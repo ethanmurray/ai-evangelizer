@@ -8,8 +8,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import {
-  AuthProvider,
+import type {
+  AuthProvider as IAuthProvider,
   AuthProviderType,
   User,
   UserRegistrationData,
@@ -26,7 +26,7 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  authProvider: AuthProvider | null;
+  authProvider: IAuthProvider | null;
   error: AuthError | null;
 
   // Authentication actions
@@ -66,7 +66,7 @@ export interface AuthProviderProps {
  * Auth Provider Factory
  * Creates the appropriate auth provider based on type
  */
-function createAuthProvider(type: AuthProviderType, config?: any): AuthProvider {
+function createAuthProvider(type: AuthProviderType, config?: any): IAuthProvider {
   switch (type) {
     case 'simple':
       return new SimpleAuthProvider({
@@ -95,7 +95,7 @@ export function AuthProvider({ children, defaultProvider = 'simple', config }: A
   // State
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authProvider, setAuthProvider] = useState<AuthProvider | null>(null);
+  const [authProvider, setAuthProvider] = useState<IAuthProvider | null>(null);
   const [error, setError] = useState<AuthError | null>(null);
 
   // Initialize auth provider

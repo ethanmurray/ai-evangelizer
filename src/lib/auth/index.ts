@@ -48,7 +48,6 @@ export {
 } from './utils/validation';
 
 export {
-  SessionStorage,
   LocalSessionStorage,
   MemorySessionStorage,
   createSessionStorage,

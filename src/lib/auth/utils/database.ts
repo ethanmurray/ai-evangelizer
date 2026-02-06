@@ -113,15 +113,16 @@ export async function findUserByEmail(email: string): Promise<User | null> {
       .select('*')
       .eq('email', email.toLowerCase().trim())
       .eq('is_active', true)
-      .single();
+      .maybeSingle(); // Use maybeSingle() instead of single() to handle 0 rows gracefully
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        // No rows returned
-        return null;
-      }
       console.error('Database error finding user:', error);
       throw new Error('DATABASE_ERROR');
+    }
+
+    // maybeSingle() returns null when no rows found
+    if (!data) {
+      return null;
     }
 
     return userFromRow(data);
@@ -148,14 +149,15 @@ export async function findUserById(id: string): Promise<User | null> {
       .select('*')
       .eq('id', id)
       .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null;
-      }
       console.error('Database error finding user by ID:', error);
       throw new Error('DATABASE_ERROR');
+    }
+
+    if (!data) {
+      return null;
     }
 
     return userFromRow(data);
@@ -186,14 +188,15 @@ export async function findUserByExternalAuthId(
       .eq('external_auth_id', externalAuthId)
       .eq('auth_provider', authProvider)
       .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null;
-      }
       console.error('Database error finding user by external auth ID:', error);
       throw new Error('DATABASE_ERROR');
+    }
+
+    if (!data) {
+      return null;
     }
 
     return userFromRow(data);

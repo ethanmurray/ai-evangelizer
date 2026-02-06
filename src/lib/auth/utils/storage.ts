@@ -93,7 +93,9 @@ export class LocalSessionStorage implements SessionStorage {
    */
   isSessionValid(session?: SessionInfo): boolean {
     if (!session) {
-      session = this.getSession();
+      const sessionData = this.getSession();
+      if (!sessionData) return false;
+      session = sessionData;
     }
     if (!session) return false;
 
@@ -222,8 +224,10 @@ export class MemorySessionStorage implements SessionStorage {
   }
 
   isSessionValid(session?: SessionInfo): boolean {
-    if (!session) session = this.sessionData;
-    if (!session) return false;
+    if (!session) {
+      if (!this.sessionData) return false;
+      session = this.sessionData;
+    }
 
     if (session.expiresAt && new Date() > session.expiresAt) {
       this.clearAll();

@@ -8,9 +8,8 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { useAuthContext } from '../context/AuthContext';
-import {
-  AuthContextType,
+import { useAuthContext, type AuthContextType } from '../context/AuthContext';
+import type {
   UserRegistrationData,
   UserProfile,
   AuthResult,
@@ -18,7 +17,23 @@ import {
 import { getErrorMessage } from '../utils/validation';
 
 // Extended hook interface with additional utilities
-export interface UseAuthReturn extends AuthContextType {
+export interface UseAuthReturn {
+  // Base AuthContextType properties
+  user: AuthContextType['user'];
+  isLoading: AuthContextType['isLoading'];
+  isAuthenticated: AuthContextType['isAuthenticated'];
+  authProvider: AuthContextType['authProvider'];
+  error: AuthContextType['error'];
+  register: AuthContextType['register'];
+  login: AuthContextType['login'];
+  logout: AuthContextType['logout'];
+  updateUser: AuthContextType['updateUser'];
+  refreshSession: AuthContextType['refreshSession'];
+  switchProvider: AuthContextType['switchProvider'];
+  getAvailableProviders: AuthContextType['getAvailableProviders'];
+  clearError: AuthContextType['clearError'];
+  getSessionInfo: AuthContextType['getSessionInfo'];
+
   // Convenience computed values
   userName: string | null;
   userInitials: string | null;
