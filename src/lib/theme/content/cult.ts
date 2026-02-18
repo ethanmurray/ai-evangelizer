@@ -1,0 +1,41 @@
+import { ContentTheme } from '../types';
+
+export const cultTheme: ContentTheme = {
+  appName: "The Cult of AI",
+  tagline: "Adjust your tinfoil hat and join us",
+  concepts: {
+    useCase: "Ritual",
+    useCasePlural: "Rituals",
+    library: "The Sacred Texts",
+    upvote: "Drink the Kool-Aid",
+    dashboard: "Your Bunker",
+    leaderboard: "The Inner Circle",
+    profile: "Your Dossier",
+    login: "Join the Cult",
+    submit: "Channel a vision",
+    step1: "Witnessed",
+    step2: "Initiated",
+    step3: "Recruited",
+    completed: "Indoctrinated",
+    newUser: "Outsider",
+    recruit: "Recruit",
+  },
+  ranks: [
+    { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
+    { min: 1, name: "Curious Bystander", desc: "Lingering near the compound" },
+    { min: 3, name: "Initiate", desc: "Has tasted the Kool-Aid" },
+    { min: 6, name: "True Believer", desc: "There is no going back" },
+    { min: 11, name: "Inner Circle", desc: "Knows the secret handshake" },
+    { min: 21, name: "Supreme Leader", desc: "All hail" },
+  ],
+  microcopy: {
+    emptyDashboard: "You haven't performed any rituals yet. The algorithm is watching. And waiting.",
+    recruitSuccess: "One of us. One of us.",
+    completionCelebration: "You have drunk deeply. There is no antidote.",
+    stubAccountWelcome: "You've already been witnessed in {count} rituals. Your indoctrination has begun.",
+    notFound: "This page has been redacted by the government.",
+    loginSubtext: "There is no leaving. (Just kidding. But also not.)",
+    submissionPrompt: "Share what the algorithm has revealed to you",
+  },
+  toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
+};

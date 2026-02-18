@@ -1,0 +1,41 @@
+import { ContentTheme } from '../types';
+
+export const corporateTheme: ContentTheme = {
+  appName: "AI Skills Tracker",
+  tagline: "Learn, practice, share",
+  concepts: {
+    useCase: "Skill",
+    useCasePlural: "Skills",
+    library: "Skill Library",
+    upvote: "Recommend",
+    dashboard: "My Progress",
+    leaderboard: "Team Rankings",
+    profile: "My Profile",
+    login: "Sign In",
+    submit: "Submit a skill",
+    step1: "Learned",
+    step2: "Applied",
+    step3: "Shared",
+    completed: "Mastered",
+    newUser: "New Member",
+    recruit: "Learner",
+  },
+  ranks: [
+    { min: 0, name: "Newcomer", desc: "Just getting started" },
+    { min: 1, name: "Learner", desc: "Building foundations" },
+    { min: 3, name: "Practitioner", desc: "Applying skills daily" },
+    { min: 6, name: "Advocate", desc: "Sharing knowledge actively" },
+    { min: 11, name: "Champion", desc: "Driving adoption across teams" },
+    { min: 21, name: "Expert", desc: "Leading the way" },
+  ],
+  microcopy: {
+    emptyDashboard: "You haven't started any skills yet. Browse the library to begin.",
+    recruitSuccess: "Nice! They've been added to your sharing history.",
+    completionCelebration: "Skill mastered! Great work.",
+    stubAccountWelcome: "Welcome! You've already been introduced to {count} skills by colleagues.",
+    notFound: "Page not found.",
+    loginSubtext: "Track your AI learning journey",
+    submissionPrompt: "Share an AI use case you've found valuable",
+  },
+  toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
+};

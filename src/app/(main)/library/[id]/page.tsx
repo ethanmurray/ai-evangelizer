@@ -1,0 +1,237 @@
+'use client';
+
+import React, { useState, useCallback } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth';
+import { useTheme } from '@/lib/theme';
+import { useUseCase } from '@/hooks/useUseCase';
+import { markSeen, markDone, shareWithRecipient } from '@/lib/data/progress';
+import { hasUpvoted } from '@/lib/data/upvotes';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Alert } from '@/components/ui/Alert';
+import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { UpvoteButton } from '@/components/ui/UpvoteButton';
+
+export default function UseCaseDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { user } = useAuth();
+  const { t } = useTheme();
+  const id = params.id as string;
+  const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
+
+  const [recipient1, setRecipient1] = useState('');
+  const [recipient2, setRecipient2] = useState('');
+  const [sharing, setSharing] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState('');
+  const [shareError, setShareError] = useState('');
+  const [upvoted, setUpvoted] = useState<boolean | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  // Check if user has upvoted
+  React.useEffect(() => {
+    if (user && id) {
+      hasUpvoted(user.id, id).then(setUpvoted);
+    }
+  }, [user, id]);
+
+  const handleMarkSeen = useCallback(async () => {
+    if (!user) return;
+    await markSeen(user.id, id);
+    refresh();
+  }, [user, id, refresh]);
+
+  const handleMarkDone = useCallback(async () => {
+    if (!user) return;
+    await markDone(user.id, id);
+    refresh();
+  }, [user, id, refresh]);
+
+  const handleShare = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !recipient1.trim()) return;
+
+    setSharing(true);
+    setShareError('');
+    setShareSuccess('');
+
+    try {
+      await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
+      if (recipient2.trim()) {
+        await shareWithRecipient(user.id, recipient2.trim(), id, user.team);
+      }
+      setShareSuccess(t.microcopy.recruitSuccess);
+      setRecipient1('');
+      setRecipient2('');
+      refresh();
+
+      // Check if now completed
+      setTimeout(() => {
+        refresh();
+      }, 500);
+    } catch (err: any) {
+      setShareError(err.message || 'Failed to share');
+    } finally {
+      setSharing(false);
+    }
+  }, [user, recipient1, recipient2, id, t, refresh]);
+
+  // Show celebration when use case becomes completed
+  React.useEffect(() => {
+    if (useCase?.is_completed && !showCelebration) {
+      setShowCelebration(true);
+    }
+  }, [useCase?.is_completed, showCelebration]);
+
+  if (isLoading || !useCase) {
+    return (
+      <div className="p-4 md:p-8 max-w-3xl mx-auto">
+        <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  const canMarkSeen = !useCase.seen_at;
+  const canMarkDone = useCase.seen_at && !useCase.done_at;
+  const canShare = useCase.done_at && useCase.share_count < 2;
+
+  return (
+    <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
+      {/* Back button */}
+      <button
+        onClick={() => router.back()}
+        className="text-sm flex items-center gap-1"
+        style={{ color: 'var(--color-text-muted)' }}
+      >
+        &larr; Back
+      </button>
+
+      {/* Title & description */}
+      <div>
+        <h1 className="text-3xl font-bold">{useCase.title}</h1>
+        <p className="mt-2" style={{ color: 'var(--color-text-muted)' }}>
+          {useCase.description}
+        </p>
+      </div>
+
+      {/* Upvote + count */}
+      <div className="flex items-center gap-4">
+        {user && upvoted !== null && (
+          <UpvoteButton
+            userId={user.id}
+            useCaseId={id}
+            initialUpvoted={upvoted}
+            initialCount={useCase.upvote_count || 0}
+            onToggle={() => refresh()}
+          />
+        )}
+      </div>
+
+      {/* Resources */}
+      {useCase.resources && (
+        <Card>
+          <h2 className="text-sm font-bold mb-2" style={{ color: 'var(--color-secondary)' }}>
+            Resources
+          </h2>
+          <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text-muted)' }}>
+            {useCase.resources}
+          </p>
+        </Card>
+      )}
+
+      {/* Celebration */}
+      {showCelebration && useCase.is_completed && (
+        <Alert variant="success" title={t.concepts.completed}>
+          {t.microcopy.completionCelebration}
+        </Alert>
+      )}
+
+      {/* Progress */}
+      <Card>
+        <h2 className="text-sm font-bold mb-4" style={{ color: 'var(--color-secondary)' }}>
+          Your Progress
+        </h2>
+        <ProgressSteps
+          seenAt={useCase.seen_at}
+          doneAt={useCase.done_at}
+          shareCount={useCase.share_count}
+        />
+
+        <div className="mt-6 space-y-4">
+          {/* Step 1: See */}
+          {canMarkSeen && (
+            <Button onClick={handleMarkSeen} className="w-full">
+              Mark as {t.concepts.step1}
+            </Button>
+          )}
+
+          {/* Step 2: Do */}
+          {canMarkDone && (
+            <Button onClick={handleMarkDone} className="w-full">
+              Mark as {t.concepts.step2}
+            </Button>
+          )}
+
+          {/* Step 3: Teach */}
+          {canShare && (
+            <div
+              className="rounded-lg border p-4"
+              style={{
+                background: 'var(--color-bg-elevated)',
+                borderColor: 'var(--color-border)',
+              }}
+            >
+              <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--color-secondary)' }}>
+                {t.concepts.step3}: Share with colleagues
+              </h3>
+              <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
+                Enter the email(s) of people you taught this to ({useCase.share_count}/2 shared)
+              </p>
+
+              {shareSuccess && (
+                <Alert variant="success" className="mb-3">{shareSuccess}</Alert>
+              )}
+              {shareError && (
+                <Alert variant="error" className="mb-3">{shareError}</Alert>
+              )}
+
+              <form onSubmit={handleShare} className="space-y-3">
+                <Input
+                  type="email"
+                  placeholder="colleague@company.com"
+                  value={recipient1}
+                  onChange={(e) => setRecipient1(e.target.value)}
+                  required
+                />
+                {useCase.share_count === 0 && (
+                  <Input
+                    type="email"
+                    placeholder="another@company.com (optional)"
+                    value={recipient2}
+                    onChange={(e) => setRecipient2(e.target.value)}
+                  />
+                )}
+                <Button type="submit" isLoading={sharing} loadingText="Sharing..." className="w-full">
+                  {t.concepts.step3}
+                </Button>
+              </form>
+            </div>
+          )}
+
+          {/* Completed state */}
+          {useCase.is_completed && (
+            <div className="text-center py-2">
+              <span className="text-lg font-bold" style={{ color: 'var(--color-success)' }}>
+                &#10003; {t.concepts.completed}
+              </span>
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+}

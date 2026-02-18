@@ -1,0 +1,15 @@
+[data-visual-theme="clean"] {
+  --color-bg: #f8fafc;
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-primary: #3b82f6;
+  --color-secondary: #6366f1;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-heading: #0f172a;
+  --color-border: #e2e8f0;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
