@@ -6,6 +6,7 @@ export { ProgressSteps } from './ProgressSteps';
 export { SearchInput } from './SearchInput';
 export { RankDisplay } from './RankDisplay';
 export { UpvoteButton } from './UpvoteButton';
+export { ConfirmDeleteModal } from './ConfirmDeleteModal';
 
 export type { ButtonProps } from './Button';
 export type { InputProps } from './Input';

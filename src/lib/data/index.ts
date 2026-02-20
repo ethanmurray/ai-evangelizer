@@ -3,6 +3,7 @@ export {
   fetchUseCase,
   fetchUseCaseWithProgress,
   createUseCase,
+  deleteUseCase,
 } from './use-cases';
 export type { UseCase, UseCaseWithProgress } from './use-cases';
 

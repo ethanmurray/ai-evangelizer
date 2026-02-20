@@ -106,3 +106,29 @@ export async function createUseCase(
   if (error) throw new Error(error.message);
   return data;
 }
+
+export async function deleteUseCase(id: string): Promise<void> {
+  const { error: sharesError } = await supabase
+    .from('shares')
+    .delete()
+    .eq('use_case_id', id);
+  if (sharesError) throw new Error(sharesError.message);
+
+  const { error: progressError } = await supabase
+    .from('progress')
+    .delete()
+    .eq('use_case_id', id);
+  if (progressError) throw new Error(progressError.message);
+
+  const { error: upvotesError } = await supabase
+    .from('upvotes')
+    .delete()
+    .eq('use_case_id', id);
+  if (upvotesError) throw new Error(upvotesError.message);
+
+  const { error: useCaseError } = await supabase
+    .from('use_cases')
+    .delete()
+    .eq('id', id);
+  if (useCaseError) throw new Error(useCaseError.message);
+}

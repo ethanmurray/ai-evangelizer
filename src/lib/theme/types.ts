@@ -17,6 +17,7 @@ export interface ContentTheme {
     completed: string;
     newUser: string;
     recruit: string;
+    delete: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -27,6 +28,11 @@ export interface ContentTheme {
     notFound: string;
     loginSubtext: string;
     submissionPrompt: string;
+    deleteConfirmTitle: string;
+    deleteConfirmBody: string;
+    deleteConfirmPlaceholder: string;
+    deleteConfirmButton: string;
+    deleteSuccess: string;
   };
   toneGuidance: string;
 }
