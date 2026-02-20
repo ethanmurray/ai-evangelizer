@@ -20,6 +20,9 @@ export const corporateTheme: ContentTheme = {
     newUser: "New Member",
     recruit: "Learner",
     delete: "Delete",
+    edit: "Edit",
+    save: "Save Changes",
+    cancel: "Cancel",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -42,6 +45,12 @@ export const corporateTheme: ContentTheme = {
     deleteConfirmPlaceholder: "Type DELETE to confirm",
     deleteConfirmButton: "Delete Permanently",
     deleteSuccess: "Skill deleted successfully.",
+    editTitle: "Edit Skill",
+    editTitleLabel: "Skill Title",
+    editDescriptionLabel: "Description",
+    editResourcesLabel: "Resources",
+    editSuccess: "Skill updated successfully.",
+    editError: "Failed to update skill. Please try again.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

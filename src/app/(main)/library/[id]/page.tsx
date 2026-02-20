@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { useUseCase } from '@/hooks/useUseCase';
 import { markSeen, markDone, shareWithRecipient } from '@/lib/data/progress';
-import { deleteUseCase } from '@/lib/data/use-cases';
+import { deleteUseCase, updateUseCase } from '@/lib/data/use-cases';
 import { hasUpvoted } from '@/lib/data/upvotes';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +15,7 @@ import { Alert } from '@/components/ui/Alert';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { UpvoteButton } from '@/components/ui/UpvoteButton';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
+import { EditUseCaseModal } from '@/components/ui/EditUseCaseModal';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -34,6 +35,10 @@ export default function UseCaseDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [editSuccess, setEditSuccess] = useState('');
 
   // Check if user has upvoted
   React.useEffect(() => {
@@ -82,6 +87,23 @@ export default function UseCaseDetailPage() {
       setSharing(false);
     }
   }, [user, recipient1, recipient2, id, t, refresh]);
+
+  const handleEdit = useCallback(async (updates: { title: string; description: string; resources: string }) => {
+    setIsEditing(true);
+    setEditError('');
+    setEditSuccess('');
+    try {
+      await updateUseCase(id, updates);
+      setEditSuccess(t.microcopy.editSuccess);
+      setShowEditModal(false);
+      refresh();
+      setTimeout(() => setEditSuccess(''), 3000);
+    } catch (err: any) {
+      setEditError(err.message || t.microcopy.editError);
+    } finally {
+      setIsEditing(false);
+    }
+  }, [id, t, refresh]);
 
   const handleDelete = useCallback(async () => {
     setIsDeleting(true);
@@ -135,7 +157,7 @@ export default function UseCaseDetailPage() {
         </p>
       </div>
 
-      {/* Upvote + delete */}
+      {/* Upvote + edit + delete */}
       <div className="flex items-center gap-4">
         {user && upvoted !== null && (
           <UpvoteButton
@@ -147,14 +169,23 @@ export default function UseCaseDetailPage() {
           />
         )}
         {user && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowDeleteModal(true)}
-            style={{ color: 'var(--color-error)' }}
-          >
-            {t.concepts.delete} {t.concepts.useCase}
-          </Button>
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowEditModal(true)}
+            >
+              {t.concepts.edit} {t.concepts.useCase}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDeleteModal(true)}
+              style={{ color: 'var(--color-error)' }}
+            >
+              {t.concepts.delete} {t.concepts.useCase}
+            </Button>
+          </>
         )}
       </div>
 
@@ -260,9 +291,31 @@ export default function UseCaseDetailPage() {
         </div>
       </Card>
 
+      {editSuccess && (
+        <Alert variant="success">{editSuccess}</Alert>
+      )}
+
+      {editError && (
+        <Alert variant="error">{editError}</Alert>
+      )}
+
       {deleteError && (
         <Alert variant="error">{deleteError}</Alert>
       )}
+
+      <EditUseCaseModal
+        isOpen={showEditModal}
+        useCase={useCase}
+        onSave={handleEdit}
+        onCancel={() => setShowEditModal(false)}
+        isSaving={isEditing}
+        modalTitle={t.microcopy.editTitle}
+        titleLabel={t.microcopy.editTitleLabel}
+        descriptionLabel={t.microcopy.editDescriptionLabel}
+        resourcesLabel={t.microcopy.editResourcesLabel}
+        saveButtonText={t.concepts.save}
+        cancelButtonText={t.concepts.cancel}
+      />
 
       <ConfirmDeleteModal
         isOpen={showDeleteModal}

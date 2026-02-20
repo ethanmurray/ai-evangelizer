@@ -107,6 +107,21 @@ export async function createUseCase(
   return data;
 }
 
+export async function updateUseCase(
+  id: string,
+  updates: {
+    title?: string;
+    description?: string;
+    resources?: string;
+  }
+): Promise<void> {
+  const { error } = await supabase
+    .from('use_cases')
+    .update(updates)
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 export async function deleteUseCase(id: string): Promise<void> {
   const { error: sharesError } = await supabase
     .from('shares')

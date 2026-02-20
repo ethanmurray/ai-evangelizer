@@ -20,6 +20,9 @@ export const cultTheme: ContentTheme = {
     newUser: "Outsider",
     recruit: "Recruit",
     delete: "Purge",
+    edit: "Reshape",
+    save: "Inscribe",
+    cancel: "Abandon",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -42,6 +45,12 @@ export const cultTheme: ContentTheme = {
     deleteConfirmPlaceholder: "Type DELETE to confirm",
     deleteConfirmButton: "Purge Forever",
     deleteSuccess: "The ritual has been purged from the sacred texts.",
+    editTitle: "Reshape the Ritual",
+    editTitleLabel: "Ritual Name",
+    editDescriptionLabel: "Sacred Instructions",
+    editResourcesLabel: "Hidden Knowledge",
+    editSuccess: "The ritual has been reshaped according to your vision.",
+    editError: "The algorithm rejects your changes. Try again.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };

@@ -1,5 +1,6 @@
 export { Button } from './Button';
 export { Input } from './Input';
+export { Textarea } from './Textarea';
 export { Alert } from './Alert';
 export { Card } from './Card';
 export { ProgressSteps } from './ProgressSteps';
@@ -7,6 +8,7 @@ export { SearchInput } from './SearchInput';
 export { RankDisplay } from './RankDisplay';
 export { UpvoteButton } from './UpvoteButton';
 export { ConfirmDeleteModal } from './ConfirmDeleteModal';
+export { EditUseCaseModal } from './EditUseCaseModal';
 
 export type { ButtonProps } from './Button';
 export type { InputProps } from './Input';
