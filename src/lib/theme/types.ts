@@ -18,6 +18,9 @@ export interface ContentTheme {
     newUser: string;
     recruit: string;
     delete: string;
+    edit: string;
+    save: string;
+    cancel: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -33,6 +36,12 @@ export interface ContentTheme {
     deleteConfirmPlaceholder: string;
     deleteConfirmButton: string;
     deleteSuccess: string;
+    editTitle: string;
+    editTitleLabel: string;
+    editDescriptionLabel: string;
+    editResourcesLabel: string;
+    editSuccess: string;
+    editError: string;
   };
   toneGuidance: string;
 }
