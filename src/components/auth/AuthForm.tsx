@@ -120,12 +120,15 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
           <Input
             type="email"
             label="Email Address"
-            placeholder="Enter your email"
+            placeholder="Enter your email (honestly, please - we have no validation or security, just the honor code)"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             error={fieldErrors.email}
             required
           />
+          <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)', opacity: 0.8 }}>
+            This is an entirely vibe-coded, unreviewed, unsecured public-data-only app. Don't put anything sensitive here. We will add very basic authentication soon and real security someday.
+          </p>
           <Button type="submit" className="w-full" isLoading={isLoading} loadingText="Checking...">
             Continue
           </Button>
