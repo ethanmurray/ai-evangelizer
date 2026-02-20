@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { useUseCase } from '@/hooks/useUseCase';
 import { markSeen, markDone, shareWithRecipient } from '@/lib/data/progress';
+import { deleteUseCase } from '@/lib/data/use-cases';
 import { hasUpvoted } from '@/lib/data/upvotes';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -13,6 +14,7 @@ import { Input } from '@/components/ui/Input';
 import { Alert } from '@/components/ui/Alert';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { UpvoteButton } from '@/components/ui/UpvoteButton';
+import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -29,6 +31,9 @@ export default function UseCaseDetailPage() {
   const [shareError, setShareError] = useState('');
   const [upvoted, setUpvoted] = useState<boolean | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   // Check if user has upvoted
   React.useEffect(() => {
@@ -78,6 +83,18 @@ export default function UseCaseDetailPage() {
     }
   }, [user, recipient1, recipient2, id, t, refresh]);
 
+  const handleDelete = useCallback(async () => {
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      await deleteUseCase(id);
+      router.push('/library');
+    } catch (err: any) {
+      setDeleteError(err.message || 'Failed to delete');
+      setIsDeleting(false);
+    }
+  }, [id, router]);
+
   // Show celebration when use case becomes completed
   React.useEffect(() => {
     if (useCase?.is_completed && !showCelebration) {
@@ -118,7 +135,7 @@ export default function UseCaseDetailPage() {
         </p>
       </div>
 
-      {/* Upvote + count */}
+      {/* Upvote + delete */}
       <div className="flex items-center gap-4">
         {user && upvoted !== null && (
           <UpvoteButton
@@ -128,6 +145,16 @@ export default function UseCaseDetailPage() {
             initialCount={useCase.upvote_count || 0}
             onToggle={() => refresh()}
           />
+        )}
+        {user && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowDeleteModal(true)}
+            style={{ color: 'var(--color-error)' }}
+          >
+            {t.concepts.delete} {t.concepts.useCase}
+          </Button>
         )}
       </div>
 
@@ -232,6 +259,22 @@ export default function UseCaseDetailPage() {
           )}
         </div>
       </Card>
+
+      {deleteError && (
+        <Alert variant="error">{deleteError}</Alert>
+      )}
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        title={useCase.title}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteModal(false)}
+        isDeleting={isDeleting}
+        confirmTitle={t.microcopy.deleteConfirmTitle}
+        confirmBody={t.microcopy.deleteConfirmBody}
+        confirmPlaceholder={t.microcopy.deleteConfirmPlaceholder}
+        confirmButtonText={t.microcopy.deleteConfirmButton}
+      />
     </div>
   );
 }

@@ -19,6 +19,7 @@ export const corporateTheme: ContentTheme = {
     completed: "Mastered",
     newUser: "New Member",
     recruit: "Learner",
+    delete: "Delete",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -36,6 +37,11 @@ export const corporateTheme: ContentTheme = {
     notFound: "Page not found.",
     loginSubtext: "Track your AI learning journey",
     submissionPrompt: "Share an AI use case you've found valuable",
+    deleteConfirmTitle: "Delete this skill?",
+    deleteConfirmBody: "This skill and all associated progress, upvotes, and shares will be permanently deleted. Type DELETE to confirm.",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteConfirmButton: "Delete Permanently",
+    deleteSuccess: "Skill deleted successfully.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

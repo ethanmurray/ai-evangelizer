@@ -19,6 +19,7 @@ export const cultTheme: ContentTheme = {
     completed: "Indoctrinated",
     newUser: "Outsider",
     recruit: "Recruit",
+    delete: "Purge",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -36,6 +37,11 @@ export const cultTheme: ContentTheme = {
     notFound: "This page has been redacted by the government.",
     loginSubtext: "There is no leaving. (Just kidding. But also not.)",
     submissionPrompt: "Share what the algorithm has revealed to you",
+    deleteConfirmTitle: "Purge this ritual?",
+    deleteConfirmBody: "This ritual will be erased from the sacred texts forever. All progress and upvotes will vanish. Type DELETE to confirm the purge.",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteConfirmButton: "Purge Forever",
+    deleteSuccess: "The ritual has been purged from the sacred texts.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };
