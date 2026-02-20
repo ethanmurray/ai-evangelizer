@@ -2,7 +2,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+The repository includes a `.env.example` file with all necessary environment variables pre-configured. No additional setup is required - the app will automatically use these values.
+
+To run the development server:
 
 ```bash
 npm run dev
