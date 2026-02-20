@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
@@ -9,12 +9,15 @@ import { useUseCases } from '@/hooks/useUseCases';
 import { RankDisplay } from '@/components/ui/RankDisplay';
 import { Card } from '@/components/ui/Card';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { Button } from '@/components/ui/Button';
+import { AboutModal } from '@/components/ui/AboutModal';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { t } = useTheme();
   const { progress, completedCount, inProgressCount, isLoading: progressLoading } = useProgress(user?.id);
   const { useCases } = useUseCases();
+  const [showAbout, setShowAbout] = useState(false);
 
   // Build a map of use_case_id -> progress
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
@@ -34,13 +37,26 @@ export default function DashboardPage() {
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold animate-flicker">
-          {t.concepts.dashboard}
-        </h1>
-        <p className="mt-1" style={{ color: 'var(--color-text-muted)' }}>
-          Welcome back, {user?.name}
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold animate-flicker">
+            {t.concepts.dashboard}
+          </h1>
+          <p className="mt-1" style={{ color: 'var(--color-text-muted)' }}>
+            Welcome back, {user?.name}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowAbout(true)}
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+          </svg>
+          {t.concepts.about}
+        </Button>
       </div>
 
       {/* Rank Card */}
@@ -140,6 +156,13 @@ export default function DashboardPage() {
           </div>
         </Card>
       )}
+
+      <AboutModal
+        isOpen={showAbout}
+        onClose={() => setShowAbout(false)}
+        title={t.microcopy.aboutTitle}
+        content={t.microcopy.aboutContent}
+      />
     </div>
   );
 }

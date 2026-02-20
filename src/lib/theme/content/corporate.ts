@@ -23,6 +23,7 @@ export const corporateTheme: ContentTheme = {
     edit: "Edit",
     save: "Save Changes",
     cancel: "Cancel",
+    about: "About This App",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -51,6 +52,8 @@ export const corporateTheme: ContentTheme = {
     editResourcesLabel: "Resources",
     editSuccess: "Skill updated successfully.",
     editError: "Failed to update skill. Please try again.",
+    aboutTitle: "About This App",
+    aboutContent: "This app is just for fun, to encourage more valuable use of AI at work. If it works, we'll rebuild it for real and use it to help our whole company, and maybe our clients, to adopt AI. In early pilot stages, we're doing minimum investment: vibe-coded with no human code review, hosted in a public unapproved location, no security or authentication - so don't put anything sensitive here.\n\nWe're running this like an open source project. David Friedman and Ethan Murray initiated it, but it belongs to anyone who cares to make it better. Anyone can add Issues (feature requests) or directly make code change pull requests at https://github.com/ethanmurray/ai-evangelizer; anyone can merge code and it will auto-deploy to production, so try not to break it for everyone else. It began with no design and just a few rough ideas, so feel totally free to introduce your own ideas and make changes. The only guiding principle is to build something that drives more AI adoption on valuable uses that we want more of at work.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

@@ -21,6 +21,7 @@ export interface ContentTheme {
     edit: string;
     save: string;
     cancel: string;
+    about: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -42,6 +43,8 @@ export interface ContentTheme {
     editResourcesLabel: string;
     editSuccess: string;
     editError: string;
+    aboutTitle: string;
+    aboutContent: string;
   };
   toneGuidance: string;
 }

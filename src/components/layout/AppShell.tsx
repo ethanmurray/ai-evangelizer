@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@/lib/theme';
 import { NavItem } from './NavItem';
+import { Button } from '@/components/ui/Button';
+import { AboutModal } from '@/components/ui/AboutModal';
 
 const DashboardIcon = () => (
   <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -30,6 +32,7 @@ const ProfileIcon = () => (
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { t } = useTheme();
+  const [showAbout, setShowAbout] = useState(false);
 
   const navItems = [
     { href: '/dashboard', label: t.concepts.dashboard, icon: <DashboardIcon /> },
@@ -61,6 +64,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <NavItem key={item.href} {...item} />
           ))}
         </nav>
+        <div className="p-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => setShowAbout(true)}
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+            </svg>
+            {t.concepts.about}
+          </Button>
+        </div>
       </aside>
 
       {/* Main content */}
@@ -80,6 +97,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <NavItem key={item.href} {...item} />
         ))}
       </nav>
+
+      <AboutModal
+        isOpen={showAbout}
+        onClose={() => setShowAbout(false)}
+        title={t.microcopy.aboutTitle}
+        content={t.microcopy.aboutContent}
+      />
     </div>
   );
 }
