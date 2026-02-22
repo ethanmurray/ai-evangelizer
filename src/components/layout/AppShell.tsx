@@ -70,7 +70,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start font-semibold about-button-pulse mt-2"
+            className="w-full justify-start font-semibold about-button-styled mt-2"
             onClick={() => setShowAbout(true)}
             style={{
               color: 'var(--color-primary)',

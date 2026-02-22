@@ -50,7 +50,7 @@ export default function DashboardPage() {
           variant="outline"
           size="md"
           onClick={() => setShowAbout(true)}
-          className="font-semibold about-button-pulse"
+          className="font-semibold about-button-styled"
           style={{
             color: 'var(--color-primary)',
             borderColor: 'var(--color-primary)',
