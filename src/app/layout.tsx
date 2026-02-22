@@ -41,7 +41,7 @@ export default function RootLayout({
   const visualTheme = process.env.NEXT_PUBLIC_VISUAL_THEME || "conspiracy-board";
 
   return (
-    <html lang="en" data-visual-theme={visualTheme}>
+    <html lang="en" data-visual-theme={visualTheme} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
