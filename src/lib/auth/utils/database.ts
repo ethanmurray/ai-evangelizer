@@ -112,6 +112,24 @@ export async function createTeam(name: string): Promise<void> {
   await supabase.from('teams').upsert({ name: name.trim() }, { onConflict: 'name' });
 }
 
+export async function updateUserTeam(
+  userId: string,
+  team: string
+): Promise<User> {
+  // Ensure the team exists
+  await supabase.from('teams').upsert({ name: team.trim() }, { onConflict: 'name' });
+
+  const { data, error } = await supabase
+    .from('users')
+    .update({ team: team.trim() })
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return userFromRow(data);
+}
+
 export async function updateUserTheme(
   userId: string,
   themePreference: 'cult' | 'corporate' | null
