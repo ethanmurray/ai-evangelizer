@@ -9,6 +9,7 @@ export { RankDisplay } from './RankDisplay';
 export { UpvoteButton } from './UpvoteButton';
 export { ConfirmDeleteModal } from './ConfirmDeleteModal';
 export { EditUseCaseModal } from './EditUseCaseModal';
+export { AboutModal } from './AboutModal';
 
 export type { ButtonProps } from './Button';
 export type { InputProps } from './Input';
