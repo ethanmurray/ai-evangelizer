@@ -27,11 +27,11 @@ export const cultTheme: ContentTheme = {
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
-    { min: 1, name: "Curious Bystander", desc: "Lingering near the compound" },
-    { min: 3, name: "Initiate", desc: "Has tasted the Kool-Aid" },
-    { min: 6, name: "True Believer", desc: "There is no going back" },
-    { min: 11, name: "Inner Circle", desc: "Knows the secret handshake" },
-    { min: 21, name: "Supreme Leader", desc: "All hail" },
+    { min: 10, name: "Curious Bystander", desc: "Lingering near the compound" },
+    { min: 30, name: "Initiate", desc: "Has tasted the Kool-Aid" },
+    { min: 60, name: "True Believer", desc: "There is no going back" },
+    { min: 110, name: "Inner Circle", desc: "Knows the secret handshake" },
+    { min: 210, name: "Supreme Leader", desc: "All hail" },
   ],
   microcopy: {
     emptyDashboard: "You haven't performed any rituals yet. The algorithm is watching. And waiting.",

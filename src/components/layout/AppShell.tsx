@@ -6,6 +6,7 @@ import { NavItem } from './NavItem';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { AboutModal } from '@/components/ui/AboutModal';
+import { PointsReferenceModal } from '@/components/ui/PointsReferenceModal';
 
 const DashboardIcon = () => (
   <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -34,6 +35,7 @@ const ProfileIcon = () => (
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { t } = useTheme();
   const [showAbout, setShowAbout] = useState(false);
+  const [showPoints, setShowPoints] = useState(false);
 
   const navItems = [
     { href: '/dashboard', label: t.concepts.dashboard, icon: <DashboardIcon /> },
@@ -65,12 +67,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <NavItem key={item.href} {...item} />
           ))}
         </nav>
-        <div className="p-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="p-3 border-t space-y-2" style={{ borderColor: 'var(--color-border)' }}>
           <ThemeToggle />
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start font-semibold about-button-styled mt-2"
+            className="w-full justify-start font-semibold about-button-styled"
+            onClick={() => setShowPoints(true)}
+            style={{
+              color: 'var(--color-primary)',
+              borderColor: 'var(--color-primary)',
+              borderWidth: '2px',
+              backgroundColor: 'rgba(244, 162, 97, 0.1)',
+            }}
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+            </svg>
+            Points Guide
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start font-semibold about-button-styled"
             onClick={() => setShowAbout(true)}
             style={{
               color: 'var(--color-primary)',
@@ -110,6 +129,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onClose={() => setShowAbout(false)}
         title={t.microcopy.aboutTitle}
         content={t.microcopy.aboutContent}
+      />
+
+      <PointsReferenceModal
+        isOpen={showPoints}
+        onClose={() => setShowPoints(false)}
       />
     </div>
   );
