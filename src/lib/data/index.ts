@@ -13,8 +13,8 @@ export type { UserProgressItem } from './progress';
 
 export { toggleUpvote, hasUpvoted, getUpvoteCount } from './upvotes';
 
-export { fetchLeaderboard, fetchTeams } from './leaderboard';
-export type { LeaderboardEntry } from './leaderboard';
+export { fetchLeaderboard, fetchTeams, fetchTeamRankings } from './leaderboard';
+export type { LeaderboardEntry, TeamRankingEntry } from './leaderboard';
 
 export { fetchUserShares, fetchUserReceivedShares } from './shares';
 export type { ShareRecord } from './shares';
