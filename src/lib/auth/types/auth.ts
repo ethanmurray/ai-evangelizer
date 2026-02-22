@@ -5,6 +5,7 @@ export interface User {
   team: string;
   isStub: boolean;
   createdAt: Date;
+  themePreference: 'cult' | 'corporate' | null;
 }
 
 export interface AuthResult {
@@ -20,4 +21,5 @@ export interface UserRow {
   team: string;
   is_stub: boolean;
   created_at: string;
+  theme_preference: string | null;
 }

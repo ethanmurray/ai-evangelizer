@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '@/lib/theme';
 import { NavItem } from './NavItem';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { AboutModal } from '@/components/ui/AboutModal';
 
@@ -65,10 +66,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="p-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start font-semibold about-button-pulse"
+            className="w-full justify-start font-semibold about-button-pulse mt-2"
             onClick={() => setShowAbout(true)}
             style={{
               color: 'var(--color-primary)',

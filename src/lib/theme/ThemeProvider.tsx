@@ -1,9 +1,10 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { ContentTheme, VisualTheme, AppTheme } from './types';
 import { cultTheme } from './content/cult';
 import { corporateTheme } from './content/corporate';
+import { getStoredThemePreference } from '@/lib/auth/utils/storage';
 
 const contentThemes: Record<string, ContentTheme> = {
   cult: cultTheme,
@@ -15,27 +16,59 @@ const visualThemes: Record<string, VisualTheme> = {
   clean: { name: 'Clean', cssClass: 'clean' },
 };
 
-const ThemeContext = createContext<AppTheme | undefined>(undefined);
+const THEME_PAIRS: Record<string, string> = {
+  cult: 'conspiracy-board',
+  corporate: 'clean',
+};
+
+export interface ThemeContextType extends AppTheme {
+  themeKey: 'cult' | 'corporate';
+  setThemeKey: (key: 'cult' | 'corporate') => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+function getInitialThemeKey(): 'cult' | 'corporate' {
+  if (typeof window !== 'undefined') {
+    const stored = getStoredThemePreference();
+    if (stored) return stored;
+  }
+  const envKey = process.env.NEXT_PUBLIC_CONTENT_THEME;
+  if (envKey === 'cult' || envKey === 'corporate') return envKey;
+  return 'cult';
+}
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = useMemo<AppTheme>(() => {
-    const contentKey = process.env.NEXT_PUBLIC_CONTENT_THEME || 'cult';
-    const visualKey = process.env.NEXT_PUBLIC_VISUAL_THEME || 'conspiracy-board';
+  const [themeKey, setThemeKeyState] = useState<'cult' | 'corporate'>(getInitialThemeKey);
 
-    return {
-      content: contentThemes[contentKey] || cultTheme,
-      visual: visualThemes[visualKey] || visualThemes['conspiracy-board'],
-    };
+  const setThemeKey = useCallback((key: 'cult' | 'corporate') => {
+    setThemeKeyState(key);
   }, []);
 
+  // Apply visual theme to <html> element reactively
+  useEffect(() => {
+    const visualKey = THEME_PAIRS[themeKey] || 'conspiracy-board';
+    document.documentElement.setAttribute('data-visual-theme', visualKey);
+  }, [themeKey]);
+
+  const value = useMemo<ThemeContextType>(() => {
+    const visualKey = THEME_PAIRS[themeKey] || 'conspiracy-board';
+    return {
+      content: contentThemes[themeKey] || cultTheme,
+      visual: visualThemes[visualKey] || visualThemes['conspiracy-board'],
+      themeKey,
+      setThemeKey,
+    };
+  }, [themeKey, setThemeKey]);
+
   return (
-    <ThemeContext.Provider value={theme}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export function useThemeContext(): AppTheme {
+export function useThemeContext(): ThemeContextType {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useThemeContext must be used within a ThemeProvider');
