@@ -9,6 +9,7 @@ function userFromRow(row: UserRow): User {
     team: row.team,
     isStub: row.is_stub,
     createdAt: new Date(row.created_at),
+    themePreference: (row.theme_preference as 'cult' | 'corporate') || null,
   };
 }
 
@@ -109,4 +110,19 @@ export async function listTeams(): Promise<string[]> {
 
 export async function createTeam(name: string): Promise<void> {
   await supabase.from('teams').upsert({ name: name.trim() }, { onConflict: 'name' });
+}
+
+export async function updateUserTheme(
+  userId: string,
+  themePreference: 'cult' | 'corporate' | null
+): Promise<User> {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ theme_preference: themePreference })
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return userFromRow(data);
 }

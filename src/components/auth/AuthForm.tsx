@@ -120,7 +120,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
           <Input
             type="email"
             label="Email Address"
-            placeholder="Enter your email (honestly, please - we have no validation or security, just the honor code)"
+            placeholder="Enter your email (honor system please!)"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             error={fieldErrors.email}

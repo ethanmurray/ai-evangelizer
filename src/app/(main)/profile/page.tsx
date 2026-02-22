@@ -10,6 +10,7 @@ import { RankDisplay } from '@/components/ui/RankDisplay';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { fetchUserShares, fetchUserReceivedShares, ShareRecord } from '@/lib/data/shares';
 
 export default function ProfilePage() {
@@ -62,6 +63,21 @@ export default function ProfilePage() {
               Team: {user?.team}
             </p>
           </div>
+        </div>
+      </Card>
+
+      {/* Theme preference */}
+      <Card>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-bold" style={{ color: 'var(--color-text-heading)' }}>
+              Experience Mode
+            </h3>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+              Choose your vibe
+            </p>
+          </div>
+          <ThemeToggle />
         </div>
       </Card>
 

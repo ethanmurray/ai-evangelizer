@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTheme } from '@/lib/theme';
 import { NavItem } from './NavItem';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const DashboardIcon = () => (
   <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -61,6 +62,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <NavItem key={item.href} {...item} />
           ))}
         </nav>
+        <div className="p-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+          <ThemeToggle />
+        </div>
       </aside>
 
       {/* Main content */}

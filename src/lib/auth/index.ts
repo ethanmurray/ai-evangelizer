@@ -4,3 +4,4 @@ export { useAuth } from './hooks/useAuth';
 export { useUser } from './hooks/useUser';
 export type { User, AuthResult, UserRow } from './types/auth';
 export { validateEmail, validateName, validateTeam, validateRegistration } from './utils/validation';
+export { updateUserTheme } from './utils/database';

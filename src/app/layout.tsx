@@ -3,6 +3,7 @@ import { Inter, Special_Elite } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth";
+import { ThemeSyncer } from "@/components/ThemeSyncer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,6 +21,18 @@ export const metadata: Metadata = {
   description: "Adjust your tinfoil hat and join us",
 };
 
+const themeScript = `
+(function() {
+  try {
+    var pref = localStorage.getItem('cult_of_ai_theme_pref');
+    var map = { cult: 'conspiracy-board', corporate: 'clean' };
+    if (pref && map[pref]) {
+      document.documentElement.setAttribute('data-visual-theme', map[pref]);
+    }
+  } catch(e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,9 +42,13 @@ export default function RootLayout({
 
   return (
     <html lang="en" data-visual-theme={visualTheme}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className={`${inter.variable} ${specialElite.variable} antialiased`}>
         <ThemeProvider>
           <AuthProvider>
+            <ThemeSyncer />
             {children}
           </AuthProvider>
         </ThemeProvider>

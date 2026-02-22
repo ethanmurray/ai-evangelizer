@@ -2,6 +2,7 @@ import { User } from '../types/auth';
 
 const USER_KEY = 'cult_of_ai_user';
 const SESSION_KEY = 'cult_of_ai_session';
+const THEME_PREF_KEY = 'cult_of_ai_theme_pref';
 
 export function saveUser(user: User): void {
   try {
@@ -36,8 +37,29 @@ export function clearStoredUser(): void {
   try {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(THEME_PREF_KEY);
   } catch {
     // localStorage not available
+  }
+}
+
+export function saveThemePreference(pref: 'cult' | 'corporate' | null): void {
+  try {
+    if (pref) {
+      localStorage.setItem(THEME_PREF_KEY, pref);
+    } else {
+      localStorage.removeItem(THEME_PREF_KEY);
+    }
+  } catch {}
+}
+
+export function getStoredThemePreference(): 'cult' | 'corporate' | null {
+  try {
+    const val = localStorage.getItem(THEME_PREF_KEY);
+    if (val === 'cult' || val === 'corporate') return val;
+    return null;
+  } catch {
+    return null;
   }
 }
 
