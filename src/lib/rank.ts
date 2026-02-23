@@ -23,9 +23,3 @@ export function getNextRank(
   }
   return null;
 }
-
-// Backwards compatibility wrapper - to be removed after full migration
-export function getRankByCompletedCount(completedCount: number, ranks: Rank[]): Rank {
-  // Convert completed count to approximate points (10 points per completion)
-  return getRank(completedCount * 10, ranks);
-}
