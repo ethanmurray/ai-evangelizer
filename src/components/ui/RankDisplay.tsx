@@ -2,14 +2,18 @@
 
 import React from 'react';
 import { useRank } from '@/hooks/useRank';
+import { formatPoints } from '@/lib/points';
 
 interface RankDisplayProps {
-  completedCount: number;
+  points?: number;
+  completedCount?: number; // Keep for backwards compatibility
   compact?: boolean;
 }
 
-export function RankDisplay({ completedCount, compact = false }: RankDisplayProps) {
-  const { current, next } = useRank(completedCount);
+export function RankDisplay({ points, completedCount, compact = false }: RankDisplayProps) {
+  // Use points if provided, otherwise fall back to completedCount * 10 for legacy
+  const totalPoints = points !== undefined ? points : (completedCount || 0) * 10;
+  const { current, next } = useRank(totalPoints);
 
   if (compact) {
     return (
@@ -38,11 +42,11 @@ export function RankDisplay({ completedCount, compact = false }: RankDisplayProp
       </div>
       {next && (
         <div className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-          {next.remaining} more to reach <span style={{ color: 'var(--color-secondary)' }}>{next.rank.name}</span>
+          {formatPoints(next.remaining)} more to reach <span style={{ color: 'var(--color-secondary)' }}>{next.rank.name}</span>
         </div>
       )}
-      <div className="mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-        {completedCount} completed
+      <div className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+        {formatPoints(totalPoints)}
       </div>
     </div>
   );

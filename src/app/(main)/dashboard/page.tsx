@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { useProgress } from '@/hooks/useProgress';
 import { useUseCases } from '@/hooks/useUseCases';
+import { fetchUserPoints } from '@/lib/data/points';
 import { RankDisplay } from '@/components/ui/RankDisplay';
 import { Card } from '@/components/ui/Card';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
@@ -18,6 +19,13 @@ export default function DashboardPage() {
   const { progress, completedCount, inProgressCount, isLoading: progressLoading } = useProgress(user?.id);
   const { useCases } = useUseCases();
   const [showAbout, setShowAbout] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserPoints(user.id).then(setUserPoints);
+    }
+  }, [user?.id]);
 
   // Build a map of use_case_id -> progress
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
@@ -50,7 +58,7 @@ export default function DashboardPage() {
           variant="outline"
           size="md"
           onClick={() => setShowAbout(true)}
-          className="font-semibold about-button-pulse"
+          className="font-semibold about-button-styled"
           style={{
             color: 'var(--color-primary)',
             borderColor: 'var(--color-primary)',
@@ -66,7 +74,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Rank Card */}
-      <RankDisplay completedCount={completedCount} />
+      <RankDisplay points={userPoints} completedCount={completedCount} />
 
       {/* Quick Links */}
       <div className="grid grid-cols-2 gap-3">
