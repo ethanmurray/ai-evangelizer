@@ -14,6 +14,7 @@ export interface AuthContextType {
   error: string | null;
   register: (name: string, email: string, team: string) => Promise<AuthResult>;
   login: (email: string) => Promise<AuthResult>;
+  verifyAndLogin: (token: string) => Promise<AuthResult>;
   logout: () => void;
   clearError: () => void;
   setUser: (user: User) => void;
@@ -55,6 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await provider.register(name, email, team);
       if (result.success && result.user) {
         setUser(result.user);
+      } else if (result.success && result.pendingVerification) {
+        // Magic link sent — don't set user, form will show check-email UI
       } else if (result.error) {
         setError(result.error);
       }
@@ -75,6 +78,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setError(result.error);
       }
       return result;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const verifyAndLogin = useCallback(async (token: string): Promise<AuthResult> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/auth/verify-magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        const errorMsg = data.error || 'Verification failed';
+        setError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+
+      const verifiedUser: User = {
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        team: data.user.team,
+        isStub: data.user.isStub,
+        createdAt: new Date(data.user.createdAt),
+        themePreference: data.user.themePreference,
+      };
+
+      saveUser(verifiedUser);
+      setUser(verifiedUser);
+      return { success: true, user: verifiedUser };
+    } catch (err: any) {
+      const errorMsg = err.message || 'Verification failed';
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       error,
       register,
       login,
+      verifyAndLogin,
       logout,
       clearError,
       setUser: handleSetUser,

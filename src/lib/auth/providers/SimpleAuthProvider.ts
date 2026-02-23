@@ -18,8 +18,18 @@ export class SimpleAuthProvider {
         user = await createUser(name, email, team);
       }
 
-      saveUser(user);
-      return { success: true, user };
+      // Send magic link email — user must verify before they're logged in
+      const response = await fetch('/api/auth/send-magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, email: user.email, name: user.name }),
+      });
+
+      if (!response.ok) {
+        console.error('Magic link email failed to send');
+      }
+
+      return { success: true, pendingVerification: true };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
     }

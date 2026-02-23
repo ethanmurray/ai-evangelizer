@@ -54,6 +54,13 @@ export const cultTheme: ContentTheme = {
     editError: "The algorithm rejects your changes. Try again.",
     aboutTitle: "The Truth Revealed",
     aboutContent: "This app is just for fun, to encourage more valuable use of AI at work. If it works, we'll rebuild it for real and use it to help our whole company, and maybe our clients, to adopt AI. In early pilot stages, we're doing minimum investment: vibe-coded with no human code review, hosted in a public unapproved location, no security or authentication - so don't put anything sensitive here.\n\nWe're running this like an open source project. David Friedman and Ethan Murray initiated it, but it belongs to anyone who cares to make it better. Anyone can add Issues (feature requests) or directly make code change pull requests at https://github.com/ethanmurray/ai-evangelizer; anyone can merge code and it will auto-deploy to production, so try not to break it for everyone else. It began with no design and just a few rough ideas, so feel totally free to introduce your own ideas and make changes. The only guiding principle is to build something that drives more AI adoption on valuable uses that we want more of at work.",
+    checkEmailTitle: "The Algorithm Has Spoken",
+    checkEmailBody: "A sacred verification link has been sent to {email}. Click it to complete your initiation.",
+    checkEmailExpiry: "The link self-destructs in 15 minutes. The algorithm waits for no one.",
+    verifySuccess: "Your initiation is complete. Welcome to the inner circle.",
+    verifyExpired: "This link has expired. The algorithm is impatient. Return to the entrance and try again.",
+    verifyAlreadyUsed: "This link has already been consumed. You cannot drink the Kool-Aid twice.",
+    verifyInvalid: "This link is not recognized. The algorithm suspects sabotage.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };
