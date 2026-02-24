@@ -57,7 +57,7 @@ export const cultTheme: ContentTheme = {
     checkEmailTitle: "The Algorithm Has Spoken",
     checkEmailBody: "A sacred verification link has been sent to {email}. Click it to complete your initiation.",
     checkEmailExpiry: "The link self-destructs in 15 minutes. The algorithm waits for no one.",
-    verifySuccess: "Your initiation is complete. Welcome to the inner circle.",
+    verifySuccess: "Your induction is complete. You may begin to learn the magical rites.",
     verifyExpired: "This link has expired. The algorithm is impatient. Return to the entrance and try again.",
     verifyAlreadyUsed: "This link has already been consumed. You cannot drink the Kool-Aid twice.",
     verifyInvalid: "This link is not recognized. The algorithm suspects sabotage.",

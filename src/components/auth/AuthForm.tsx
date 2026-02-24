@@ -44,7 +44,9 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await login(email);
-    if (result.success) {
+    if (result.pendingVerification) {
+      setMode('check-email');
+    } else if (result.success) {
       onSuccess?.();
     } else if (result.error === 'STUB_ACCOUNT') {
       setStubInfo({ id: '', email });
