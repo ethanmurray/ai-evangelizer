@@ -1,6 +1,6 @@
 import { AuthResult, User } from '../types/auth';
 import { findUserByEmail, createUser, convertStubUser } from '../utils/database';
-import { clearStoredUser, getStoredUser } from '../utils/storage';
+import { clearStoredUser, getStoredUser, saveUser } from '../utils/storage';
 
 export class SimpleAuthProvider {
   async register(name: string, email: string, team: string): Promise<AuthResult> {
@@ -18,18 +18,10 @@ export class SimpleAuthProvider {
         user = await createUser(name, email, team);
       }
 
-      // Send magic link email — user must verify before they're logged in
-      const response = await fetch('/api/auth/send-magic-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, email: user.email, name: user.name }),
-      });
-
-      if (!response.ok) {
-        console.error('Magic link email failed to send');
-      }
-
-      return { success: true, pendingVerification: true };
+      // TODO: Re-enable magic link verification once email delivery works
+      // For now, log the user in directly
+      saveUser(user);
+      return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
     }
@@ -46,18 +38,10 @@ export class SimpleAuthProvider {
         return { success: false, error: 'STUB_ACCOUNT' };
       }
 
-      // Send magic link email instead of auto-logging in
-      const response = await fetch('/api/auth/send-magic-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, email: user.email, name: user.name }),
-      });
-
-      if (!response.ok) {
-        console.error('Magic link email failed to send');
-      }
-
-      return { success: true, pendingVerification: true };
+      // TODO: Re-enable magic link verification once email delivery works
+      // For now, log the user in directly
+      saveUser(user);
+      return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Login failed' };
     }
