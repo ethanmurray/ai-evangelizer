@@ -89,13 +89,13 @@ export default function LeaderboardPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Name</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Team</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Rank</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Completed</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Points</th>
                 </tr>
               </thead>
               <tbody>
                 {entries.map((entry, i) => {
                   const isCurrentUser = entry.user_id === user?.id;
-                  const rank = getRank(entry.completed_count, t.ranks);
+                  const rank = getRank(entry.points || 0, t.ranks);
 
                   return (
                     <tr
@@ -120,7 +120,7 @@ export default function LeaderboardPage() {
                         {rank.name}
                       </td>
                       <td className="px-4 py-3 text-sm text-right font-bold" style={{ color: 'var(--color-text)' }}>
-                        {entry.completed_count}
+                        {entry.points || 0}
                       </td>
                     </tr>
                   );

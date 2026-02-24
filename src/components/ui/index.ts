@@ -11,6 +11,7 @@ export { ConfirmDeleteModal } from './ConfirmDeleteModal';
 export { EditUseCaseModal } from './EditUseCaseModal';
 export { ThemeToggle } from './ThemeToggle';
 export { AboutModal } from './AboutModal';
+export { PointsReferenceModal } from './PointsReferenceModal';
 
 export type { ButtonProps } from './Button';
 export type { InputProps } from './Input';

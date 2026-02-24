@@ -45,6 +45,17 @@ export interface ContentTheme {
     editError: string;
     aboutTitle: string;
     aboutContent: string;
+    checkEmailTitle: string;
+    checkEmailBody: string;
+    checkEmailExpiry: string;
+    verifySuccess: string;
+    verifyExpired: string;
+    verifyAlreadyUsed: string;
+    verifyInvalid: string;
+    teacherPrompt: string;
+    teacherPlaceholder: string;
+    teacherSkip: string;
+    teacherSubmit: string;
   };
   toneGuidance: string;
 }

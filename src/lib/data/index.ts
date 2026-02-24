@@ -18,3 +18,12 @@ export type { LeaderboardEntry, TeamRankingEntry } from './leaderboard';
 
 export { fetchUserShares, fetchUserReceivedShares } from './shares';
 export type { ShareRecord } from './shares';
+
+export {
+  fetchUserPoints,
+  fetchUserPointsBreakdown,
+  fetchLeaderboardByPoints,
+  fetchTopUsersByPoints,
+  fetchUserRankPosition
+} from './points';
+export type { UserPoints } from './points';
