@@ -27,17 +27,10 @@ export async function POST(req: NextRequest) {
 
     const displayName = learnerName || learnerEmail;
 
-    // Send email to the learner
-    await sendEmail({
-      to: learnerEmail,
-      subject: `You credited someone for teaching you "${useCaseTitle}"`,
-      html: `<p>You logged that <strong>${teacherEmail}</strong> taught you <strong>${useCaseTitle}</strong>.</p>
-<p>Keep learning and sharing!</p>`,
-    });
-
-    // Send email to the teacher
+    // Send email to the teacher, cc the learner
     await sendEmail({
       to: teacherEmail,
+      cc: learnerEmail,
       subject: `${displayName} says you taught them "${useCaseTitle}"`,
       html: `<p><strong>${displayName}</strong> logged that you taught them <strong>${useCaseTitle}</strong>.</p>
 <p>Thanks for spreading the knowledge!</p>`,
