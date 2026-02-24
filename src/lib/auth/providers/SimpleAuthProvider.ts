@@ -18,8 +18,7 @@ export class SimpleAuthProvider {
         user = await createUser(name, email, team);
       }
 
-      await this.sendMagicLink(user);
-      return { success: true, pendingVerification: true };
+      return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
     }
@@ -36,26 +35,9 @@ export class SimpleAuthProvider {
         return { success: false, error: 'STUB_ACCOUNT' };
       }
 
-      await this.sendMagicLink(user);
-      return { success: true, pendingVerification: true };
+      return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Login failed' };
-    }
-  }
-
-  private async sendMagicLink(user: User): Promise<void> {
-    const response = await fetch('/api/auth/send-magic-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: user.id,
-        email: user.email,
-        name: user.name,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to send verification email');
     }
   }
 

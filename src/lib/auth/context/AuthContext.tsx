@@ -55,9 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const result = await provider.register(name, email, team);
       if (result.success && result.user) {
+        saveUser(result.user);
         setUser(result.user);
-      } else if (result.success && result.pendingVerification) {
-        // Magic link sent — don't set user, form will show check-email UI
       } else if (result.error) {
         setError(result.error);
       }
@@ -73,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const result = await provider.login(email);
       if (result.success && result.user) {
+        saveUser(result.user);
         setUser(result.user);
       } else if (result.error && result.error !== 'STUB_ACCOUNT') {
         setError(result.error);

@@ -23,7 +23,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
   const [team, setTeam] = useState('');
   const [teams, setTeams] = useState<string[]>([]);
   const [showTeamDropdown, setShowTeamDropdown] = useState(false);
-  const [mode, setMode] = useState<'email' | 'register' | 'stub-convert' | 'check-email'>('email');
+  const [mode, setMode] = useState<'email' | 'register' | 'stub-convert'>('email');
   const [stubInfo, setStubInfo] = useState<{ id: string; email: string } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -44,9 +44,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await login(email);
-    if (result.pendingVerification) {
-      setMode('check-email');
-    } else if (result.success) {
+    if (result.success) {
       onSuccess?.();
     } else if (result.error === 'STUB_ACCOUNT') {
       setStubInfo({ id: '', email });
@@ -68,9 +66,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await register(name, email, team);
-    if (result.pendingVerification) {
-      setMode('check-email');
-    } else if (result.success) {
+    if (result.success) {
       onSuccess?.();
     }
   }, [name, email, team, register, onSuccess]);
@@ -86,9 +82,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await register(name, email, team);
-    if (result.pendingVerification) {
-      setMode('check-email');
-    } else if (result.success) {
+    if (result.success) {
       onSuccess?.();
     }
   }, [name, email, team, register, onSuccess]);
@@ -112,13 +106,11 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
           {mode === 'email' && t.concepts.login}
           {mode === 'register' && `${t.concepts.login}`}
           {mode === 'stub-convert' && 'Complete Your Account'}
-          {mode === 'check-email' && t.microcopy.checkEmailTitle}
         </h2>
         <p className="mt-2 text-sm" style={{ color: 'var(--color-text-muted)' }}>
           {mode === 'email' && t.microcopy.loginSubtext}
           {mode === 'register' && t.tagline}
           {mode === 'stub-convert' && t.microcopy.stubAccountWelcome.replace('{count}', 'some')}
-          {mode === 'check-email' && t.microcopy.checkEmailBody.replace('{email}', email)}
         </p>
       </div>
 
@@ -231,18 +223,6 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
         </form>
       )}
 
-      {/* Check Email */}
-      {mode === 'check-email' && (
-        <div className="text-center space-y-4">
-          <div className="text-4xl">&#x2709;&#xFE0F;</div>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}>
-            {t.microcopy.checkEmailExpiry}
-          </p>
-          <Button type="button" variant="ghost" onClick={resetForm} className="w-full">
-            Use Different Email
-          </Button>
-        </div>
-      )}
     </div>
   );
 }
