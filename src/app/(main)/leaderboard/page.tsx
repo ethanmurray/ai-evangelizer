@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
@@ -128,7 +129,9 @@ export default function LeaderboardPage() {
                         {i + 1}
                       </td>
                       <td className="px-4 py-3 text-sm font-medium" style={{ color: isCurrentUser ? 'var(--color-secondary)' : 'var(--color-text)' }}>
-                        {entry.name}
+                        <Link href={`/profile/${entry.user_id}`} className="hover:underline">
+                          {entry.name}
+                        </Link>
                         {isCurrentUser && <span className="ml-2 text-xs">(you)</span>}
                       </td>
                       <td className="px-4 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
