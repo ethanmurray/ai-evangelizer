@@ -1,31 +1,17 @@
 import { NextResponse } from 'next/server';
-import { randomBytes } from 'crypto';
-import { supabaseServer } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
-    const { shareId, sharerName, recipientEmail, useCaseTitle } = await request.json();
+    const { confirmationToken, sharerName, recipientEmail, useCaseTitle } = await request.json();
 
-    if (!shareId || !recipientEmail || !useCaseTitle) {
+    if (!confirmationToken || !recipientEmail || !useCaseTitle) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const token = randomBytes(32).toString('hex');
-
-    const { error: updateError } = await supabaseServer
-      .from('shares')
-      .update({ confirmation_token: token })
-      .eq('id', shareId);
-
-    if (updateError) {
-      console.error('Failed to set confirmation token:', updateError);
-      return NextResponse.json({ error: 'Failed to prepare confirmation' }, { status: 500 });
-    }
-
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const confirmUrl = `${baseUrl}/share/respond?token=${token}&action=confirm`;
-    const denyUrl = `${baseUrl}/share/respond?token=${token}&action=deny`;
+    const confirmUrl = `${baseUrl}/share/respond?token=${confirmationToken}&action=confirm`;
+    const denyUrl = `${baseUrl}/share/respond?token=${confirmationToken}&action=deny`;
 
     const displayName = sharerName || 'A colleague';
 

@@ -57,25 +57,39 @@ export async function markDone(userId: string, useCaseId: string): Promise<void>
   }
 }
 
+function generateToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+export interface ShareResult {
+  id: string;
+  confirmationToken: string;
+}
+
 export async function shareWithRecipient(
   sharerId: string,
   recipientEmail: string,
   useCaseId: string,
   sharerTeam: string
-): Promise<string> {
+): Promise<ShareResult> {
   // Find or create recipient
   let recipient = await findUserByEmail(recipientEmail);
   if (!recipient) {
     recipient = await createStubUser(recipientEmail, sharerTeam);
   }
 
-  // Create share record
+  const confirmationToken = generateToken();
+
+  // Create share record with token in one atomic insert
   const { data: share, error } = await supabase
     .from('shares')
     .insert({
       sharer_id: sharerId,
       recipient_id: recipient.id,
       use_case_id: useCaseId,
+      confirmation_token: confirmationToken,
     })
     .select('id')
     .single();
@@ -102,7 +116,7 @@ export async function shareWithRecipient(
       });
   }
 
-  return share.id;
+  return { id: share.id, confirmationToken };
 }
 
 export interface UserProgressItem {

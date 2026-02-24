@@ -88,13 +88,13 @@ export default function UseCaseDetailPage() {
     setShareSuccess('');
 
     try {
-      const shareId1 = await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
+      const share1 = await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
       // Fire-and-forget email notification
       fetch('/api/send-share-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          shareId: shareId1,
+          confirmationToken: share1.confirmationToken,
           sharerName: user.name || user.email,
           recipientEmail: recipient1.trim(),
           useCaseTitle: useCase?.title,
@@ -102,12 +102,12 @@ export default function UseCaseDetailPage() {
       }).catch((err) => console.error('Share email failed:', err));
 
       if (recipient2.trim()) {
-        const shareId2 = await shareWithRecipient(user.id, recipient2.trim(), id, user.team);
+        const share2 = await shareWithRecipient(user.id, recipient2.trim(), id, user.team);
         fetch('/api/send-share-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            shareId: shareId2,
+            confirmationToken: share2.confirmationToken,
             sharerName: user.name || user.email,
             recipientEmail: recipient2.trim(),
             useCaseTitle: useCase?.title,
