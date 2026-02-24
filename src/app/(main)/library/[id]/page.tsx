@@ -89,12 +89,12 @@ export default function UseCaseDetailPage() {
 
     try {
       const share1 = await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
-      // Fire-and-forget email notification
+      // Fire-and-forget email notification — pass shareId, server reads token from DB
       fetch('/api/send-share-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          confirmationToken: share1.confirmationToken,
+          shareId: share1.id,
           sharerName: user.name || user.email,
           recipientEmail: recipient1.trim(),
           useCaseTitle: useCase?.title,
@@ -107,7 +107,7 @@ export default function UseCaseDetailPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            confirmationToken: share2.confirmationToken,
+            shareId: share2.id,
             sharerName: user.name || user.email,
             recipientEmail: recipient2.trim(),
             useCaseTitle: useCase?.title,

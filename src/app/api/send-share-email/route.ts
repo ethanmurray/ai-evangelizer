@@ -1,13 +1,34 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
+import { supabaseServer } from '@/lib/supabase-server';
 
 export async function POST(request: Request) {
   try {
-    const { confirmationToken, sharerName, recipientEmail, useCaseTitle } = await request.json();
+    const { shareId, sharerName, recipientEmail, useCaseTitle } = await request.json();
 
-    if (!confirmationToken || !recipientEmail || !useCaseTitle) {
+    if (!shareId || !recipientEmail || !useCaseTitle) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    // TODO: We reduced the "security" of this process by looking up the token
+    // server-side by share ID instead of having the client pass the token directly.
+    // The original approach (client generates token, includes it in the insert, passes
+    // it to this endpoint) was flaking out on OW corporate email — the token in the
+    // email consistently didn't match the token in the DB, and we didn't have time to
+    // further troubleshoot. This works but means anyone with a share ID can trigger an
+    // email. Someday somebody should fix the root cause and restore the original flow.
+    const { data: share, error: lookupError } = await supabaseServer
+      .from('shares')
+      .select('confirmation_token')
+      .eq('id', shareId)
+      .single();
+
+    if (lookupError || !share?.confirmation_token) {
+      console.error('[send-share-email] token lookup failed:', { shareId, error: lookupError?.message });
+      return NextResponse.json({ error: 'Share not found or missing token' }, { status: 404 });
+    }
+
+    const confirmationToken = share.confirmation_token;
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const confirmUrl = `${baseUrl}/share/respond?token=${confirmationToken}&action=confirm`;
