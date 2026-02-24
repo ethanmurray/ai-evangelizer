@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
+import { updateUserTeam } from '@/lib/auth/utils/database';
+import { listTeams } from '@/lib/auth/utils/database';
 import { useTheme } from '@/lib/theme';
 import { useProgress } from '@/hooks/useProgress';
 import { useUseCases } from '@/hooks/useUseCases';
@@ -14,12 +16,24 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { fetchUserShares, fetchUserReceivedShares, ShareRecord } from '@/lib/data/shares';
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const { t } = useTheme();
   const { progress, completedCount } = useProgress(user?.id);
   const { useCases } = useUseCases();
   const [shares, setShares] = useState<ShareRecord[]>([]);
   const [receivedShares, setReceivedShares] = useState<ShareRecord[]>([]);
+
+  // Team editing state
+  const [editingTeam, setEditingTeam] = useState(false);
+  const [teamInput, setTeamInput] = useState('');
+  const [teams, setTeams] = useState<string[]>([]);
+  const [showTeamDropdown, setShowTeamDropdown] = useState(false);
+  const [teamSaving, setTeamSaving] = useState(false);
+  const [teamError, setTeamError] = useState<string | null>(null);
+
+  const filteredTeams = teams.filter(
+    (t) => t.toLowerCase().includes(teamInput.toLowerCase()) && t !== teamInput
+  );
 
   useEffect(() => {
     if (user) {
@@ -27,6 +41,48 @@ export default function ProfilePage() {
       fetchUserReceivedShares(user.id).then(setReceivedShares);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (editingTeam) {
+      listTeams().then(setTeams);
+    }
+  }, [editingTeam]);
+
+  const startEditingTeam = () => {
+    setTeamInput(user?.team || '');
+    setTeamError(null);
+    setEditingTeam(true);
+  };
+
+  const cancelEditingTeam = () => {
+    setEditingTeam(false);
+    setTeamError(null);
+  };
+
+  const saveTeam = async () => {
+    const trimmed = teamInput.trim();
+    if (!trimmed) {
+      setTeamError('Team name is required');
+      return;
+    }
+    if (trimmed === user?.team) {
+      setEditingTeam(false);
+      return;
+    }
+    if (!user) return;
+
+    setTeamSaving(true);
+    setTeamError(null);
+    try {
+      const updated = await updateUserTeam(user.id, trimmed);
+      setUser(updated);
+      setEditingTeam(false);
+    } catch {
+      setTeamError('Failed to update team');
+    } finally {
+      setTeamSaving(false);
+    }
+  };
 
   const useCaseMap = new Map(useCases.map((uc) => [uc.id, uc]));
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
@@ -59,9 +115,80 @@ export default function ProfilePage() {
             <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
               {user?.email}
             </p>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Team: {user?.team}
-            </p>
+            {editingTeam ? (
+              <div className="mt-1">
+                <div className="relative">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="block w-48 rounded-lg border px-2 py-1 text-sm"
+                      style={{
+                        background: 'var(--color-bg-surface)',
+                        color: 'var(--color-text)',
+                        borderColor: teamError ? 'var(--color-error)' : 'var(--color-border)',
+                      }}
+                      placeholder="Type or select a team"
+                      value={teamInput}
+                      onChange={(e) => {
+                        setTeamInput(e.target.value);
+                        setShowTeamDropdown(true);
+                      }}
+                      onFocus={() => setShowTeamDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowTeamDropdown(false), 200)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') { e.preventDefault(); saveTeam(); }
+                        if (e.key === 'Escape') cancelEditingTeam();
+                      }}
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={saveTeam} isLoading={teamSaving} loadingText="...">
+                      {t.concepts.save}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={cancelEditingTeam}>
+                      {t.concepts.cancel}
+                    </Button>
+                  </div>
+                  {showTeamDropdown && filteredTeams.length > 0 && (
+                    <div
+                      className="absolute z-10 w-48 mt-1 rounded-lg border shadow-lg max-h-40 overflow-y-auto"
+                      style={{
+                        background: 'var(--color-bg-elevated)',
+                        borderColor: 'var(--color-border)',
+                      }}
+                    >
+                      {filteredTeams.map((team) => (
+                        <button
+                          key={team}
+                          type="button"
+                          className="block w-full text-left px-3 py-2 text-sm hover:opacity-80"
+                          style={{ color: 'var(--color-text)' }}
+                          onMouseDown={() => {
+                            setTeamInput(team);
+                            setShowTeamDropdown(false);
+                          }}
+                        >
+                          {team}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {teamError && (
+                  <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{teamError}</p>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                Team: {user?.team}
+                <button
+                  className="ml-2 text-xs underline cursor-pointer"
+                  style={{ color: 'var(--color-secondary)' }}
+                  onClick={startEditingTeam}
+                >
+                  {t.concepts.edit}
+                </button>
+              </p>
+            )}
           </div>
         </div>
       </Card>
