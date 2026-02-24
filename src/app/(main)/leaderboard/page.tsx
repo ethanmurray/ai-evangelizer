@@ -6,6 +6,7 @@ import { useTheme } from '@/lib/theme';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import { Card } from '@/components/ui/Card';
 import { getRank } from '@/lib/rank';
+import { deleteUser } from '@/lib/data/users';
 
 type ViewMode = 'individuals' | 'teams';
 
@@ -14,7 +15,21 @@ export default function LeaderboardPage() {
   const { t } = useTheme();
   const [viewMode, setViewMode] = useState<ViewMode>('individuals');
   const [teamFilter, setTeamFilter] = useState<string>('');
-  const { entries, teams, teamRankings, isLoading } = useLeaderboard(teamFilter || undefined);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { entries, teams, teamRankings, isLoading, refresh } = useLeaderboard(teamFilter || undefined);
+
+  const handleDelete = async (userId: string, name: string) => {
+    if (!window.confirm(`Delete user "${name}" and all their data? This cannot be undone.`)) return;
+    setDeletingId(userId);
+    try {
+      await deleteUser(userId);
+      await refresh();
+    } catch (err: any) {
+      alert(`Failed to delete user: ${err.message}`);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
@@ -90,6 +105,9 @@ export default function LeaderboardPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Team</th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Rank</th>
                   <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Points</th>
+                  {user?.isAdmin && (
+                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}></th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -122,6 +140,20 @@ export default function LeaderboardPage() {
                       <td className="px-4 py-3 text-sm text-right font-bold" style={{ color: 'var(--color-text)' }}>
                         {entry.points || 0}
                       </td>
+                      {user?.isAdmin && (
+                        <td className="px-4 py-3 text-sm text-right">
+                          {!isCurrentUser && (
+                            <button
+                              onClick={() => handleDelete(entry.user_id, entry.name)}
+                              disabled={deletingId === entry.user_id}
+                              className="text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 disabled:opacity-50"
+                              style={{ color: 'var(--color-danger, #e74c3c)', border: '1px solid var(--color-danger, #e74c3c)' }}
+                            >
+                              {deletingId === entry.user_id ? '...' : 'Delete'}
+                            </button>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   );
                 })}

@@ -4,6 +4,7 @@ export interface User {
   email: string;
   team: string;
   isStub: boolean;
+  isAdmin: boolean;
   createdAt: Date;
   themePreference: 'cult' | 'corporate' | null;
 }
@@ -21,6 +22,7 @@ export interface UserRow {
   email: string;
   team: string;
   is_stub: boolean;
+  is_admin: boolean;
   created_at: string;
   theme_preference: string | null;
 }
