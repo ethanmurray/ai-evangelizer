@@ -65,6 +65,9 @@ export const corporateTheme: ContentTheme = {
     teacherPlaceholder: "their@email.com",
     teacherSkip: "Skip",
     teacherSubmit: "Give credit",
+    shareConfirmed: "Thanks for confirming! The share has been validated.",
+    shareDenied: "Share declined. The sharer's record has been updated.",
+    shareInvalidToken: "This link is invalid or has already been used.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

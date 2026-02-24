@@ -56,6 +56,9 @@ export interface ContentTheme {
     teacherPlaceholder: string;
     teacherSkip: string;
     teacherSubmit: string;
+    shareConfirmed: string;
+    shareDenied: string;
+    shareInvalidToken: string;
   };
   toneGuidance: string;
 }
