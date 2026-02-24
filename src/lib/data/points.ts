@@ -6,11 +6,13 @@ export interface UserPoints {
   activity_points: number;
   submission_points: number;
   viral_bonus_points: number;
+  teaching_points: number;
   total_points: number;
   learned_count: number;
   applied_count: number;
   shared_count: number;
   submitted_count: number;
+  teaching_count: number;
   viral_use_cases: string[];
 }
 
@@ -56,6 +58,7 @@ export async function fetchUserPointsBreakdown(userId: string): Promise<PointsBr
     applied: userPoints.applied_count * 3, // 3 points per applied
     shared: userPoints.shared_count * 6, // 6 points per shared
     submitted: userPoints.submission_points,
+    teaching: userPoints.teaching_points || 0,
     bonuses: userPoints.viral_bonus_points,
     total: userPoints.total_points,
     details: {
@@ -63,6 +66,7 @@ export async function fetchUserPointsBreakdown(userId: string): Promise<PointsBr
       appliedCount: userPoints.applied_count,
       sharedCount: userPoints.shared_count,
       submittedCount: userPoints.submitted_count,
+      teachingCount: userPoints.teaching_count || 0,
       viralUseCases: userPoints.viral_use_cases || []
     }
   };

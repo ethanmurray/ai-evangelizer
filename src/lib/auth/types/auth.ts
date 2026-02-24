@@ -12,6 +12,7 @@ export interface AuthResult {
   success: boolean;
   user?: User;
   error?: string;
+  pendingVerification?: boolean;
 }
 
 export interface UserRow {

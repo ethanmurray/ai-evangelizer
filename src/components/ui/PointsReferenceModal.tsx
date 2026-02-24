@@ -127,6 +127,18 @@ export function PointsReferenceModal({ isOpen, onClose }: PointsReferenceModalPr
 
             <div className="flex justify-between items-center p-3 rounded" style={{ background: 'var(--color-bg-surface)' }}>
               <div>
+                <div className="font-medium">Teach Someone</div>
+                <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                  When someone credits you for teaching them
+                </div>
+              </div>
+              <div className="font-bold" style={{ color: 'var(--color-primary)' }}>
+                +{POINTS_CONFIG.teaching} point
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center p-3 rounded" style={{ background: 'var(--color-bg-surface)' }}>
+              <div>
                 <div className="font-medium">Go Viral</div>
                 <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
                   When {POINTS_CONFIG.viralThreshold}+ people share your submission
@@ -175,6 +187,14 @@ export function PointsReferenceModal({ isOpen, onClose }: PointsReferenceModalPr
                       Submitted ({userPoints.details?.submittedCount || 0} {t.concepts.useCasePlural.toLowerCase()})
                     </span>
                     <span className="font-medium">{userPoints.submitted}</span>
+                  </div>
+                )}
+                {(userPoints.teaching || 0) > 0 && (
+                  <div className="flex justify-between py-1">
+                    <span style={{ color: 'var(--color-text-muted)' }}>
+                      Teaching ({userPoints.details?.teachingCount || 0} credits)
+                    </span>
+                    <span className="font-medium">{userPoints.teaching}</span>
                   </div>
                 )}
                 {userPoints.bonuses > 0 && (
