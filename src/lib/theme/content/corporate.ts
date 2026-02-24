@@ -61,6 +61,10 @@ export const corporateTheme: ContentTheme = {
     verifyExpired: "This verification link has expired. Please register again.",
     verifyAlreadyUsed: "This verification link has already been used. Try signing in.",
     verifyInvalid: "This verification link is invalid. Please register again.",
+    teacherPrompt: "Who taught you this skill?",
+    teacherPlaceholder: "their@email.com",
+    teacherSkip: "Skip",
+    teacherSubmit: "Give credit",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

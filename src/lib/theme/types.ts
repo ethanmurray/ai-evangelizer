@@ -52,6 +52,10 @@ export interface ContentTheme {
     verifyExpired: string;
     verifyAlreadyUsed: string;
     verifyInvalid: string;
+    teacherPrompt: string;
+    teacherPlaceholder: string;
+    teacherSkip: string;
+    teacherSubmit: string;
   };
   toneGuidance: string;
 }

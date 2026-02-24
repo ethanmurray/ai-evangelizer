@@ -39,6 +39,9 @@ export default function UseCaseDetailPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editError, setEditError] = useState('');
   const [editSuccess, setEditSuccess] = useState('');
+  const [showTeacherPrompt, setShowTeacherPrompt] = useState(false);
+  const [teacherEmail, setTeacherEmail] = useState('');
+  const [sendingAttribution, setSendingAttribution] = useState(false);
 
   // Check if user has upvoted
   React.useEffect(() => {
@@ -47,11 +50,28 @@ export default function UseCaseDetailPage() {
     }
   }, [user, id]);
 
-  const handleMarkSeen = useCallback(async () => {
+  const handleMarkSeen = useCallback(async (attribution?: { teacherEmail: string }) => {
     if (!user) return;
     await markSeen(user.id, id);
+    if (attribution?.teacherEmail) {
+      // Fire-and-forget email notification + attribution record
+      fetch('/api/send-learned-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          learnerId: user.id,
+          learnerEmail: user.email,
+          learnerName: user.name || user.email,
+          teacherEmail: attribution.teacherEmail,
+          useCaseTitle: useCase?.title,
+          useCaseId: id,
+        }),
+      }).catch((err) => console.error('Attribution email failed:', err));
+    }
+    setShowTeacherPrompt(false);
+    setTeacherEmail('');
     refresh();
-  }, [user, id, refresh]);
+  }, [user, id, useCase?.title, refresh]);
 
   const handleMarkDone = useCallback(async () => {
     if (!user) return;
@@ -221,10 +241,51 @@ export default function UseCaseDetailPage() {
 
         <div className="mt-6 space-y-4">
           {/* Step 1: See */}
-          {canMarkSeen && (
-            <Button onClick={handleMarkSeen} className="w-full">
+          {canMarkSeen && !showTeacherPrompt && (
+            <Button onClick={() => setShowTeacherPrompt(true)} className="w-full">
               Mark as {t.concepts.step1}
             </Button>
+          )}
+
+          {/* Teacher attribution prompt */}
+          {canMarkSeen && showTeacherPrompt && (
+            <div
+              className="rounded-lg border p-4 space-y-3"
+              style={{
+                background: 'var(--color-bg-elevated)',
+                borderColor: 'var(--color-border)',
+              }}
+            >
+              <p className="text-sm font-medium">{t.microcopy.teacherPrompt}</p>
+              <Input
+                type="email"
+                placeholder={t.microcopy.teacherPlaceholder}
+                value={teacherEmail}
+                onChange={(e) => setTeacherEmail(e.target.value)}
+              />
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  className="flex-1"
+                  onClick={() => handleMarkSeen()}
+                >
+                  {t.microcopy.teacherSkip}
+                </Button>
+                <Button
+                  className="flex-1"
+                  disabled={!teacherEmail.trim() || sendingAttribution}
+                  isLoading={sendingAttribution}
+                  loadingText="Sending..."
+                  onClick={async () => {
+                    setSendingAttribution(true);
+                    await handleMarkSeen({ teacherEmail: teacherEmail.trim() });
+                    setSendingAttribution(false);
+                  }}
+                >
+                  {t.microcopy.teacherSubmit}
+                </Button>
+              </div>
+            </div>
           )}
 
           {/* Step 2: Do */}

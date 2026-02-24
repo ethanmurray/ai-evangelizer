@@ -5,6 +5,7 @@ export interface PointsConfig {
   applied: number;
   shared: number;
   submitted: number;
+  teaching: number;
   viralBonus: number;
   viralThreshold: number;
 }
@@ -14,6 +15,7 @@ export const POINTS_CONFIG: PointsConfig = {
   applied: 3,       // Additional points for marking as applied (done_at)
   shared: 6,        // Additional points for sharing
   submitted: 5,     // Points for submitting a new use case
+  teaching: 1,      // Points when someone credits you for teaching them
   viralBonus: 15,   // Bonus points when 5+ people share your submission
   viralThreshold: 5 // Number of unique sharers needed for viral bonus
 };
@@ -23,6 +25,7 @@ export interface PointsBreakdown {
   applied: number;      // Points from applying use cases
   shared: number;       // Points from sharing use cases
   submitted: number;    // Points from submitting use cases
+  teaching: number;     // Points from being credited as a teacher
   bonuses: number;      // Viral bonus points
   total: number;        // Total points
   details?: {
@@ -30,6 +33,7 @@ export interface PointsBreakdown {
     appliedCount: number;
     sharedCount: number;
     submittedCount: number;
+    teachingCount: number;
     viralUseCases: string[];
   };
 }
@@ -127,6 +131,7 @@ export function calculatePointsBreakdown(
     applied,
     shared,
     submitted,
+    teaching: 0, // Populated from database
     bonuses,
     total,
     details: {
@@ -134,6 +139,7 @@ export function calculatePointsBreakdown(
       appliedCount,
       sharedCount,
       submittedCount,
+      teachingCount: 0,
       viralUseCases: [] // Will be populated from database
     }
   };
@@ -155,6 +161,7 @@ export function getPointsDescription(): string[] {
     `Apply it: +${POINTS_CONFIG.applied} points`,
     `Share with others: +${POINTS_CONFIG.shared} points`,
     `Submit a new use case: +${POINTS_CONFIG.submitted} points`,
+    `When someone credits you for teaching them: +${POINTS_CONFIG.teaching} point`,
     `When ${POINTS_CONFIG.viralThreshold}+ people share your submission: +${POINTS_CONFIG.viralBonus} bonus points`
   ];
 }
