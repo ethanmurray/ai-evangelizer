@@ -88,9 +88,31 @@ export default function UseCaseDetailPage() {
     setShareSuccess('');
 
     try {
-      await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
+      const shareId1 = await shareWithRecipient(user.id, recipient1.trim(), id, user.team);
+      // Fire-and-forget email notification
+      fetch('/api/send-share-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shareId: shareId1,
+          sharerName: user.name || user.email,
+          recipientEmail: recipient1.trim(),
+          useCaseTitle: useCase?.title,
+        }),
+      }).catch((err) => console.error('Share email failed:', err));
+
       if (recipient2.trim()) {
-        await shareWithRecipient(user.id, recipient2.trim(), id, user.team);
+        const shareId2 = await shareWithRecipient(user.id, recipient2.trim(), id, user.team);
+        fetch('/api/send-share-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            shareId: shareId2,
+            sharerName: user.name || user.email,
+            recipientEmail: recipient2.trim(),
+            useCaseTitle: useCase?.title,
+          }),
+        }).catch((err) => console.error('Share email failed:', err));
       }
       setShareSuccess(t.microcopy.recruitSuccess);
       setRecipient1('');

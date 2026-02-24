@@ -65,6 +65,9 @@ export const cultTheme: ContentTheme = {
     teacherPlaceholder: "their@email.com",
     teacherSkip: "I found it myself",
     teacherSubmit: "Credit the evangelist",
+    shareConfirmed: "You have accepted the sacred knowledge. The cult grows stronger.",
+    shareDenied: "You have rejected the offering. The sharer's record has been expunged.",
+    shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };

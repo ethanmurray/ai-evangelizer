@@ -62,7 +62,7 @@ export async function shareWithRecipient(
   recipientEmail: string,
   useCaseId: string,
   sharerTeam: string
-): Promise<void> {
+): Promise<string> {
   // Find or create recipient
   let recipient = await findUserByEmail(recipientEmail);
   if (!recipient) {
@@ -70,13 +70,19 @@ export async function shareWithRecipient(
   }
 
   // Create share record
-  await supabase
+  const { data: share, error } = await supabase
     .from('shares')
     .insert({
       sharer_id: sharerId,
       recipient_id: recipient.id,
       use_case_id: useCaseId,
-    });
+    })
+    .select('id')
+    .single();
+
+  if (error || !share) {
+    throw new Error(error?.message || 'Failed to create share');
+  }
 
   // Auto-mark recipient's progress as seen
   const { data: existingProgress } = await supabase
@@ -95,6 +101,8 @@ export async function shareWithRecipient(
         seen_at: new Date().toISOString(),
       });
   }
+
+  return share.id;
 }
 
 export interface UserProgressItem {
