@@ -10,7 +10,7 @@ interface SendEmailParams {
 }
 
 export async function sendEmail({ to, cc, subject, html }: SendEmailParams) {
-  const from = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+  const from = process.env.EMAIL_FROM || 'noreply@murraymusics.com';
   const override = process.env.DEV_EMAIL_OVERRIDE;
 
   const actualTo = override || to;
