@@ -53,6 +53,7 @@ export async function POST(request: Request) {
         email: user.email,
         team: user.team,
         isStub: user.is_stub,
+        isAdmin: user.is_admin ?? false,
         createdAt: user.created_at,
         themePreference: user.theme_preference || null,
       },

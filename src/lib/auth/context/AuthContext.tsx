@@ -107,6 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: data.user.email,
         team: data.user.team,
         isStub: data.user.isStub,
+        isAdmin: data.user.isAdmin ?? false,
         createdAt: new Date(data.user.createdAt),
         themePreference: data.user.themePreference,
       };

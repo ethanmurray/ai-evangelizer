@@ -8,6 +8,7 @@ function userFromRow(row: UserRow): User {
     email: row.email,
     team: row.team,
     isStub: row.is_stub,
+    isAdmin: row.is_admin ?? false,
     createdAt: new Date(row.created_at),
     themePreference: (row.theme_preference as 'cult' | 'corporate') || null,
   };

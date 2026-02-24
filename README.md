@@ -31,6 +31,18 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Admin Role
+
+Admins can delete users directly from the leaderboard page. There is no admin UI for role management — it's assigned via SQL in Supabase.
+
+To grant admin access, run in the Supabase SQL editor:
+
+```sql
+UPDATE users SET is_admin = true WHERE email = 'someone@example.com';
+```
+
+The user must log out and back in to pick up the change.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
