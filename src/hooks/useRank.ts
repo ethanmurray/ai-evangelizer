@@ -4,17 +4,18 @@ import { useMemo } from 'react';
 import { useTheme } from '@/lib/theme';
 import { getRank, getNextRank } from '@/lib/rank';
 
-export function useRank(completedCount: number) {
+export function useRank(points: number) {
   const { t } = useTheme();
 
   return useMemo(() => {
-    const current = getRank(completedCount, t.ranks);
-    const next = getNextRank(completedCount, t.ranks);
+    const current = getRank(points, t.ranks);
+    const next = getNextRank(points, t.ranks);
 
     return {
       current,
       next,
-      completedCount,
+      points,
+      completedCount: Math.floor(points / 10), // For backwards compatibility
     };
-  }, [completedCount, t.ranks]);
+  }, [points, t.ranks]);
 }

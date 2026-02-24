@@ -27,11 +27,11 @@ export const corporateTheme: ContentTheme = {
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
-    { min: 1, name: "Learner", desc: "Building foundations" },
-    { min: 3, name: "Practitioner", desc: "Applying skills daily" },
-    { min: 6, name: "Advocate", desc: "Sharing knowledge actively" },
-    { min: 11, name: "Champion", desc: "Driving adoption across teams" },
-    { min: 21, name: "Expert", desc: "Leading the way" },
+    { min: 10, name: "Learner", desc: "Building foundations" },
+    { min: 30, name: "Practitioner", desc: "Applying skills daily" },
+    { min: 60, name: "Advocate", desc: "Sharing knowledge actively" },
+    { min: 110, name: "Champion", desc: "Driving adoption across teams" },
+    { min: 210, name: "Expert", desc: "Leading the way" },
   ],
   microcopy: {
     emptyDashboard: "You haven't started any skills yet. Browse the library to begin.",

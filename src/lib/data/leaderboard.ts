@@ -4,44 +4,37 @@ export interface LeaderboardEntry {
   user_id: string;
   name: string;
   team: string;
-  completed_count: number;
+  points: number;
+  completed_count?: number; // Keep for backwards compatibility
 }
 
 export async function fetchLeaderboard(teamFilter?: string): Promise<LeaderboardEntry[]> {
-  // Get all completed counts
-  const { data: counts } = await supabase
-    .from('user_completed_counts')
-    .select('user_id, completed_count')
-    .order('completed_count', { ascending: false });
-
-  if (!counts || counts.length === 0) return [];
-
-  // Get user info for those users
-  const userIds = counts.map((c: any) => c.user_id);
-  let userQuery = supabase
-    .from('users')
-    .select('id, name, team')
-    .in('id', userIds)
-    .eq('is_stub', false);
+  // Get all user points
+  let query = supabase
+    .from('user_total_points')
+    .select('user_id, name, team, total_points')
+    .order('total_points', { ascending: false });
 
   if (teamFilter) {
-    userQuery = userQuery.eq('team', teamFilter);
+    query = query.eq('team', teamFilter);
   }
 
-  const { data: users } = await userQuery;
-  if (!users) return [];
+  const { data, error } = await query;
 
-  const userMap = new Map(users.map((u: any) => [u.id, u]));
-  const countMap = new Map(counts.map((c: any) => [c.user_id, c.completed_count]));
+  if (error) {
+    console.error('Error fetching leaderboard:', error);
+    return [];
+  }
 
-  return users
-    .map((u: any) => ({
-      user_id: u.id,
-      name: u.name,
-      team: u.team,
-      completed_count: countMap.get(u.id) || 0,
-    }))
-    .sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.completed_count - a.completed_count);
+  if (!data || data.length === 0) return [];
+
+  return data.map((u: any) => ({
+    user_id: u.user_id,
+    name: u.name,
+    team: u.team,
+    points: u.total_points,
+    completed_count: Math.floor(u.total_points / 10), // Approximate for backwards compatibility
+  }));
 }
 
 export async function fetchTeams(): Promise<string[]> {
