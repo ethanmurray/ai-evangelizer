@@ -71,8 +71,7 @@ async function registerUser(page: Page, email: string, name: string, team: strin
   await page.getByLabel(/Your Name/i).click();
 
   await page.getByRole('button', { name: /Create Account/i }).click();
-
-  await completeMagicLinkVerification(page, email);
+  await page.waitForURL('**/dashboard', { timeout: 15000 });
 }
 
 test.describe('Login Page', () => {
@@ -160,8 +159,8 @@ test.describe('Returning User Login', () => {
     await page.getByLabel(/Email/i).fill(testEmail);
     await page.getByRole('button', { name: /Continue/i }).click();
 
-    // Magic link flow: check-email → verify → dashboard
-    await completeMagicLinkVerification(page, testEmail);
+    // Should go straight to dashboard (magic link bypassed)
+    await page.waitForURL('**/dashboard', { timeout: 15000 });
     expect(page.url()).toContain('/dashboard');
   });
 });
