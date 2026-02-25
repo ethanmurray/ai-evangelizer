@@ -31,10 +31,12 @@ export class SimpleAuthProvider {
         user = await createUser(name, email, team);
       }
 
-      // BYPASS: skip magic link email — corporate spam filters block it.
-      // To re-enable: replace this line with:
+      // BYPASS: log in directly without waiting for email verification.
+      // Send magic link email in background (fire-and-forget) for testing.
+      // To require email verification: remove the `return` below and uncomment:
       //   await sendMagicLink(user.id, email, name);
       //   return { success: true, pendingVerification: true };
+      sendMagicLink(user.id, email, name).catch(() => {});
       return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
@@ -52,10 +54,12 @@ export class SimpleAuthProvider {
         return { success: false, error: 'STUB_ACCOUNT' };
       }
 
-      // BYPASS: skip magic link email — corporate spam filters block it.
-      // To re-enable: replace this line with:
+      // BYPASS: log in directly without waiting for email verification.
+      // Send magic link email in background (fire-and-forget) for testing.
+      // To require email verification: remove the `return` below and uncomment:
       //   await sendMagicLink(user.id, email, user.name);
       //   return { success: true, pendingVerification: true };
+      sendMagicLink(user.id, email, user.name).catch(() => {});
       return { success: true, user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Login failed' };
