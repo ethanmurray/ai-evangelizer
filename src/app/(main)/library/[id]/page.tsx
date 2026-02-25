@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { useUseCase } from '@/hooks/useUseCase';
-import { markSeen, markDone, shareWithRecipient } from '@/lib/data/progress';
+import { markSeen, markDone, unmarkSeen, unmarkDone, shareWithRecipient } from '@/lib/data/progress';
 import { deleteUseCase, updateUseCase } from '@/lib/data/use-cases';
 import { hasUpvoted } from '@/lib/data/upvotes';
 import { Card } from '@/components/ui/Card';
@@ -76,6 +76,18 @@ export default function UseCaseDetailPage() {
   const handleMarkDone = useCallback(async () => {
     if (!user) return;
     await markDone(user.id, id);
+    refresh();
+  }, [user, id, refresh]);
+
+  const handleUnmarkSeen = useCallback(async () => {
+    if (!user) return;
+    await unmarkSeen(user.id, id);
+    refresh();
+  }, [user, id, refresh]);
+
+  const handleUnmarkDone = useCallback(async () => {
+    if (!user) return;
+    await unmarkDone(user.id, id);
     refresh();
   }, [user, id, refresh]);
 
@@ -310,10 +322,24 @@ export default function UseCaseDetailPage() {
             </div>
           )}
 
+          {/* Undo Step 1 (only when step 2 not yet done) */}
+          {useCase.seen_at && !useCase.done_at && (
+            <Button variant="ghost" size="sm" onClick={handleUnmarkSeen}>
+              Undo {t.concepts.step1}
+            </Button>
+          )}
+
           {/* Step 2: Do */}
           {canMarkDone && (
             <Button onClick={handleMarkDone} className="w-full">
               Mark as {t.concepts.step2}
+            </Button>
+          )}
+
+          {/* Undo Step 2 (only when sharing not yet started) */}
+          {useCase.done_at && useCase.share_count === 0 && (
+            <Button variant="ghost" size="sm" onClick={handleUnmarkDone}>
+              Undo {t.concepts.step2}
             </Button>
           )}
 
