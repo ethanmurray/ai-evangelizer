@@ -6,6 +6,7 @@ const FLAVORS = [
   { id: 'hello-world', label: 'Hello World', desc: 'Plain text, no links or buttons' },
   { id: 'magic-link-no-links', label: 'Magic Link (no links)', desc: 'Looks like the real email but with no clickable links' },
   { id: 'david-to-ethan', label: 'David to Ethan', desc: 'Casual internal email with a plain text link' },
+  { id: 'real-magic-link', label: 'Real Magic Link', desc: 'Actual magic link email with a working verify token and button' },
 ];
 
 export default function TestEmailPage() {
