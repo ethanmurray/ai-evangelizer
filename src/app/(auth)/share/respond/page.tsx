@@ -1,62 +1,108 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
 import { Button } from '@/components/ui/Button';
 
-type ResponseState = 'processing' | 'confirmed' | 'denied' | 'invalid' | 'error';
+type Phase = 'processing' | 'done' | 'invalid' | 'error';
+
+interface ShareState {
+  currentStatus: 'confirmed' | 'denied';
+  previousStatus: string;
+  changed: boolean;
+}
 
 function ShareRespondContent() {
   const searchParams = useSearchParams();
   const { t } = useTheme();
-  const [state, setState] = useState<ResponseState>('processing');
+  const [phase, setPhase] = useState<Phase>('processing');
+  const [shareState, setShareState] = useState<ShareState | null>(null);
+  const [toggling, setToggling] = useState(false);
 
   const token = searchParams.get('token');
   const action = searchParams.get('action');
 
+  const sendAction = useCallback(async (actionToSend: string) => {
+    const res = await fetch('/api/share/respond', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: actionToSend }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (data.error === 'invalid_token') {
+        setPhase('invalid');
+      } else {
+        setPhase('error');
+      }
+      return null;
+    }
+
+    const data = await res.json();
+    return data as { success: boolean; action: string; previousStatus: string; changed: boolean };
+  }, [token]);
+
+  // Initial auto-action from URL
   useEffect(() => {
     if (!token || !action || !['confirm', 'deny'].includes(action)) {
-      setState('invalid');
+      setPhase('invalid');
       return;
     }
 
-    fetch('/api/share/respond', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, action }),
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          setState(data.action === 'confirmed' ? 'confirmed' : 'denied');
-        } else {
-          const data = await res.json().catch(() => ({}));
-          setState(data.error === 'invalid_token' ? 'invalid' : 'error');
-        }
-      })
-      .catch(() => setState('error'));
-  }, [token, action]);
+    sendAction(action).then((result) => {
+      if (result) {
+        setShareState({
+          currentStatus: result.action === 'confirmed' ? 'confirmed' : 'denied',
+          previousStatus: result.previousStatus,
+          changed: result.changed,
+        });
+        setPhase('done');
+      }
+    });
+  }, [token, action, sendAction]);
+
+  const handleToggle = async (newAction: string) => {
+    setToggling(true);
+    const result = await sendAction(newAction);
+    if (result) {
+      setShareState({
+        currentStatus: result.action === 'confirmed' ? 'confirmed' : 'denied',
+        previousStatus: result.previousStatus,
+        changed: result.changed,
+      });
+    }
+    setToggling(false);
+  };
 
   const getMessage = () => {
-    switch (state) {
-      case 'processing': return 'Processing...';
-      case 'confirmed': return t.microcopy.shareConfirmed;
-      case 'denied': return t.microcopy.shareDenied;
-      case 'invalid': return t.microcopy.shareInvalidToken;
-      case 'error': return 'Something went wrong. Please try again.';
-    }
+    if (phase === 'processing') return 'Processing...';
+    if (phase === 'invalid') return t.microcopy.shareInvalidToken;
+    if (phase === 'error') return 'Something went wrong. Please try again.';
+
+    if (!shareState) return '';
+
+    if (shareState.currentStatus === 'confirmed') return t.microcopy.shareConfirmed;
+    return t.microcopy.shareDenied;
   };
+
+  const showStatusChanged = phase === 'done' && shareState?.changed &&
+    shareState.previousStatus !== 'pending';
 
   return (
     <div className="w-full max-w-md text-center space-y-6">
-      {state === 'processing' && (
+      {phase === 'processing' && (
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"
              style={{ borderColor: 'var(--color-primary)' }} />
       )}
-      {state === 'confirmed' && <div className="text-4xl">&#x2705;</div>}
-      {state === 'denied' && <div className="text-4xl">&#x1F6AB;</div>}
-      {(state === 'invalid' || state === 'error') && (
+      {phase === 'done' && shareState?.currentStatus === 'confirmed' && (
+        <div className="text-4xl">&#x2705;</div>
+      )}
+      {phase === 'done' && shareState?.currentStatus === 'denied' && (
+        <div className="text-4xl">&#x1F6AB;</div>
+      )}
+      {(phase === 'invalid' || phase === 'error') && (
         <div className="text-4xl">&#x26A0;&#xFE0F;</div>
       )}
 
@@ -64,8 +110,39 @@ function ShareRespondContent() {
         {getMessage()}
       </p>
 
-      {state !== 'processing' && (
-        <Button onClick={() => window.location.href = '/login'} className="w-full">
+      {showStatusChanged && (
+        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+          {t.microcopy.shareStatusChanged}
+        </p>
+      )}
+
+      {/* Toggle buttons: allow user to change their response */}
+      {phase === 'done' && shareState && (
+        <div className="space-y-3">
+          {shareState.currentStatus === 'denied' && (
+            <Button
+              onClick={() => handleToggle('confirm')}
+              disabled={toggling}
+              className="w-full"
+            >
+              {toggling ? 'Updating...' : 'Confirm instead'}
+            </Button>
+          )}
+          {shareState.currentStatus === 'confirmed' && (
+            <Button
+              onClick={() => handleToggle('deny')}
+              disabled={toggling}
+              className="w-full"
+              variant="secondary"
+            >
+              {toggling ? 'Updating...' : 'Decline instead'}
+            </Button>
+          )}
+        </div>
+      )}
+
+      {phase !== 'processing' && (
+        <Button onClick={() => window.location.href = '/login'} variant="secondary" className="w-full">
           Go to App
         </Button>
       )}

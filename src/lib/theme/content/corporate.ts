@@ -66,8 +66,9 @@ export const corporateTheme: ContentTheme = {
     teacherSkip: "Skip",
     teacherSubmit: "Give credit",
     shareConfirmed: "Thanks for confirming! The share has been validated.",
-    shareDenied: "Share declined. The sharer's record has been updated.",
+    shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
+    shareStatusChanged: "Status updated from a previous response.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

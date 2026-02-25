@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     const { data: share, error: lookupError } = await supabaseServer
       .from('shares')
-      .select('id, confirmed_at')
+      .select('id, status')
       .eq('confirmation_token', token)
       .maybeSingle();
 
@@ -19,31 +19,44 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'invalid_token' }, { status: 404 });
     }
 
-    if (action === 'confirm') {
-      if (!share.confirmed_at) {
-        const { error } = await supabaseServer
-          .from('shares')
-          .update({ confirmed_at: new Date().toISOString() })
-          .eq('id', share.id);
+    const previousStatus = share.status;
 
-        if (error) {
-          return NextResponse.json({ error: 'Failed to confirm' }, { status: 500 });
-        }
+    if (action === 'confirm') {
+      const newStatus = 'confirmed';
+      const { error } = await supabaseServer
+        .from('shares')
+        .update({ status: newStatus, confirmed_at: new Date().toISOString() })
+        .eq('id', share.id);
+
+      if (error) {
+        return NextResponse.json({ error: 'Failed to confirm' }, { status: 500 });
       }
-      return NextResponse.json({ success: true, action: 'confirmed' });
+
+      return NextResponse.json({
+        success: true,
+        action: 'confirmed',
+        previousStatus,
+        changed: previousStatus !== newStatus,
+      });
     }
 
-    // Deny: delete the share row
-    const { error: deleteError } = await supabaseServer
+    // Deny: update status instead of deleting
+    const newStatus = 'denied';
+    const { error: denyError } = await supabaseServer
       .from('shares')
-      .delete()
+      .update({ status: newStatus })
       .eq('id', share.id);
 
-    if (deleteError) {
+    if (denyError) {
       return NextResponse.json({ error: 'Failed to deny' }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, action: 'denied' });
+    return NextResponse.json({
+      success: true,
+      action: 'denied',
+      previousStatus,
+      changed: previousStatus !== newStatus,
+    });
   } catch (err: any) {
     console.error('share/respond error:', err);
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
