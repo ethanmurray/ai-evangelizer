@@ -8,8 +8,8 @@ export {
 } from './use-cases';
 export type { UseCase, UseCaseWithProgress } from './use-cases';
 
-export { markSeen, markDone, shareWithRecipient, fetchUserProgress } from './progress';
-export type { UserProgressItem } from './progress';
+export { markSeen, markDone, shareWithRecipient, fetchUserProgress, fetchPeopleForUseCase } from './progress';
+export type { UserProgressItem, ProgressStatus, UseCasePerson, UseCasePeopleResult } from './progress';
 
 export { toggleUpvote, hasUpvoted, getUpvoteCount } from './upvotes';
 

@@ -17,6 +17,8 @@ import { UpvoteButton } from '@/components/ui/UpvoteButton';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
 import { EditUseCaseModal } from '@/components/ui/EditUseCaseModal';
 import { LabelPill } from '@/components/ui/LabelPill';
+import { usePeopleForUseCase } from '@/hooks/usePeopleForUseCase';
+import { PeopleWhoKnowThis } from '@/components/ui/PeopleWhoKnowThis';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -25,6 +27,7 @@ export default function UseCaseDetailPage() {
   const { t } = useTheme();
   const id = params.id as string;
   const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
+  const { people, totalCount, isLoading: peopleLoading } = usePeopleForUseCase(id, user?.id);
 
   const [recipient1, setRecipient1] = useState('');
   const [recipient2, setRecipient2] = useState('');
@@ -407,6 +410,14 @@ export default function UseCaseDetailPage() {
           )}
         </div>
       </Card>
+
+      {/* People who know this */}
+      <PeopleWhoKnowThis
+        people={people}
+        totalCount={totalCount}
+        isLoading={peopleLoading}
+        useCaseTitle={useCase.title}
+      />
 
       {editSuccess && (
         <Alert variant="success">{editSuccess}</Alert>

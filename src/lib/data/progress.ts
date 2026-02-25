@@ -153,3 +153,126 @@ export async function fetchUserProgress(userId: string): Promise<UserProgressIte
   if (error) return [];
   return data || [];
 }
+
+export type ProgressStatus = 'recruited' | 'initiated' | 'witnessed';
+
+export interface UseCasePerson {
+  user_id: string;
+  name: string;
+  email: string;
+  status: ProgressStatus;
+  has_interacted: boolean;
+}
+
+export interface UseCasePeopleResult {
+  recruited: UseCasePerson[];
+  initiated: UseCasePerson[];
+  witnessed: UseCasePerson[];
+}
+
+export async function fetchPeopleForUseCase(
+  useCaseId: string,
+  currentUserId: string
+): Promise<UseCasePeopleResult> {
+  // 1. Get all progress for this use case, excluding current user
+  const { data: progressRows, error: progressError } = await supabase
+    .from('user_progress_summary')
+    .select('user_id, seen_at, done_at, share_count')
+    .eq('use_case_id', useCaseId)
+    .neq('user_id', currentUserId);
+
+  if (progressError || !progressRows || progressRows.length === 0) {
+    return { recruited: [], initiated: [], witnessed: [] };
+  }
+
+  const userIds = progressRows.map((r: any) => r.user_id);
+
+  // 2. Get user details, excluding stub users
+  const { data: users } = await supabase
+    .from('users')
+    .select('id, name, email, is_stub')
+    .in('id', userIds)
+    .eq('is_stub', false);
+
+  if (!users || users.length === 0) {
+    return { recruited: [], initiated: [], witnessed: [] };
+  }
+
+  const userMap = new Map(users.map((u: any) => [u.id, u]));
+
+  // 3. Get share interactions involving current user
+  const { data: shareInteractions } = await supabase
+    .from('shares')
+    .select('sharer_id, recipient_id')
+    .or(`sharer_id.eq.${currentUserId},recipient_id.eq.${currentUserId}`)
+    .neq('status', 'denied');
+
+  // 4. Get attribution interactions involving current user
+  const { data: currentUserRow } = await supabase
+    .from('users')
+    .select('email')
+    .eq('id', currentUserId)
+    .single();
+
+  const currentUserEmail = currentUserRow?.email || '';
+
+  const { data: attributionInteractions } = await supabase
+    .from('attributions')
+    .select('learner_id, teacher_email')
+    .or(`learner_id.eq.${currentUserId},teacher_email.eq.${currentUserEmail}`);
+
+  // Build set of user IDs the current user has interacted with
+  const interactedUserIds = new Set<string>();
+
+  for (const s of shareInteractions || []) {
+    if (s.sharer_id === currentUserId) interactedUserIds.add(s.recipient_id);
+    if (s.recipient_id === currentUserId) interactedUserIds.add(s.sharer_id);
+  }
+
+  for (const a of attributionInteractions || []) {
+    if (a.learner_id === currentUserId) {
+      const teacher = users.find((u: any) => u.email === a.teacher_email);
+      if (teacher) interactedUserIds.add(teacher.id);
+    }
+    if (a.teacher_email === currentUserEmail) {
+      interactedUserIds.add(a.learner_id);
+    }
+  }
+
+  // Classify into groups
+  const recruited: UseCasePerson[] = [];
+  const initiated: UseCasePerson[] = [];
+  const witnessed: UseCasePerson[] = [];
+
+  for (const row of progressRows) {
+    const user = userMap.get(row.user_id);
+    if (!user) continue;
+
+    const person: UseCasePerson = {
+      user_id: row.user_id,
+      name: user.name,
+      email: user.email,
+      status: row.share_count >= 2 ? 'recruited' :
+              row.done_at ? 'initiated' : 'witnessed',
+      has_interacted: interactedUserIds.has(row.user_id),
+    };
+
+    if (person.status === 'recruited') recruited.push(person);
+    else if (person.status === 'initiated') initiated.push(person);
+    else witnessed.push(person);
+  }
+
+  // Sort: interacted first, then alphabetical
+  const sortFn = (a: UseCasePerson, b: UseCasePerson) => {
+    if (a.has_interacted !== b.has_interacted) {
+      return a.has_interacted ? -1 : 1;
+    }
+    return (a.name || '').localeCompare(b.name || '');
+  };
+
+  recruited.sort(sortFn);
+  initiated.sort(sortFn);
+  witnessed.sort(sortFn);
+
+  return { recruited, initiated, witnessed };
+}
