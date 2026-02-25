@@ -59,6 +59,7 @@ export interface ContentTheme {
     shareConfirmed: string;
     shareDenied: string;
     shareInvalidToken: string;
+    shareStatusChanged: string;
   };
   toneGuidance: string;
 }

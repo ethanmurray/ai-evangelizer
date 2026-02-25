@@ -90,6 +90,7 @@ export async function shareWithRecipient(
       recipient_id: recipient.id,
       use_case_id: useCaseId,
       confirmation_token: confirmationToken,
+      status: 'pending',
     })
     .select('id')
     .single();

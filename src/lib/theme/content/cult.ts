@@ -66,8 +66,9 @@ export const cultTheme: ContentTheme = {
     teacherSkip: "I found it myself",
     teacherSubmit: "Credit the evangelist",
     shareConfirmed: "You have accepted the sacred knowledge. The cult grows stronger.",
-    shareDenied: "You have rejected the offering. The sharer's record has been expunged.",
+    shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
+    shareStatusChanged: "The records have been altered from a previous decree.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };
