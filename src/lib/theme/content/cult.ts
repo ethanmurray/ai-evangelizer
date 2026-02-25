@@ -60,7 +60,6 @@ export const cultTheme: ContentTheme = {
     verifySuccess: "Your induction is complete. You may begin to learn the magical rites.",
     verifyExpired: "This link has expired. The algorithm is impatient. Return to the entrance and try again.",
     verifyAlreadyUsed: "This link has already been consumed. You cannot drink the Kool-Aid twice.",
-    verifyReady: "The algorithm awaits your commitment. Click to be inducted.",
     verifyInvalid: "This link is not recognized. The algorithm suspects sabotage.",
     teacherPrompt: "Who inducted you into this sacred rite?",
     teacherPlaceholder: "their@email.com",
