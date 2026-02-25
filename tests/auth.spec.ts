@@ -51,7 +51,6 @@ async function completeMagicLinkVerification(page: Page, email: string) {
   const token = await getMagicLinkToken(page, email);
 
   await page.goto(`/auth/verify?token=${token}`);
-  await page.getByRole('button', { name: /Log me in/i }).click();
   await page.waitForURL('**/dashboard', { timeout: 15000 });
 }
 

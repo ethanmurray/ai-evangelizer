@@ -1,25 +1,28 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { Button } from '@/components/ui/Button';
 
-type VerifyState = 'ready' | 'verifying' | 'success' | 'expired' | 'already-used' | 'invalid' | 'error';
+type VerifyState = 'verifying' | 'success' | 'expired' | 'invalid' | 'error';
 
 function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { verifyAndLogin } = useAuth();
   const { t } = useTheme();
+  const [state, setState] = useState<VerifyState>('verifying');
 
   const token = searchParams.get('token');
-  const [state, setState] = useState<VerifyState>(token ? 'ready' : 'invalid');
 
-  const handleVerify = () => {
-    if (!token) return;
-    setState('verifying');
+  useEffect(() => {
+    if (!token) {
+      setState('invalid');
+      return;
+    }
+
     verifyAndLogin(token).then((result) => {
       if (result.success) {
         setState('success');
@@ -27,21 +30,18 @@ function VerifyContent() {
       } else {
         switch (result.error) {
           case 'EXPIRED': setState('expired'); break;
-          case 'ALREADY_USED': setState('already-used'); break;
           case 'INVALID_TOKEN': setState('invalid'); break;
           default: setState('error'); break;
         }
       }
     });
-  };
+  }, [token, verifyAndLogin, router]);
 
   const getMessage = () => {
     switch (state) {
-      case 'ready': return t.microcopy.verifyReady;
       case 'verifying': return 'Verifying...';
       case 'success': return t.microcopy.verifySuccess;
       case 'expired': return t.microcopy.verifyExpired;
-      case 'already-used': return t.microcopy.verifyAlreadyUsed;
       case 'invalid': return t.microcopy.verifyInvalid;
       case 'error': return 'Something went wrong. Please try again.';
     }
@@ -54,7 +54,7 @@ function VerifyContent() {
              style={{ borderColor: 'var(--color-primary)' }} />
       )}
       {state === 'success' && <div className="text-4xl">&#x2705;</div>}
-      {(state === 'expired' || state === 'already-used' || state === 'invalid' || state === 'error') && (
+      {(state === 'expired' || state === 'invalid' || state === 'error') && (
         <div className="text-4xl">&#x26A0;&#xFE0F;</div>
       )}
 
@@ -62,13 +62,7 @@ function VerifyContent() {
         {getMessage()}
       </p>
 
-      {state === 'ready' && (
-        <Button onClick={handleVerify} className="w-full">
-          Log me in
-        </Button>
-      )}
-
-      {(state === 'expired' || state === 'already-used' || state === 'invalid' || state === 'error') && (
+      {state !== 'verifying' && state !== 'success' && (
         <Button onClick={() => router.push('/login')} className="w-full">
           Back to Login
         </Button>

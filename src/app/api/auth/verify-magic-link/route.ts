@@ -20,19 +20,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'INVALID_TOKEN' }, { status: 400 });
     }
 
-    if (magicLink.used_at) {
-      return NextResponse.json({ error: 'ALREADY_USED' }, { status: 400 });
-    }
-
     if (new Date(magicLink.expires_at) < new Date()) {
       return NextResponse.json({ error: 'EXPIRED' }, { status: 400 });
     }
-
-    // Mark as used
-    await supabaseServer
-      .from('magic_links')
-      .update({ used_at: new Date().toISOString() })
-      .eq('id', magicLink.id);
 
     // Fetch the user
     const { data: user, error: userError } = await supabaseServer
