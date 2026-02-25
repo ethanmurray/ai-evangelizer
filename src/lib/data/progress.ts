@@ -27,6 +27,22 @@ export async function markSeen(userId: string, useCaseId: string): Promise<void>
   }
 }
 
+export async function unmarkSeen(userId: string, useCaseId: string): Promise<void> {
+  await supabase
+    .from('progress')
+    .update({ seen_at: null, done_at: null })
+    .eq('user_id', userId)
+    .eq('use_case_id', useCaseId);
+}
+
+export async function unmarkDone(userId: string, useCaseId: string): Promise<void> {
+  await supabase
+    .from('progress')
+    .update({ done_at: null })
+    .eq('user_id', userId)
+    .eq('use_case_id', useCaseId);
+}
+
 export async function markDone(userId: string, useCaseId: string): Promise<void> {
   const { data: existing } = await supabase
     .from('progress')
