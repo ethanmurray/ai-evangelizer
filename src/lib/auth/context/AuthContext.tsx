@@ -57,6 +57,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (result.success && result.user) {
         saveUser(result.user);
         setUser(result.user);
+      } else if (result.success && result.pendingVerification) {
+        // Magic link sent — don't save user yet
       } else if (result.error) {
         setError(result.error);
       }
@@ -74,6 +76,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (result.success && result.user) {
         saveUser(result.user);
         setUser(result.user);
+      } else if (result.success && result.pendingVerification) {
+        // Magic link sent — don't save user yet
       } else if (result.error && result.error !== 'STUB_ACCOUNT') {
         setError(result.error);
       }

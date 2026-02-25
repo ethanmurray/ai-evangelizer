@@ -1,4 +1,17 @@
 import { test, expect, Page } from '@playwright/test';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// Load Supabase config from .env.local for magic link token lookups
+const envContent = readFileSync(join(process.cwd(), '.env.local'), 'utf-8');
+const envVars = Object.fromEntries(
+  envContent.split('\n')
+    .filter(line => line && !line.startsWith('#'))
+    .map(line => { const i = line.indexOf('='); return [line.slice(0, i).trim(), line.slice(i + 1).trim()]; })
+    .filter(([k, v]) => k && v)
+);
+const SUPABASE_URL = envVars['NEXT_PUBLIC_SUPABASE_URL'];
+const SUPABASE_KEY = envVars['NEXT_PUBLIC_SUPABASE_ANON_KEY'];
 
 // Helper: clear session and go to login page
 async function goToLogin(page: Page) {
@@ -6,6 +19,40 @@ async function goToLogin(page: Page) {
   await page.evaluate(() => localStorage.clear());
   await page.goto('/login');
   await page.waitForLoadState('networkidle');
+}
+
+// Helper: get the latest unused magic link token for an email from Supabase
+async function getMagicLinkToken(page: Page, email: string): Promise<string> {
+  return page.evaluate(async ({ email, supabaseUrl, supabaseKey }) => {
+    const headers = { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` };
+
+    const userRes = await fetch(
+      `${supabaseUrl}/rest/v1/users?select=id&email=eq.${encodeURIComponent(email)}&limit=1`,
+      { headers }
+    );
+    const users = await userRes.json();
+    if (!users.length) throw new Error(`No user found for ${email}`);
+
+    const linkRes = await fetch(
+      `${supabaseUrl}/rest/v1/magic_links?select=token&user_id=eq.${users[0].id}&used_at=is.null&order=created_at.desc&limit=1`,
+      { headers }
+    );
+    const links = await linkRes.json();
+    if (!links.length) throw new Error(`No magic link found for ${email}`);
+    return links[0].token;
+  }, { email, supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY });
+}
+
+// Helper: complete magic link verification (check-email screen → verify page → dashboard)
+async function completeMagicLinkVerification(page: Page, email: string) {
+  // Wait for check-email screen (shows the user's email)
+  await expect(page.getByText(email)).toBeVisible({ timeout: 15000 });
+
+  const token = await getMagicLinkToken(page, email);
+
+  await page.goto(`/auth/verify?token=${token}`);
+  await page.getByRole('button', { name: /Log me in/i }).click();
+  await page.waitForURL('**/dashboard', { timeout: 15000 });
 }
 
 // Helper: register a new user and end up on the dashboard
@@ -25,7 +72,8 @@ async function registerUser(page: Page, email: string, name: string, team: strin
   await page.getByLabel(/Your Name/i).click();
 
   await page.getByRole('button', { name: /Create Account/i }).click();
-  await page.waitForURL('**/dashboard', { timeout: 15000 });
+
+  await completeMagicLinkVerification(page, email);
 }
 
 test.describe('Login Page', () => {
@@ -113,8 +161,8 @@ test.describe('Returning User Login', () => {
     await page.getByLabel(/Email/i).fill(testEmail);
     await page.getByRole('button', { name: /Continue/i }).click();
 
-    // Should go straight to dashboard (no registration form)
-    await page.waitForURL('**/dashboard', { timeout: 15000 });
+    // Magic link flow: check-email → verify → dashboard
+    await completeMagicLinkVerification(page, testEmail);
     expect(page.url()).toContain('/dashboard');
   });
 });

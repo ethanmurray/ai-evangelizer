@@ -2,6 +2,19 @@ import { AuthResult, User } from '../types/auth';
 import { findUserByEmail, createUser, convertStubUser } from '../utils/database';
 import { clearStoredUser, getStoredUser } from '../utils/storage';
 
+async function sendMagicLink(userId: string, email: string, name?: string): Promise<void> {
+  const response = await fetch('/api/auth/send-magic-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, email, name }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error || 'Failed to send verification email');
+  }
+}
+
 export class SimpleAuthProvider {
   async register(name: string, email: string, team: string): Promise<AuthResult> {
     try {
@@ -18,7 +31,8 @@ export class SimpleAuthProvider {
         user = await createUser(name, email, team);
       }
 
-      return { success: true, user };
+      await sendMagicLink(user.id, email, name);
+      return { success: true, pendingVerification: true };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
     }
@@ -35,7 +49,8 @@ export class SimpleAuthProvider {
         return { success: false, error: 'STUB_ACCOUNT' };
       }
 
-      return { success: true, user };
+      await sendMagicLink(user.id, email, user.name);
+      return { success: true, pendingVerification: true };
     } catch (err: any) {
       return { success: false, error: err.message || 'Login failed' };
     }

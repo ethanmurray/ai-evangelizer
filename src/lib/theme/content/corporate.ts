@@ -60,6 +60,7 @@ export const corporateTheme: ContentTheme = {
     verifySuccess: "Your account has been verified. Welcome!",
     verifyExpired: "This verification link has expired. Please register again.",
     verifyAlreadyUsed: "This verification link has already been used. Try signing in.",
+    verifyReady: "Click below to complete your login.",
     verifyInvalid: "This verification link is invalid. Please register again.",
     teacherPrompt: "Who taught you this skill?",
     teacherPlaceholder: "their@email.com",
