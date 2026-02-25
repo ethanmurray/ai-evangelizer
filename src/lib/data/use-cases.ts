@@ -1,5 +1,26 @@
 import { supabase } from '../supabase';
 
+export const PREDEFINED_LABELS = [
+  'Coding',
+  'Code Generation',
+  'Code Quality',
+  'Testing',
+  'Debugging',
+  'Documentation',
+  'Writing',
+  'Data',
+  'SQL',
+  'Text Processing',
+  'Automation',
+  'DevOps',
+  'Git',
+  'APIs',
+  'Learning',
+  'Frameworks',
+] as const;
+
+export type UseCaseLabel = (typeof PREDEFINED_LABELS)[number];
+
 export interface UseCase {
   id: string;
   title: string;
@@ -7,6 +28,7 @@ export interface UseCase {
   resources: string | null;
   submitted_by: string | null;
   created_at: string;
+  labels: string[];
   upvote_count?: number;
 }
 
@@ -17,7 +39,7 @@ export interface UseCaseWithProgress extends UseCase {
   is_completed: boolean;
 }
 
-export async function fetchUseCases(search?: string): Promise<UseCase[]> {
+export async function fetchUseCases(search?: string, labels?: string[]): Promise<UseCase[]> {
   let query = supabase
     .from('use_cases')
     .select('*')
@@ -25,6 +47,10 @@ export async function fetchUseCases(search?: string): Promise<UseCase[]> {
 
   if (search) {
     query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+  }
+
+  if (labels && labels.length > 0) {
+    query = query.overlaps('labels', labels);
   }
 
   const { data, error } = await query;
@@ -41,6 +67,7 @@ export async function fetchUseCases(search?: string): Promise<UseCase[]> {
 
   return (data || []).map((uc: any) => ({
     ...uc,
+    labels: uc.labels || [],
     upvote_count: upvoteMap.get(uc.id) || 0,
   }));
 }
@@ -53,7 +80,7 @@ export async function fetchUseCase(id: string): Promise<UseCase | null> {
     .maybeSingle();
 
   if (error || !data) return null;
-  return data;
+  return { ...data, labels: data.labels || [] };
 }
 
 export async function fetchUseCaseWithProgress(
@@ -90,7 +117,8 @@ export async function createUseCase(
   title: string,
   description: string,
   resources: string | null,
-  submittedBy: string
+  submittedBy: string,
+  labels: string[] = []
 ): Promise<UseCase> {
   const { data, error } = await supabase
     .from('use_cases')
@@ -99,6 +127,7 @@ export async function createUseCase(
       description,
       resources,
       submitted_by: submittedBy,
+      labels,
     })
     .select()
     .single();
@@ -113,6 +142,7 @@ export async function updateUseCase(
     title?: string;
     description?: string;
     resources?: string;
+    labels?: string[];
   }
 ): Promise<void> {
   const { error } = await supabase

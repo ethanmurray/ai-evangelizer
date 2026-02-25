@@ -11,19 +11,33 @@ import { SearchInput } from '@/components/ui/SearchInput';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { LabelFilter } from '@/components/ui/LabelFilter';
+import { LabelPill } from '@/components/ui/LabelPill';
+import { LabelSelector } from '@/components/ui/LabelSelector';
 import { createUseCase } from '@/lib/data/use-cases';
 
 export default function LibraryPage() {
   const { user } = useAuth();
   const { t } = useTheme();
   const [search, setSearch] = useState('');
-  const { useCases, isLoading, refresh } = useUseCases(search || undefined);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const { useCases, isLoading, refresh } = useUseCases(
+    search || undefined,
+    selectedLabels.length > 0 ? selectedLabels : undefined
+  );
   const { progress } = useProgress(user?.id);
   const [showSubmit, setShowSubmit] = useState(false);
   const [submitTitle, setSubmitTitle] = useState('');
   const [submitDesc, setSubmitDesc] = useState('');
   const [submitResources, setSubmitResources] = useState('');
+  const [submitLabels, setSubmitLabels] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  const handleToggleLabel = (label: string) => {
+    setSelectedLabels((prev) =>
+      prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
+    );
+  };
 
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
 
@@ -32,10 +46,11 @@ export default function LibraryPage() {
     if (!submitTitle.trim() || !submitDesc.trim() || !user) return;
     setSubmitting(true);
     try {
-      await createUseCase(submitTitle, submitDesc, submitResources || null, user.id);
+      await createUseCase(submitTitle, submitDesc, submitResources || null, user.id, submitLabels);
       setSubmitTitle('');
       setSubmitDesc('');
       setSubmitResources('');
+      setSubmitLabels([]);
       setShowSubmit(false);
       refresh();
     } finally {
@@ -93,6 +108,11 @@ export default function LibraryPage() {
               onChange={(e) => setSubmitResources(e.target.value)}
               placeholder="Links, tools, tips"
             />
+            <LabelSelector
+              selectedLabels={submitLabels}
+              onChange={setSubmitLabels}
+              disabled={submitting}
+            />
             <div className="flex gap-2">
               <Button type="submit" isLoading={submitting} loadingText="Submitting...">
                 Submit
@@ -110,6 +130,13 @@ export default function LibraryPage() {
         value={search}
         onChange={setSearch}
         placeholder={`Search ${t.concepts.useCasePlural.toLowerCase()}...`}
+      />
+
+      {/* Label filters */}
+      <LabelFilter
+        selectedLabels={selectedLabels}
+        onToggle={handleToggleLabel}
+        onClear={() => setSelectedLabels([])}
       />
 
       {/* Use case list */}
@@ -132,6 +159,13 @@ export default function LibraryPage() {
                       <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>
                         {uc.description}
                       </p>
+                      {uc.labels && uc.labels.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {uc.labels.map((label) => (
+                            <LabelPill key={label} label={label} />
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="ml-3 text-xs flex items-center gap-1" style={{ color: 'var(--color-text-muted)' }}>
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

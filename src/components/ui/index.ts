@@ -12,6 +12,9 @@ export { EditUseCaseModal } from './EditUseCaseModal';
 export { ThemeToggle } from './ThemeToggle';
 export { AboutModal } from './AboutModal';
 export { PointsReferenceModal } from './PointsReferenceModal';
+export { LabelPill } from './LabelPill';
+export { LabelFilter } from './LabelFilter';
+export { LabelSelector } from './LabelSelector';
 
 export type { ButtonProps } from './Button';
 export type { InputProps } from './Input';
