@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Textarea } from './Textarea';
+import { LabelSelector } from './LabelSelector';
 
 interface EditUseCaseModalProps {
   isOpen: boolean;
@@ -12,8 +13,9 @@ interface EditUseCaseModalProps {
     title: string;
     description: string;
     resources: string | null;
+    labels: string[];
   };
-  onSave: (updates: { title: string; description: string; resources: string }) => Promise<void>;
+  onSave: (updates: { title: string; description: string; resources: string; labels: string[] }) => Promise<void>;
   onCancel: () => void;
   isSaving: boolean;
   modalTitle: string;
@@ -40,6 +42,7 @@ export function EditUseCaseModal({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [resources, setResources] = useState('');
+  const [labels, setLabels] = useState<string[]>([]);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -47,6 +50,7 @@ export function EditUseCaseModal({
       setTitle(useCase.title);
       setDescription(useCase.description);
       setResources(useCase.resources || '');
+      setLabels(useCase.labels || []);
     }
   }, [isOpen, useCase]);
 
@@ -86,7 +90,7 @@ export function EditUseCaseModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() && description.trim()) {
-      await onSave({ title: title.trim(), description: description.trim(), resources: resources.trim() });
+      await onSave({ title: title.trim(), description: description.trim(), resources: resources.trim(), labels });
     }
   };
 
@@ -163,6 +167,12 @@ export function EditUseCaseModal({
               rows={3}
             />
           </div>
+
+          <LabelSelector
+            selectedLabels={labels}
+            onChange={setLabels}
+            disabled={isSaving}
+          />
 
           <div className="flex gap-3 justify-end">
             <Button

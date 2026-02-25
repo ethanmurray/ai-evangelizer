@@ -16,6 +16,7 @@ import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { UpvoteButton } from '@/components/ui/UpvoteButton';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
 import { EditUseCaseModal } from '@/components/ui/EditUseCaseModal';
+import { LabelPill } from '@/components/ui/LabelPill';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -142,7 +143,7 @@ export default function UseCaseDetailPage() {
     }
   }, [user, recipient1, recipient2, id, t, refresh]);
 
-  const handleEdit = useCallback(async (updates: { title: string; description: string; resources: string }) => {
+  const handleEdit = useCallback(async (updates: { title: string; description: string; resources: string; labels: string[] }) => {
     setIsEditing(true);
     setEditError('');
     setEditSuccess('');
@@ -209,6 +210,13 @@ export default function UseCaseDetailPage() {
         <p className="mt-2" style={{ color: 'var(--color-text-muted)' }}>
           {useCase.description}
         </p>
+        {useCase.labels && useCase.labels.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {useCase.labels.map((label) => (
+              <LabelPill key={label} label={label} size="md" />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Upvote + edit + delete */}
