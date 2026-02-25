@@ -51,6 +51,7 @@ export interface ContentTheme {
     verifySuccess: string;
     verifyExpired: string;
     verifyAlreadyUsed: string;
+    verifyReady: string;
     verifyInvalid: string;
     teacherPrompt: string;
     teacherPlaceholder: string;

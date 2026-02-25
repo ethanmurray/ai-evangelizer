@@ -23,7 +23,7 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
   const [team, setTeam] = useState('');
   const [teams, setTeams] = useState<string[]>([]);
   const [showTeamDropdown, setShowTeamDropdown] = useState(false);
-  const [mode, setMode] = useState<'email' | 'register' | 'stub-convert'>('email');
+  const [mode, setMode] = useState<'email' | 'register' | 'stub-convert' | 'check-email'>('email');
   const [stubInfo, setStubInfo] = useState<{ id: string; email: string } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -44,7 +44,9 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await login(email);
-    if (result.success) {
+    if (result.success && result.pendingVerification) {
+      setMode('check-email');
+    } else if (result.success) {
       onSuccess?.();
     } else if (result.error === 'STUB_ACCOUNT') {
       setStubInfo({ id: '', email });
@@ -66,7 +68,9 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await register(name, email, team);
-    if (result.success) {
+    if (result.success && result.pendingVerification) {
+      setMode('check-email');
+    } else if (result.success) {
       onSuccess?.();
     }
   }, [name, email, team, register, onSuccess]);
@@ -82,7 +86,9 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
     }
 
     const result = await register(name, email, team);
-    if (result.success) {
+    if (result.success && result.pendingVerification) {
+      setMode('check-email');
+    } else if (result.success) {
       onSuccess?.();
     }
   }, [name, email, team, register, onSuccess]);
@@ -221,6 +227,25 @@ export function AuthForm({ onSuccess, className = '' }: AuthFormProps) {
             </Button>
           </div>
         </form>
+      )}
+
+      {/* Check Email */}
+      {mode === 'check-email' && (
+        <div className="text-center space-y-4">
+          <div className="text-4xl">&#x2709;&#xFE0F;</div>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-heading)' }}>
+            {t.microcopy.checkEmailTitle}
+          </h3>
+          <p style={{ color: 'var(--color-text-muted)' }}>
+            {t.microcopy.checkEmailBody.replace('{email}', email)}
+          </p>
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)', opacity: 0.7 }}>
+            {t.microcopy.checkEmailExpiry}
+          </p>
+          <Button type="button" variant="ghost" onClick={resetForm} className="w-full">
+            Use Different Email
+          </Button>
+        </div>
       )}
 
     </div>

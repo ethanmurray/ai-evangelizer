@@ -1,28 +1,25 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/lib/theme';
 import { Button } from '@/components/ui/Button';
 
-type VerifyState = 'verifying' | 'success' | 'expired' | 'already-used' | 'invalid' | 'error';
+type VerifyState = 'ready' | 'verifying' | 'success' | 'expired' | 'already-used' | 'invalid' | 'error';
 
 function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { verifyAndLogin } = useAuth();
   const { t } = useTheme();
-  const [state, setState] = useState<VerifyState>('verifying');
 
   const token = searchParams.get('token');
+  const [state, setState] = useState<VerifyState>(token ? 'ready' : 'invalid');
 
-  useEffect(() => {
-    if (!token) {
-      setState('invalid');
-      return;
-    }
-
+  const handleVerify = () => {
+    if (!token) return;
+    setState('verifying');
     verifyAndLogin(token).then((result) => {
       if (result.success) {
         setState('success');
@@ -36,10 +33,11 @@ function VerifyContent() {
         }
       }
     });
-  }, [token, verifyAndLogin, router]);
+  };
 
   const getMessage = () => {
     switch (state) {
+      case 'ready': return t.microcopy.verifyReady;
       case 'verifying': return 'Verifying...';
       case 'success': return t.microcopy.verifySuccess;
       case 'expired': return t.microcopy.verifyExpired;
@@ -64,7 +62,13 @@ function VerifyContent() {
         {getMessage()}
       </p>
 
-      {state !== 'verifying' && state !== 'success' && (
+      {state === 'ready' && (
+        <Button onClick={handleVerify} className="w-full">
+          Log me in
+        </Button>
+      )}
+
+      {(state === 'expired' || state === 'already-used' || state === 'invalid' || state === 'error') && (
         <Button onClick={() => router.push('/login')} className="w-full">
           Back to Login
         </Button>
