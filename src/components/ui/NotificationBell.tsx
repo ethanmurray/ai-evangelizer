@@ -61,7 +61,7 @@ export function NotificationBell() {
 
       {open && (
         <div
-          className="absolute right-0 mt-2 w-72 rounded-lg border shadow-xl z-50 overflow-hidden"
+          className="absolute left-0 mt-2 w-72 rounded-lg border shadow-xl z-50 overflow-hidden"
           style={{
             background: 'var(--color-bg-elevated)',
             borderColor: 'var(--color-border)',
