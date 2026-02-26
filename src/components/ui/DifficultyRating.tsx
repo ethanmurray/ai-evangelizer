@@ -18,6 +18,7 @@ interface DifficultyRatingProps {
   canRate: boolean;
   onRate?: (rating: number) => void;
   compact?: boolean;
+  error?: string | null;
 }
 
 export function DifficultyRating({
@@ -27,6 +28,7 @@ export function DifficultyRating({
   canRate,
   onRate,
   compact = false,
+  error = null,
 }: DifficultyRatingProps) {
   const { t } = useTheme();
   const difficultyLevels = t.concepts.difficulty === 'Danger Level'
@@ -101,7 +103,17 @@ export function DifficultyRating({
             {userRating ? 'Your rating' : 'Rate this'}
           </span>
         )}
+        {!canRate && (
+          <span className="text-xs ml-1" style={{ color: 'var(--color-text-muted)' }}>
+            Apply this use case to rate
+          </span>
+        )}
       </div>
+      {error && (
+        <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }

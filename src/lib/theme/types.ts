@@ -22,6 +22,12 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    timeline: string;
+    discussion: string;
+    playbook: string;
+    tip: string;
+    gotcha: string;
+    skillRadar: string;
     badges: string;
     difficulty: string;
     activityFeed: string;
@@ -65,6 +71,10 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    timelineEmpty: string;
+    noComments: string;
+    noPlaybook: string;
+    commentPlaceholder: string;
     rankUpTitle: string;
     rankUpBody: string;
     feedEmpty: string;

@@ -19,6 +19,11 @@ import { EditUseCaseModal } from '@/components/ui/EditUseCaseModal';
 import { LabelPill } from '@/components/ui/LabelPill';
 import { usePeopleForUseCase } from '@/hooks/usePeopleForUseCase';
 import { PeopleWhoKnowThis } from '@/components/ui/PeopleWhoKnowThis';
+import { useComments } from '@/hooks/useComments';
+import { CommentThread } from '@/components/ui/CommentThread';
+import { CommentForm } from '@/components/ui/CommentForm';
+import { PlaybookSection } from '@/components/ui/PlaybookSection';
+import { CommentType } from '@/lib/data/comments';
 import { useDifficulty } from '@/hooks/useDifficulty';
 import { DifficultyRating } from '@/components/ui/DifficultyRating';
 import { useRelatedUseCases } from '@/hooks/useRelatedUseCases';
@@ -32,7 +37,8 @@ export default function UseCaseDetailPage() {
   const id = params.id as string;
   const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
   const { people, totalCount, isLoading: peopleLoading } = usePeopleForUseCase(id, user?.id);
-  const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn } = useDifficulty(id, user?.id);
+  const { comments, playbookSteps, addComment, removeComment } = useComments(id);
+  const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn, error: difficultyError } = useDifficulty(id, user?.id);
   const { related, isLoading: relatedLoading } = useRelatedUseCases(id);
 
   const [recipient1, setRecipient1] = useState('');
@@ -235,6 +241,7 @@ export default function UseCaseDetailPage() {
         userRating={difficultyUserRating}
         canRate={!!user && !!useCase.done_at}
         onRate={rateDifficultyFn}
+        error={difficultyError}
       />
 
       {/* Upvote + edit + delete */}
@@ -436,6 +443,35 @@ export default function UseCaseDetailPage() {
 
       {/* Related use cases */}
       <RelatedUseCases related={related} isLoading={relatedLoading} />
+
+      {/* Playbook */}
+      <PlaybookSection
+        steps={playbookSteps}
+        canAddStep={!!user && !!useCase.done_at}
+        currentUserId={user?.id}
+        onAddStep={(content) => user && addComment(user.id, content, 'playbook_step')}
+        onDeleteStep={removeComment}
+      />
+
+      {/* Discussion */}
+      <Card>
+        <h2 className="text-sm font-bold mb-3" style={{ color: 'var(--color-secondary)' }}>
+          {t.concepts.discussion}
+        </h2>
+        <CommentThread
+          comments={comments}
+          currentUserId={user?.id}
+          onReply={(parentId, content) => user && addComment(user.id, content, 'discussion', parentId)}
+          onDelete={removeComment}
+        />
+        {user && (
+          <div className="mt-3">
+            <CommentForm
+              onSubmit={(content, type) => addComment(user.id, content, type)}
+            />
+          </div>
+        )}
+      </Card>
 
       {editSuccess && (
         <Alert variant="success">{editSuccess}</Alert>
