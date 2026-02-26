@@ -31,6 +31,7 @@ export interface ContentTheme {
     badges: string;
     difficulty: string;
     activityFeed: string;
+    heatmap: string;
     recommended: string;
     related: string;
   };
@@ -78,6 +79,7 @@ export interface ContentTheme {
     rankUpTitle: string;
     rankUpBody: string;
     feedEmpty: string;
+    heatmapSubtitle: string;
     noRecommendations: string;
   };
   badgeNames: Record<string, { name: string; description: string }>;

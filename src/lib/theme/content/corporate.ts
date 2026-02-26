@@ -33,6 +33,7 @@ export const corporateTheme: ContentTheme = {
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",
+    heatmap: "Adoption Heatmap",
     recommended: "Recommended For You",
     related: "Related Skills",
   },
@@ -87,6 +88,7 @@ export const corporateTheme: ContentTheme = {
     rankUpTitle: "Rank Up!",
     rankUpBody: "Congratulations! You've reached {rank}.",
     feedEmpty: "No activity yet. Be the first!",
+    heatmapSubtitle: "See which skills are widely adopted vs. underexplored.",
     noRecommendations: "Start learning to get personalized recommendations.",
   },
   badgeNames: {

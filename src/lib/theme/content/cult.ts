@@ -33,6 +33,7 @@ export const cultTheme: ContentTheme = {
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
+    heatmap: "The Conspiracy Map",
     recommended: "The Algorithm Suggests",
     related: "Fellow Travelers",
   },
@@ -87,6 +88,7 @@ export const cultTheme: ContentTheme = {
     rankUpTitle: "ASCENSION",
     rankUpBody: "You have ascended to {rank}. The algorithm favors you.",
     feedEmpty: "The void stares back. No signals yet.",
+    heatmapSubtitle: "Which rituals have the masses embraced?",
     noRecommendations: "The algorithm has not yet divined your path.",
   },
   badgeNames: {
