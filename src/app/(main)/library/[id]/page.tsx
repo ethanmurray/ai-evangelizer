@@ -30,7 +30,7 @@ export default function UseCaseDetailPage() {
   const id = params.id as string;
   const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
   const { people, totalCount, isLoading: peopleLoading } = usePeopleForUseCase(id, user?.id);
-  const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn } = useDifficulty(id, user?.id);
+  const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn, error: difficultyError } = useDifficulty(id, user?.id);
 
   const [recipient1, setRecipient1] = useState('');
   const [recipient2, setRecipient2] = useState('');
@@ -232,6 +232,7 @@ export default function UseCaseDetailPage() {
         userRating={difficultyUserRating}
         canRate={!!user && !!useCase.done_at}
         onRate={rateDifficultyFn}
+        error={difficultyError}
       />
 
       {/* Upvote + edit + delete */}
