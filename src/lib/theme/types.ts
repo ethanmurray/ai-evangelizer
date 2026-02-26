@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    badges: string;
     difficulty: string;
     activityFeed: string;
   };
@@ -64,6 +65,7 @@ export interface ContentTheme {
     shareStatusChanged: string;
     feedEmpty: string;
   };
+  badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;
 }
 

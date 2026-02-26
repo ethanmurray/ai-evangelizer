@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import { findUserByEmail, createStubUser } from '../auth/utils/database';
+import { checkAndAwardBadges } from './badges';
 import { logActivity } from './activity';
 
 export async function markSeen(userId: string, useCaseId: string): Promise<void> {
@@ -26,6 +27,9 @@ export async function markSeen(userId: string, useCaseId: string): Promise<void>
         seen_at: new Date().toISOString(),
       });
   }
+
+  // Check badges (fire-and-forget)
+  checkAndAwardBadges(userId).catch(() => {});
 
   // Log activity (fire-and-forget)
   const { data: actor } = await supabase.from('users').select('team').eq('id', userId).single();
@@ -76,6 +80,9 @@ export async function markDone(userId: string, useCaseId: string): Promise<void>
         done_at: now,
       });
   }
+
+  // Check badges (fire-and-forget)
+  checkAndAwardBadges(userId).catch(() => {});
 
   // Log activity (fire-and-forget)
   const { data: actor } = await supabase.from('users').select('team').eq('id', userId).single();
@@ -141,6 +148,9 @@ export async function shareWithRecipient(
         seen_at: new Date().toISOString(),
       });
   }
+
+  // Check badges for sharer (fire-and-forget)
+  checkAndAwardBadges(sharerId).catch(() => {});
 
   // Log activity (fire-and-forget)
   logActivity('shared', sharerId, useCaseId, sharerTeam).catch(() => {});
