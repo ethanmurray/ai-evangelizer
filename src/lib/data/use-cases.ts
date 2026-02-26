@@ -1,4 +1,6 @@
 import { supabase } from '../supabase';
+import { checkAndAwardBadges } from './badges';
+import { logActivity } from './activity';
 
 export const PREDEFINED_LABELS = [
   'Coding',
@@ -133,6 +135,14 @@ export async function createUseCase(
     .single();
 
   if (error) throw new Error(error.message);
+
+  // Check badges (fire-and-forget)
+  checkAndAwardBadges(submittedBy).catch(() => {});
+
+  // Log activity (fire-and-forget)
+  const { data: actor } = await supabase.from('users').select('team').eq('id', submittedBy).single();
+  logActivity('submitted', submittedBy, data.id, actor?.team).catch(() => {});
+
   return data;
 }
 

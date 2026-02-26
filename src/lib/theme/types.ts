@@ -22,6 +22,9 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    badges: string;
+    difficulty: string;
+    activityFeed: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -62,7 +65,9 @@ export interface ContentTheme {
     shareStatusChanged: string;
     rankUpTitle: string;
     rankUpBody: string;
+    feedEmpty: string;
   };
+  badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;
 }
 
