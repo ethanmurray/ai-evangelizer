@@ -24,6 +24,10 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    discussion: "Transmissions",
+    playbook: "The Manuscript",
+    tip: "Intel",
+    gotcha: "Trap",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -69,6 +73,9 @@ export const cultTheme: ContentTheme = {
     shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
     shareStatusChanged: "The records have been altered from a previous decree.",
+    noComments: "No transmissions yet. Break the silence.",
+    noPlaybook: "The manuscript is unwritten. Be the first scribe.",
+    commentPlaceholder: "Transmit your knowledge...",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };

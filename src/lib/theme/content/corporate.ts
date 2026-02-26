@@ -24,6 +24,10 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    discussion: "Discussion",
+    playbook: "Playbook",
+    tip: "Tip",
+    gotcha: "Gotcha",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -69,6 +73,9 @@ export const corporateTheme: ContentTheme = {
     shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
     shareStatusChanged: "Status updated from a previous response.",
+    noComments: "No comments yet. Start the conversation!",
+    noPlaybook: "No playbook steps yet. Share your approach!",
+    commentPlaceholder: "Share your thoughts...",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };
