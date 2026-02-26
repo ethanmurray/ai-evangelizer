@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
   userName: string;
   userEmail: string;
   userTeam: string;
+  userTeams?: string[];
   emailOptIn: boolean;
   isOwnProfile: boolean;
   onTeamSaved?: (updatedUser: User) => void;
@@ -22,6 +23,7 @@ export function ProfileHeader({
   userName,
   userEmail,
   userTeam,
+  userTeams,
   emailOptIn,
   isOwnProfile,
   onTeamSaved,
@@ -29,58 +31,74 @@ export function ProfileHeader({
   const { t } = useTheme();
   const [emailOn, setEmailOn] = useState(emailOptIn);
 
-  const [editingTeam, setEditingTeam] = useState(false);
-  const [teamInput, setTeamInput] = useState('');
-  const [teams, setTeams] = useState<string[]>([]);
-  const [showTeamDropdown, setShowTeamDropdown] = useState(false);
-  const [teamSaving, setTeamSaving] = useState(false);
-  const [teamError, setTeamError] = useState<string | null>(null);
-  const [currentTeam, setCurrentTeam] = useState(userTeam);
+  const [currentTeams, setCurrentTeams] = useState<string[]>(
+    userTeams && userTeams.length > 0 ? userTeams : [userTeam]
+  );
+  const [adding, setAdding] = useState(false);
+  const [addInput, setAddInput] = useState('');
+  const [allTeams, setAllTeams] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredTeams = teams.filter(
-    (tm) => tm.toLowerCase().includes(teamInput.toLowerCase()) && tm !== teamInput
+  const filteredTeams = allTeams.filter(
+    (tm) =>
+      tm.toLowerCase().includes(addInput.toLowerCase()) &&
+      !currentTeams.includes(tm)
   );
 
   useEffect(() => {
-    if (editingTeam) {
-      listTeams().then(setTeams);
+    if (adding) {
+      listTeams().then(setAllTeams);
     }
-  }, [editingTeam]);
+  }, [adding]);
 
-  const startEditingTeam = () => {
-    setTeamInput(currentTeam);
-    setTeamError(null);
-    setEditingTeam(true);
-  };
-
-  const cancelEditingTeam = () => {
-    setEditingTeam(false);
-    setTeamError(null);
-  };
-
-  const saveTeam = async () => {
-    const trimmed = teamInput.trim();
-    if (!trimmed) {
-      setTeamError('Team name is required');
+  const handleAddTeam = async () => {
+    const trimmed = addInput.trim();
+    if (!trimmed) return;
+    if (currentTeams.includes(trimmed)) {
+      setError('Already a member of this team');
       return;
     }
-    if (trimmed === currentTeam) {
-      setEditingTeam(false);
-      return;
-    }
-
-    setTeamSaving(true);
-    setTeamError(null);
+    setSaving(true);
+    setError(null);
     try {
-      const { updateUserTeam } = await import('@/lib/auth/utils/database');
-      const updated = await updateUserTeam(userId, trimmed);
-      setCurrentTeam(updated.team);
-      setEditingTeam(false);
-      onTeamSaved?.(updated);
+      const { addUserTeam } = await import('@/lib/auth/utils/database');
+      await addUserTeam(userId, trimmed);
+      const updated = [...currentTeams, trimmed];
+      setCurrentTeams(updated);
+      setAddInput('');
+      setAdding(false);
     } catch {
-      setTeamError('Failed to update team');
+      setError('Failed to add team');
     } finally {
-      setTeamSaving(false);
+      setSaving(false);
+    }
+  };
+
+  const handleRemoveTeam = async (teamName: string) => {
+    if (currentTeams.length <= 1) {
+      setError('You must belong to at least one team');
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      const { removeUserTeam } = await import('@/lib/auth/utils/database');
+      await removeUserTeam(userId, teamName);
+      const updated = currentTeams.filter((tm) => tm !== teamName);
+      setCurrentTeams(updated);
+
+      // If we removed the primary team, update via callback
+      if (teamName === userTeam && onTeamSaved) {
+        const { findUserById } = await import('@/lib/auth/utils/database');
+        const refreshed = await findUserById(userId);
+        if (refreshed) onTeamSaved(refreshed);
+      }
+    } catch {
+      setError('Failed to remove team');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -88,7 +106,7 @@ export function ProfileHeader({
     <Card>
       <div className="flex items-center gap-4">
         <div
-          className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold"
+          className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shrink-0"
           style={{
             background: 'var(--color-primary)',
             color: '#fff',
@@ -103,8 +121,45 @@ export function ProfileHeader({
           <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
             {userEmail}
           </p>
-          {isOwnProfile && editingTeam ? (
-            <div className="mt-1">
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            {currentTeams.map((teamName) => (
+              <span
+                key={teamName}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                style={{
+                  background: 'var(--color-bg-elevated)',
+                  color: 'var(--color-text)',
+                  border: '1px solid var(--color-border)',
+                }}
+              >
+                {teamName}
+                {isOwnProfile && currentTeams.length > 1 && (
+                  <button
+                    className="ml-0.5 hover:opacity-70 cursor-pointer"
+                    style={{ color: 'var(--color-text-muted)' }}
+                    onClick={() => handleRemoveTeam(teamName)}
+                    disabled={saving}
+                  >
+                    &times;
+                  </button>
+                )}
+              </span>
+            ))}
+            {isOwnProfile && !adding && (
+              <button
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs cursor-pointer"
+                style={{
+                  border: '1px dashed var(--color-border)',
+                  color: 'var(--color-text-muted)',
+                }}
+                onClick={() => setAdding(true)}
+              >
+                + Add Team
+              </button>
+            )}
+          </div>
+          {adding && (
+            <div className="mt-1.5">
               <div className="relative">
                 <div className="flex gap-2">
                   <input
@@ -113,30 +168,30 @@ export function ProfileHeader({
                     style={{
                       background: 'var(--color-bg-surface)',
                       color: 'var(--color-text)',
-                      borderColor: teamError ? 'var(--color-error)' : 'var(--color-border)',
+                      borderColor: error ? 'var(--color-error)' : 'var(--color-border)',
                     }}
                     placeholder="Type or select a team"
-                    value={teamInput}
+                    value={addInput}
                     onChange={(e) => {
-                      setTeamInput(e.target.value);
-                      setShowTeamDropdown(true);
+                      setAddInput(e.target.value);
+                      setShowDropdown(true);
                     }}
-                    onFocus={() => setShowTeamDropdown(true)}
-                    onBlur={() => setTimeout(() => setShowTeamDropdown(false), 200)}
+                    onFocus={() => setShowDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') { e.preventDefault(); saveTeam(); }
-                      if (e.key === 'Escape') cancelEditingTeam();
+                      if (e.key === 'Enter') { e.preventDefault(); handleAddTeam(); }
+                      if (e.key === 'Escape') { setAdding(false); setError(null); }
                     }}
                     autoFocus
                   />
-                  <Button size="sm" onClick={saveTeam} isLoading={teamSaving} loadingText="...">
-                    {t.concepts.save}
+                  <Button size="sm" onClick={handleAddTeam} isLoading={saving} loadingText="...">
+                    Add
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={cancelEditingTeam}>
+                  <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setError(null); }}>
                     {t.concepts.cancel}
                   </Button>
                 </div>
-                {showTeamDropdown && filteredTeams.length > 0 && (
+                {showDropdown && filteredTeams.length > 0 && (
                   <div
                     className="absolute z-10 w-48 mt-1 rounded-lg border shadow-lg max-h-40 overflow-y-auto"
                     style={{
@@ -151,8 +206,8 @@ export function ProfileHeader({
                         className="block w-full text-left px-3 py-2 text-sm hover:opacity-80"
                         style={{ color: 'var(--color-text)' }}
                         onMouseDown={() => {
-                          setTeamInput(team);
-                          setShowTeamDropdown(false);
+                          setAddInput(team);
+                          setShowDropdown(false);
                         }}
                       >
                         {team}
@@ -161,23 +216,13 @@ export function ProfileHeader({
                   </div>
                 )}
               </div>
-              {teamError && (
-                <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{teamError}</p>
+              {error && (
+                <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{error}</p>
               )}
             </div>
-          ) : (
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Team: {currentTeam}
-              {isOwnProfile && (
-                <button
-                  className="ml-2 text-xs underline cursor-pointer"
-                  style={{ color: 'var(--color-secondary)' }}
-                  onClick={startEditingTeam}
-                >
-                  {t.concepts.edit}
-                </button>
-              )}
-            </p>
+          )}
+          {!adding && error && (
+            <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{error}</p>
           )}
           {isOwnProfile && (
             <div className="flex items-center gap-2 mt-2">

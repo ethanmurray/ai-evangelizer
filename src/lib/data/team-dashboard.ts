@@ -42,14 +42,26 @@ export interface UseCaseAdoption {
   teamMemberCount: number;
 }
 
-export async function fetchTeamOverview(team: string): Promise<TeamOverview> {
+async function getTeamMemberIds(team: string): Promise<string[]> {
+  const { data: teamRows } = await supabase
+    .from('user_teams')
+    .select('user_id')
+    .eq('team_name', team);
+
+  const candidateIds = (teamRows || []).map((r: any) => r.user_id);
+  if (candidateIds.length === 0) return [];
+
   const { data: users } = await supabase
     .from('users')
     .select('id')
-    .eq('team', team)
+    .in('id', candidateIds)
     .eq('is_stub', false);
 
-  const memberIds = (users || []).map((u: any) => u.id);
+  return (users || []).map((u: any) => u.id);
+}
+
+export async function fetchTeamOverview(team: string): Promise<TeamOverview> {
+  const memberIds = await getTeamMemberIds(team);
   if (memberIds.length === 0) {
     return { totalMembers: 0, totalPoints: 0, totalLearned: 0, totalApplied: 0, totalCompleted: 0 };
   }
@@ -81,15 +93,16 @@ export async function fetchTeamOverview(team: string): Promise<TeamOverview> {
 }
 
 export async function fetchTeamMembers(team: string): Promise<TeamMember[]> {
+  const memberIds = await getTeamMemberIds(team);
+  if (memberIds.length === 0) return [];
+
   const { data: users } = await supabase
     .from('users')
     .select('id, name, email')
-    .eq('team', team)
+    .in('id', memberIds)
     .eq('is_stub', false);
 
   if (!users || users.length === 0) return [];
-
-  const memberIds = users.map((u: any) => u.id);
 
   const { data: points } = await supabase
     .from('user_total_points')
@@ -127,13 +140,7 @@ export async function fetchTeamMembers(team: string): Promise<TeamMember[]> {
 }
 
 export async function fetchTeamWeeklyGrowth(team: string, weeks = 8): Promise<WeeklyGrowth[]> {
-  const { data: users } = await supabase
-    .from('users')
-    .select('id')
-    .eq('team', team)
-    .eq('is_stub', false);
-
-  const memberIds = (users || []).map((u: any) => u.id);
+  const memberIds = await getTeamMemberIds(team);
   if (memberIds.length === 0) return [];
 
   const sinceDate = new Date();
@@ -182,13 +189,7 @@ export async function fetchTeamWeeklyGrowth(team: string, weeks = 8): Promise<We
 }
 
 export async function fetchTeamSkillGaps(team: string): Promise<SkillGap[]> {
-  const { data: users } = await supabase
-    .from('users')
-    .select('id')
-    .eq('team', team)
-    .eq('is_stub', false);
-
-  const memberIds = (users || []).map((u: any) => u.id);
+  const memberIds = await getTeamMemberIds(team);
   if (memberIds.length === 0) return [];
 
   // Get all progress with use case labels

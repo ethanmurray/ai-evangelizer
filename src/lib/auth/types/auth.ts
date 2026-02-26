@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   team: string;
+  teams?: string[];
   isStub: boolean;
   isAdmin: boolean;
   createdAt: Date;
