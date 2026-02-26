@@ -27,3 +27,6 @@ export {
   fetchUserRankPosition
 } from './points';
 export type { UserPoints } from './points';
+
+export { fetchUserBadges, checkAndAwardBadges, BADGE_DEFINITIONS } from './badges';
+export type { BadgeDefinition, UserBadge } from './badges';

@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { checkAndAwardBadges } from './badges';
 
 export const PREDEFINED_LABELS = [
   'Coding',
@@ -133,6 +134,10 @@ export async function createUseCase(
     .single();
 
   if (error) throw new Error(error.message);
+
+  // Check badges (fire-and-forget)
+  checkAndAwardBadges(submittedBy).catch(() => {});
+
   return data;
 }
 

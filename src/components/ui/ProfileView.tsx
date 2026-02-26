@@ -12,6 +12,8 @@ import { RankDisplay } from '@/components/ui/RankDisplay';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { useBadges } from '@/hooks/useBadges';
+import { BadgeDisplay } from '@/components/ui/BadgeDisplay';
 import type { User } from '@/lib/auth/types/auth';
 
 interface ProfileViewProps {
@@ -33,6 +35,7 @@ export function ProfileView({
 }: ProfileViewProps) {
   const { t } = useTheme();
   const { progress, completedCount } = useProgress(userId);
+  const { badges: earnedBadges } = useBadges(userId);
   const { useCases } = useUseCases();
   const [shares, setShares] = useState<ShareRecord[]>([]);
   const [receivedShares, setReceivedShares] = useState<ShareRecord[]>([]);
@@ -208,6 +211,9 @@ export function ProfileView({
 
       {/* Rank */}
       <RankDisplay points={points} />
+
+      {/* Badges */}
+      <BadgeDisplay earnedBadges={earnedBadges} />
 
       {/* Completed use cases */}
       {completed.length > 0 && (

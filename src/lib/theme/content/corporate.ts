@@ -24,6 +24,7 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    badges: "Badges",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -69,6 +70,18 @@ export const corporateTheme: ContentTheme = {
     shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
     shareStatusChanged: "Status updated from a previous response.",
+  },
+  badgeNames: {
+    first_learn: { name: "First Step", description: "Learned your first skill" },
+    first_apply: { name: "Applied!", description: "Applied your first skill" },
+    first_share: { name: "First Share", description: "Shared a skill with a colleague" },
+    ten_learned: { name: "10 Learned", description: "Learned 10 skills" },
+    five_applied: { name: "5 Applied", description: "Applied 5 skills" },
+    taught_five: { name: "Mentor", description: "Taught 5 different people" },
+    full_stack_ai: { name: "Full Stack AI", description: "Completed a use case in every category" },
+    submitted_one: { name: "Contributor", description: "Submitted a skill to the library" },
+    five_completed: { name: "5 Mastered", description: "Fully mastered 5 skills" },
+    speed_learner: { name: "Quick Learner", description: "Learned 3 skills in one day" },
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };
