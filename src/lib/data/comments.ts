@@ -151,41 +151,18 @@ export async function createComment(
         { use_case_id: useCaseId, comment_id: data.id, parent_comment_id: parentId }
       ).catch(() => {});
 
-      // Email notification (fire-and-forget, dynamic import to avoid loading Resend client-side)
-      (async () => {
-        try {
-          const { sendEmail } = await import('../email');
-          const { buildReplyNotificationEmail } = await import('../email-templates/reply-notification');
-
-          const { data: parentAuthor } = await supabase
-            .from('users')
-            .select('name, email, email_opt_in')
-            .eq('id', parentComment.author_id)
-            .single();
-
-          if (!parentAuthor || parentAuthor.email_opt_in === false) return;
-
-          const { data: replier } = await supabase
-            .from('users')
-            .select('name')
-            .eq('id', authorId)
-            .single();
-
-          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-          const { subject, html } = buildReplyNotificationEmail({
-            recipientName: parentAuthor.name || 'there',
-            replierName: replier?.name || 'Someone',
-            replySnippet: content,
-            originalSnippet: parentComment.content,
-            useCaseTitle: useCase?.title || 'a use case',
-            useCaseUrl: `${baseUrl}/use-cases/${useCaseId}`,
-          });
-
-          await sendEmail({ to: parentAuthor.email, subject, html });
-        } catch {
-          // Fire-and-forget: swallow email errors
-        }
-      })();
+      // Email notification via API route (fire-and-forget)
+      fetch('/api/send-reply-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          parentCommentId: parentId,
+          replyContent: content,
+          replierAuthorId: authorId,
+          useCaseId,
+          useCaseTitle: useCase?.title || '',
+        }),
+      }).catch(() => {});
     }
   }
 
