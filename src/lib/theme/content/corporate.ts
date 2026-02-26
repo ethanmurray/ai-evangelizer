@@ -25,6 +25,7 @@ export const corporateTheme: ContentTheme = {
     cancel: "Cancel",
     about: "About This App",
     difficulty: "Difficulty",
+    activityFeed: "Activity Feed",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -70,6 +71,7 @@ export const corporateTheme: ContentTheme = {
     shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
     shareStatusChanged: "Status updated from a previous response.",
+    feedEmpty: "No activity yet. Be the first!",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };

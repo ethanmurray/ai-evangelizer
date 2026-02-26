@@ -25,6 +25,7 @@ export const cultTheme: ContentTheme = {
     cancel: "Abandon",
     about: "Behind the Curtain",
     difficulty: "Danger Level",
+    activityFeed: "The Signal",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -70,6 +71,7 @@ export const cultTheme: ContentTheme = {
     shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
     shareStatusChanged: "The records have been altered from a previous decree.",
+    feedEmpty: "The void stares back. No signals yet.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };

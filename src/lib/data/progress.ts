@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import { findUserByEmail, createStubUser } from '../auth/utils/database';
+import { logActivity } from './activity';
 
 export async function markSeen(userId: string, useCaseId: string): Promise<void> {
   const { data: existing } = await supabase
@@ -25,6 +26,10 @@ export async function markSeen(userId: string, useCaseId: string): Promise<void>
         seen_at: new Date().toISOString(),
       });
   }
+
+  // Log activity (fire-and-forget)
+  const { data: actor } = await supabase.from('users').select('team').eq('id', userId).single();
+  logActivity('learned', userId, useCaseId, actor?.team).catch(() => {});
 }
 
 export async function unmarkSeen(userId: string, useCaseId: string): Promise<void> {
@@ -71,6 +76,10 @@ export async function markDone(userId: string, useCaseId: string): Promise<void>
         done_at: now,
       });
   }
+
+  // Log activity (fire-and-forget)
+  const { data: actor } = await supabase.from('users').select('team').eq('id', userId).single();
+  logActivity('applied', userId, useCaseId, actor?.team).catch(() => {});
 }
 
 function generateToken(): string {
@@ -132,6 +141,9 @@ export async function shareWithRecipient(
         seen_at: new Date().toISOString(),
       });
   }
+
+  // Log activity (fire-and-forget)
+  logActivity('shared', sharerId, useCaseId, sharerTeam).catch(() => {});
 
   return { id: share.id, confirmationToken };
 }

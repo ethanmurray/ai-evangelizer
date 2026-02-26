@@ -30,3 +30,6 @@ export type { UserPoints } from './points';
 
 export { fetchDifficulty, fetchAllDifficultyStats, fetchUserRating, rateDifficulty } from './difficulty';
 export type { DifficultyStats } from './difficulty';
+
+export { logActivity, fetchActivityFeed, formatRelativeTime } from './activity';
+export type { ActivityEvent, ActivityEventType } from './activity';
