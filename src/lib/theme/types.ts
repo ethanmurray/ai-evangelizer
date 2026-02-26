@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    difficulty: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {

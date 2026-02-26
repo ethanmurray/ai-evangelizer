@@ -24,6 +24,7 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    difficulty: "Danger Level",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },

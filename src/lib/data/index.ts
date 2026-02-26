@@ -27,3 +27,6 @@ export {
   fetchUserRankPosition
 } from './points';
 export type { UserPoints } from './points';
+
+export { fetchDifficulty, fetchAllDifficultyStats, fetchUserRating, rateDifficulty } from './difficulty';
+export type { DifficultyStats } from './difficulty';
