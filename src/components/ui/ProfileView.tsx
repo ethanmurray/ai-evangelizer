@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/Button';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { useSkillRadar } from '@/hooks/useSkillRadar';
 import { SkillRadarChart } from '@/components/ui/SkillRadarChart';
+import { useBadges } from '@/hooks/useBadges';
+import { BadgeDisplay } from '@/components/ui/BadgeDisplay';
 import type { User } from '@/lib/auth/types/auth';
 
 interface ProfileViewProps {
@@ -35,6 +37,7 @@ export function ProfileView({
 }: ProfileViewProps) {
   const { t } = useTheme();
   const { progress, completedCount } = useProgress(userId);
+  const { badges: earnedBadges } = useBadges(userId);
   const { useCases } = useUseCases();
   const { data: skillRadarData, isLoading: radarLoading } = useSkillRadar(userId);
   const [shares, setShares] = useState<ShareRecord[]>([]);
@@ -214,6 +217,9 @@ export function ProfileView({
 
       {/* Skill Radar */}
       <SkillRadarChart data={skillRadarData} isLoading={radarLoading} />
+
+      {/* Badges */}
+      <BadgeDisplay earnedBadges={earnedBadges} />
 
       {/* Completed use cases */}
       {completed.length > 0 && (
