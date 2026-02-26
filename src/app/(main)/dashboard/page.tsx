@@ -12,6 +12,8 @@ import { Card } from '@/components/ui/Card';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { Button } from '@/components/ui/Button';
 import { AboutModal } from '@/components/ui/AboutModal';
+import { useActivityFeed } from '@/hooks/useActivityFeed';
+import { ActivityFeedItem } from '@/components/ui/ActivityFeedItem';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -20,6 +22,7 @@ export default function DashboardPage() {
   const { useCases } = useUseCases();
   const [showAbout, setShowAbout] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
+  const { events: recentActivity, isLoading: activityLoading } = useActivityFeed();
 
   useEffect(() => {
     if (user?.id) {
@@ -145,6 +148,27 @@ export default function DashboardPage() {
                   </div>
                 </Card>
               </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Activity */}
+      {!activityLoading && recentActivity.length > 0 && (
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-lg font-bold">{t.concepts.activityFeed}</h2>
+            <Link
+              href="/feed"
+              className="text-sm font-medium"
+              style={{ color: 'var(--color-primary)' }}
+            >
+              View all &rarr;
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {recentActivity.slice(0, 5).map((event) => (
+              <ActivityFeedItem key={event.id} event={event} />
             ))}
           </div>
         </div>

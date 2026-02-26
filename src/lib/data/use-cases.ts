@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { logActivity } from './activity';
 
 export const PREDEFINED_LABELS = [
   'Coding',
@@ -133,6 +134,11 @@ export async function createUseCase(
     .single();
 
   if (error) throw new Error(error.message);
+
+  // Log activity (fire-and-forget)
+  const { data: actor } = await supabase.from('users').select('team').eq('id', submittedBy).single();
+  logActivity('submitted', submittedBy, data.id, actor?.team).catch(() => {});
+
   return data;
 }
 

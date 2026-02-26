@@ -27,3 +27,6 @@ export {
   fetchUserRankPosition
 } from './points';
 export type { UserPoints } from './points';
+
+export { logActivity, fetchActivityFeed, formatRelativeTime } from './activity';
+export type { ActivityEvent, ActivityEventType } from './activity';
