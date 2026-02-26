@@ -32,6 +32,7 @@ export const cultTheme: ContentTheme = {
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
+    heatmap: "The Conspiracy Map",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -83,6 +84,7 @@ export const cultTheme: ContentTheme = {
     rankUpTitle: "ASCENSION",
     rankUpBody: "You have ascended to {rank}. The algorithm favors you.",
     feedEmpty: "The void stares back. No signals yet.",
+    heatmapSubtitle: "Which rituals have the masses embraced?",
   },
   badgeNames: {
     first_learn: { name: "The Awakening", description: "Witnessed your first ritual" },
