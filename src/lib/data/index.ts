@@ -27,3 +27,6 @@ export {
   fetchUserRankPosition
 } from './points';
 export type { UserPoints } from './points';
+
+export { fetchUserTimeline } from './timeline';
+export type { TimelineEvent, TimelineEventType } from './timeline';

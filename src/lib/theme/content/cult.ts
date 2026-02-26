@@ -24,6 +24,7 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    timeline: "The Chronology",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -69,6 +70,7 @@ export const cultTheme: ContentTheme = {
     shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
     shareStatusChanged: "The records have been altered from a previous decree.",
+    timelineEmpty: "Your story has not yet begun.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };
