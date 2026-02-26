@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
   userName: string;
   userEmail: string;
   userTeam: string;
+  emailOptIn: boolean;
   isOwnProfile: boolean;
   onTeamSaved?: (updatedUser: User) => void;
 }
@@ -21,10 +22,12 @@ export function ProfileHeader({
   userName,
   userEmail,
   userTeam,
+  emailOptIn,
   isOwnProfile,
   onTeamSaved,
 }: ProfileHeaderProps) {
   const { t } = useTheme();
+  const [emailOn, setEmailOn] = useState(emailOptIn);
 
   const [editingTeam, setEditingTeam] = useState(false);
   const [teamInput, setTeamInput] = useState('');
@@ -175,6 +178,39 @@ export function ProfileHeader({
                 </button>
               )}
             </p>
+          )}
+          {isOwnProfile && (
+            <div className="flex items-center gap-2 mt-2">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={emailOn}
+                onClick={async () => {
+                  const next = !emailOn;
+                  setEmailOn(next);
+                  try {
+                    const { updateEmailOptIn } = await import('@/lib/auth/utils/database');
+                    await updateEmailOptIn(userId, next);
+                  } catch {
+                    setEmailOn(!next);
+                  }
+                }}
+                className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors"
+                style={{
+                  background: emailOn ? 'var(--color-primary)' : 'var(--color-border)',
+                }}
+              >
+                <span
+                  className="inline-block h-3.5 w-3.5 rounded-full bg-white transition-transform"
+                  style={{
+                    transform: emailOn ? 'translateX(17px)' : 'translateX(3px)',
+                  }}
+                />
+              </button>
+              <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                Email notifications
+              </span>
+            </div>
           )}
         </div>
       </div>

@@ -114,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAdmin: data.user.isAdmin ?? false,
         createdAt: new Date(data.user.createdAt),
         themePreference: data.user.themePreference,
+        emailOptIn: data.user.emailOptIn ?? true,
       };
 
       saveUser(verifiedUser);

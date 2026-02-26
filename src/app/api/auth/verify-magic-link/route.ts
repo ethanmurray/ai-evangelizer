@@ -46,6 +46,7 @@ export async function POST(request: Request) {
         isAdmin: user.is_admin ?? false,
         createdAt: user.created_at,
         themePreference: user.theme_preference || null,
+        emailOptIn: user.email_opt_in ?? true,
       },
     });
   } catch (err: any) {

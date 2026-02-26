@@ -100,6 +100,13 @@ export interface ContentTheme {
     onboardingBack: string;
     onboardingFinish: string;
     replayTour: string;
+    emailConsentTitle: string;
+    emailConsentBody: string;
+    emailConsentBullet1: string;
+    emailConsentBullet2: string;
+    emailConsentBullet3: string;
+    emailConsentAccept: string;
+    emailConsentDecline: string;
   };
   badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;
