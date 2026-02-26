@@ -9,17 +9,38 @@ export interface LeaderboardEntry {
 }
 
 export async function fetchLeaderboard(teamFilter?: string): Promise<LeaderboardEntry[]> {
-  // Get all user points
-  let query = supabase
+  if (teamFilter) {
+    // Get user IDs in this team from user_teams junction table
+    const { data: teamMembers } = await supabase
+      .from('user_teams')
+      .select('user_id')
+      .eq('team_name', teamFilter);
+
+    const memberIds = (teamMembers || []).map((m: any) => m.user_id);
+    if (memberIds.length === 0) return [];
+
+    const { data, error } = await supabase
+      .from('user_total_points')
+      .select('user_id, name, team, total_points')
+      .in('user_id', memberIds)
+      .order('total_points', { ascending: false });
+
+    if (error || !data) return [];
+
+    return data.map((u: any) => ({
+      user_id: u.user_id,
+      name: u.name,
+      team: u.team,
+      points: u.total_points,
+      completed_count: Math.floor(u.total_points / 10),
+    }));
+  }
+
+  // No filter — return all
+  const { data, error } = await supabase
     .from('user_total_points')
     .select('user_id, name, team, total_points')
     .order('total_points', { ascending: false });
-
-  if (teamFilter) {
-    query = query.eq('team', teamFilter);
-  }
-
-  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching leaderboard:', error);
@@ -33,7 +54,7 @@ export async function fetchLeaderboard(teamFilter?: string): Promise<Leaderboard
     name: u.name,
     team: u.team,
     points: u.total_points,
-    completed_count: Math.floor(u.total_points / 10), // Approximate for backwards compatibility
+    completed_count: Math.floor(u.total_points / 10),
   }));
 }
 
@@ -45,13 +66,20 @@ export interface TeamRankingEntry {
 }
 
 export async function fetchTeamRankings(): Promise<TeamRankingEntry[]> {
-  // Get all non-stub users
+  // Get all user-team associations from junction table
+  const { data: userTeamRows } = await supabase
+    .from('user_teams')
+    .select('user_id, team_name');
+
+  if (!userTeamRows || userTeamRows.length === 0) return [];
+
+  // Get non-stub user IDs
   const { data: users } = await supabase
     .from('users')
-    .select('id, team')
+    .select('id')
     .eq('is_stub', false);
 
-  if (!users || users.length === 0) return [];
+  const nonStubIds = new Set((users || []).map((u: any) => u.id));
 
   // Get completion counts
   const { data: counts } = await supabase
@@ -60,13 +88,14 @@ export async function fetchTeamRankings(): Promise<TeamRankingEntry[]> {
 
   const countMap = new Map((counts || []).map((c: any) => [c.user_id, c.completed_count as number]));
 
-  // Group by team
+  // Group by team (users in multiple teams count for each)
   const teamMap = new Map<string, { totalCompleted: number; memberCount: number }>();
-  for (const u of users) {
-    const existing = teamMap.get(u.team) || { totalCompleted: 0, memberCount: 0 };
+  for (const row of userTeamRows) {
+    if (!nonStubIds.has(row.user_id)) continue;
+    const existing = teamMap.get(row.team_name) || { totalCompleted: 0, memberCount: 0 };
     existing.memberCount += 1;
-    existing.totalCompleted += countMap.get(u.id) || 0;
-    teamMap.set(u.team, existing);
+    existing.totalCompleted += countMap.get(row.user_id) || 0;
+    teamMap.set(row.team_name, existing);
   }
 
   return Array.from(teamMap.entries())

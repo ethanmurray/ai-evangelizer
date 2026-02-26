@@ -75,6 +75,7 @@ export default function UserProfilePage() {
         userName={profileUser.name}
         userEmail={profileUser.email}
         userTeam={profileUser.team}
+        userTeams={profileUser.teams}
         isOwnProfile={false}
       />
     </div>

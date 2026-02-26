@@ -15,6 +15,66 @@ function userFromRow(row: UserRow): User {
   };
 }
 
+export async function getUserTeams(userId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('user_teams')
+    .select('team_name')
+    .eq('user_id', userId)
+    .order('is_primary', { ascending: false })
+    .order('joined_at', { ascending: true });
+
+  if (error || !data) return [];
+  return data.map((row) => row.team_name);
+}
+
+export async function addUserTeam(userId: string, teamName: string): Promise<void> {
+  const trimmed = teamName.trim();
+  await supabase.from('teams').upsert({ name: trimmed }, { onConflict: 'name' });
+
+  const { error } = await supabase
+    .from('user_teams')
+    .upsert(
+      { user_id: userId, team_name: trimmed },
+      { onConflict: 'user_id,team_name' }
+    );
+
+  if (error) throw new Error(error.message);
+}
+
+export async function removeUserTeam(userId: string, teamName: string): Promise<void> {
+  const { error } = await supabase
+    .from('user_teams')
+    .delete()
+    .eq('user_id', userId)
+    .eq('team_name', teamName);
+
+  if (error) throw new Error(error.message);
+
+  // If we removed the primary team, reassign primary to the first remaining team
+  const remaining = await getUserTeams(userId);
+  if (remaining.length > 0) {
+    // Check if any team is still primary
+    const { data: primaryRow } = await supabase
+      .from('user_teams')
+      .select('team_name')
+      .eq('user_id', userId)
+      .eq('is_primary', true)
+      .maybeSingle();
+
+    if (!primaryRow) {
+      await supabase
+        .from('user_teams')
+        .update({ is_primary: true })
+        .eq('user_id', userId)
+        .eq('team_name', remaining[0]);
+    }
+
+    // Sync users.team to match primary
+    const primary = primaryRow?.team_name || remaining[0];
+    await supabase.from('users').update({ team: primary }).eq('id', userId);
+  }
+}
+
 export async function findUserByEmail(email: string): Promise<User | null> {
   const { data, error } = await supabase
     .from('users')
@@ -23,7 +83,9 @@ export async function findUserByEmail(email: string): Promise<User | null> {
     .maybeSingle();
 
   if (error || !data) return null;
-  return userFromRow(data);
+  const user = userFromRow(data);
+  user.teams = await getUserTeams(user.id);
+  return user;
 }
 
 export async function findUserById(id: string): Promise<User | null> {
@@ -34,7 +96,9 @@ export async function findUserById(id: string): Promise<User | null> {
     .maybeSingle();
 
   if (error || !data) return null;
-  return userFromRow(data);
+  const user = userFromRow(data);
+  user.teams = await getUserTeams(user.id);
+  return user;
 }
 
 export async function createUser(
@@ -57,7 +121,18 @@ export async function createUser(
     .single();
 
   if (error) throw new Error(error.message);
-  return userFromRow(data);
+  const user = userFromRow(data);
+
+  // Also add to user_teams junction table
+  await supabase
+    .from('user_teams')
+    .upsert(
+      { user_id: user.id, team_name: team.trim(), is_primary: true },
+      { onConflict: 'user_id,team_name' }
+    );
+  user.teams = [team.trim()];
+
+  return user;
 }
 
 export async function createStubUser(
@@ -97,7 +172,18 @@ export async function convertStubUser(
     .single();
 
   if (error) throw new Error(error.message);
-  return userFromRow(data);
+  const user = userFromRow(data);
+
+  // Ensure user_teams entry exists
+  await supabase
+    .from('user_teams')
+    .upsert(
+      { user_id: user.id, team_name: team.trim(), is_primary: true },
+      { onConflict: 'user_id,team_name' }
+    );
+  user.teams = await getUserTeams(user.id);
+
+  return user;
 }
 
 export async function listTeams(): Promise<string[]> {
