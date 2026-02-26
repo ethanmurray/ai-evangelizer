@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    timeline: string;
     discussion: string;
     playbook: string;
     tip: string;
@@ -68,6 +69,7 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    timelineEmpty: string;
     noComments: string;
     noPlaybook: string;
     commentPlaceholder: string;

@@ -9,9 +9,11 @@ import { fetchUserShares, fetchUserReceivedShares, ShareRecord } from '@/lib/dat
 import { fetchUserPoints } from '@/lib/data/points';
 import { listTeams } from '@/lib/auth/utils/database';
 import { RankDisplay } from '@/components/ui/RankDisplay';
+import { Timeline } from '@/components/ui/Timeline';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { useTimeline } from '@/hooks/useTimeline';
 import { useSkillRadar } from '@/hooks/useSkillRadar';
 import { SkillRadarChart } from '@/components/ui/SkillRadarChart';
 import { useBadges } from '@/hooks/useBadges';
@@ -37,6 +39,7 @@ export function ProfileView({
 }: ProfileViewProps) {
   const { t } = useTheme();
   const { progress, completedCount } = useProgress(userId);
+  const { events: timelineEvents, isLoading: timelineLoading } = useTimeline(userId);
   const { badges: earnedBadges } = useBadges(userId);
   const { useCases } = useUseCases();
   const { data: skillRadarData, isLoading: radarLoading } = useSkillRadar(userId);
@@ -309,6 +312,9 @@ export function ProfileView({
           </div>
         </div>
       )}
+
+      {/* Timeline */}
+      <Timeline events={timelineEvents} isLoading={timelineLoading} />
     </div>
   );
 }

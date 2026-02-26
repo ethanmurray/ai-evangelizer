@@ -28,6 +28,9 @@ export {
 } from './points';
 export type { UserPoints } from './points';
 
+export { fetchUserTimeline } from './timeline';
+export type { TimelineEvent, TimelineEventType } from './timeline';
+
 export { createNotification, fetchUnreadNotifications, fetchRecentNotifications, markNotificationRead, markAllRead } from './notifications';
 export type { Notification } from './notifications';
 
