@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    skillRadar: string;
     badges: string;
     difficulty: string;
     activityFeed: string;

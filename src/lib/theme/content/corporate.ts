@@ -24,6 +24,7 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    skillRadar: "Skill Radar",
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",

@@ -24,6 +24,7 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    skillRadar: "The All-Seeing Eye",
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
