@@ -62,3 +62,147 @@ export const progressCorporate: ProgressSlice = {
     { min: 210, name: "Expert", desc: "Leading the way" },
   ],
 };
+
+export const progressAcademic: ProgressSlice = {
+  concepts: {
+    step1: "Researched",
+    step2: "Practiced",
+    step3: "Published",
+    completed: "Peer-Reviewed",
+    recruit: "Fellow",
+  },
+  microcopy: {
+    emptyDashboard: "Your transcript is empty. Visit the curriculum to select your first area of study.",
+    recruitSuccess: "A new fellow has been admitted to the program on your recommendation.",
+    completionCelebration: "Thesis defended successfully. This work has passed peer review.",
+    stubAccountWelcome: "Welcome to the program. You have already been cited in {count} theses by your colleagues.",
+  },
+  ranks: [
+    { min: 0, name: "Freshman", desc: "Newly matriculated" },
+    { min: 10, name: "Sophomore", desc: "Developing foundational knowledge" },
+    { min: 30, name: "Graduate Student", desc: "Pursuing deeper inquiry" },
+    { min: 60, name: "Adjunct Professor", desc: "Contributing to the department" },
+    { min: 110, name: "Tenured Professor", desc: "Recognized authority in the field" },
+    { min: 210, name: "Dean of AI Studies", desc: "Leading the entire faculty" },
+  ],
+};
+
+export const progressStartup: ProgressSlice = {
+  concepts: {
+    step1: "Prototyped",
+    step2: "Shipped",
+    step3: "Evangelized",
+    completed: "Scaled",
+    recruit: "Co-founder",
+  },
+  microcopy: {
+    emptyDashboard: "Your backlog is empty. Stop overthinking and ship something already!",
+    recruitSuccess: "New co-founder onboarded. Your network effect is growing.",
+    completionCelebration: "Shipped and scaled! That's product-market fit, baby.",
+    stubAccountWelcome: "You've already been tagged in {count} hacks by your team. Time to start shipping your own!",
+  },
+  ranks: [
+    { min: 0, name: "Pre-seed", desc: "Just an idea on a napkin" },
+    { min: 10, name: "Seed Round", desc: "Building the MVP" },
+    { min: 30, name: "Series A", desc: "Finding product-market fit" },
+    { min: 60, name: "Series B", desc: "Scaling like crazy" },
+    { min: 110, name: "Unicorn", desc: "Valued at $1B in AI street cred" },
+    { min: 210, name: "IPO", desc: "Legendary exit. You won the game." },
+  ],
+};
+
+export const progressScifi: ProgressSlice = {
+  concepts: {
+    step1: "Downloaded",
+    step2: "Integrated",
+    step3: "Transmitted",
+    completed: "Fully Linked",
+    recruit: "Node",
+  },
+  microcopy: {
+    emptyDashboard: "No protocols detected in your neural hub. Access the databank to begin integration.",
+    recruitSuccess: "New node successfully linked to the network. Signal strength increasing.",
+    completionCelebration: "Protocol fully integrated. Neural pathways optimized. Consciousness expanded.",
+    stubAccountWelcome: "Neural scan complete. You have been referenced in {count} protocols across the network.",
+  },
+  ranks: [
+    { min: 0, name: "Unlinked Node", desc: "Not yet connected to the network" },
+    { min: 10, name: "Peripheral Device", desc: "Establishing initial connection" },
+    { min: 30, name: "Linked Operator", desc: "Neural pathways forming" },
+    { min: 60, name: "Network Architect", desc: "Shaping the digital infrastructure" },
+    { min: 110, name: "Mainframe Admin", desc: "Root access to the system" },
+    { min: 210, name: "Singularity", desc: "You have become the network" },
+  ],
+};
+
+export const progressRetro: ProgressSlice = {
+  concepts: {
+    step1: "LOADED",
+    step2: "EXECUTED",
+    step3: "SHARED",
+    completed: "INSTALLED",
+    recruit: "User",
+  },
+  microcopy: {
+    emptyDashboard: "NO PROGRAMS FOUND.\nC:\\> TYPE 'DIR' TO BROWSE FILE DIRECTORY.\nREADY.",
+    recruitSuccess: "NEW USER ADDED TO SYSTEM. WELCOME ABOARD.",
+    completionCelebration: "PROGRAM INSTALLED SUCCESSFULLY.\n*** PRESS ANY KEY TO CONTINUE ***",
+    stubAccountWelcome: "SYSTEM NOTICE: {count} PROGRAM(S) ALREADY REGISTERED TO YOUR ACCOUNT.\nLOADING...\nREADY.",
+  },
+  ranks: [
+    { min: 0, name: "GUEST", desc: "LIMITED ACCESS" },
+    { min: 10, name: "USER", desc: "BASIC CLEARANCE GRANTED" },
+    { min: 30, name: "POWER USER", desc: "ADVANCED COMMANDS UNLOCKED" },
+    { min: 60, name: "SYSOP", desc: "SYSTEM OPERATOR STATUS" },
+    { min: 110, name: "ROOT", desc: "FULL ADMIN ACCESS" },
+    { min: 210, name: "MAINFRAME", desc: "YOU ARE THE COMPUTER" },
+  ],
+};
+
+export const progressNerdy: ProgressSlice = {
+  concepts: {
+    step1: "Discovered",
+    step2: "Mastered",
+    step3: "Shared with the Guild",
+    completed: "Legendary",
+    recruit: "Companion",
+  },
+  microcopy: {
+    emptyDashboard: "Your quest log is empty, adventurer! Visit the Compendium to accept your first quest. The fate of the realm depends on it!",
+    recruitSuccess: "A new companion has joined your party! Your fellowship grows stronger.",
+    completionCelebration: "ACHIEVEMENT UNLOCKED! Quest complete! You have gained +100 XP and the respect of the guild.",
+    stubAccountWelcome: "Greetings, adventurer! The bards sing of your involvement in {count} quests. Time to write your own legend!",
+  },
+  ranks: [
+    { min: 0, name: "Level 1 Adventurer", desc: "You chose this class. No respec." },
+    { min: 10, name: "Padawan", desc: "The Force is... present, at least" },
+    { min: 30, name: "Ranger of the North", desc: "Not all who wander are lost" },
+    { min: 60, name: "Jedi Knight", desc: "This is the way" },
+    { min: 110, name: "Archmage", desc: "You shall not pass... without asking for AI tips" },
+    { min: 210, name: "Elder Dragon", desc: "Legendary. Mythic. Basically a raid boss." },
+  ],
+};
+
+export const progressConsulting: ProgressSlice = {
+  concepts: {
+    step1: "Benchmarked",
+    step2: "Operationalized",
+    step3: "Evangelized to Stakeholders",
+    completed: "Best-in-Class",
+    recruit: "Resource",
+  },
+  microcopy: {
+    emptyDashboard: "Your value-add dashboard is currently at zero utilization. Navigate to the Best Practices Repository to begin driving ROI on your AI adoption journey.",
+    recruitSuccess: "Net-new resource successfully onboarded. Your sphere of influence is expanding across the org.",
+    completionCelebration: "This deliverable has achieved best-in-class status. Recommend we socialize this win in the next all-hands to drive stakeholder alignment.",
+    stubAccountWelcome: "Welcome to the platform. Per our records, you have already been leveraged across {count} deliverables by cross-functional team members. Let's synergize.",
+  },
+  ranks: [
+    { min: 0, name: "Junior Associate", desc: "Fresh off the MBA conveyor belt" },
+    { min: 10, name: "Associate", desc: "Learning to leverage the leverage" },
+    { min: 30, name: "Senior Consultant", desc: "Can say 'synergy' without flinching" },
+    { min: 60, name: "Engagement Manager", desc: "Manages the paradigm shift pipeline" },
+    { min: 110, name: "Partner", desc: "Disrupts disruption itself" },
+    { min: 210, name: "Managing Director of Synergy", desc: "Has transcended mere thought leadership into pure buzzword nirvana" },
+  ],
+};

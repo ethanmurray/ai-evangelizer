@@ -43,7 +43,7 @@ export function clearStoredUser(): void {
   }
 }
 
-export function saveThemePreference(pref: 'cult' | 'corporate' | null): void {
+export function saveThemePreference(pref: string | null): void {
   try {
     if (pref) {
       localStorage.setItem(THEME_PREF_KEY, pref);
@@ -53,11 +53,9 @@ export function saveThemePreference(pref: 'cult' | 'corporate' | null): void {
   } catch {}
 }
 
-export function getStoredThemePreference(): 'cult' | 'corporate' | null {
+export function getStoredThemePreference(): string | null {
   try {
-    const val = localStorage.getItem(THEME_PREF_KEY);
-    if (val === 'cult' || val === 'corporate') return val;
-    return null;
+    return localStorage.getItem(THEME_PREF_KEY) || null;
   } catch {
     return null;
   }

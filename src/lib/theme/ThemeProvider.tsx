@@ -2,14 +2,22 @@
 
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { ContentTheme, VisualTheme, AppTheme } from './types';
-import { cultTheme, corporateTheme } from './mergeSlices';
+import { cultTheme, corporateTheme, academicTheme, startupTheme, scifiTheme, retroTheme, nerdyTheme, consultingTheme } from './mergeSlices';
 import { getStoredThemePreference } from '@/lib/auth/utils/storage';
+
+export type ThemeKey = 'cult' | 'corporate' | 'academic' | 'startup' | 'scifi' | 'retro' | 'nerdy' | 'consulting';
 
 const DARK_MODE_KEY = 'cult_of_ai_dark_mode';
 
-const contentThemes: Record<string, ContentTheme> = {
+const contentThemes: Record<ThemeKey, ContentTheme> = {
   cult: cultTheme,
   corporate: corporateTheme,
+  academic: academicTheme,
+  startup: startupTheme,
+  scifi: scifiTheme,
+  retro: retroTheme,
+  nerdy: nerdyTheme,
+  consulting: consultingTheme,
 };
 
 const visualThemes: Record<string, VisualTheme> = {
@@ -19,27 +27,34 @@ const visualThemes: Record<string, VisualTheme> = {
   'clean-dark': { name: 'Clean Dark', cssClass: 'clean-dark' },
 };
 
+// Themes that use the conspiracy-board visual style; all others use clean
+const CONSPIRACY_THEMES: Set<ThemeKey> = new Set(['cult', 'scifi', 'retro', 'nerdy']);
+
 function getVisualThemeKey(contentKey: string, darkMode: boolean): string {
-  if (contentKey === 'cult') return darkMode ? 'conspiracy-board' : 'conspiracy-board-light';
+  if (CONSPIRACY_THEMES.has(contentKey as ThemeKey)) {
+    return darkMode ? 'conspiracy-board' : 'conspiracy-board-light';
+  }
   return darkMode ? 'clean-dark' : 'clean';
 }
 
+const VALID_THEME_KEYS: Set<string> = new Set<string>(Object.keys(contentThemes));
+
 export interface ThemeContextType extends AppTheme {
-  themeKey: 'cult' | 'corporate';
-  setThemeKey: (key: 'cult' | 'corporate') => void;
+  themeKey: ThemeKey;
+  setThemeKey: (key: ThemeKey) => void;
   darkMode: boolean;
   toggleDarkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-function getInitialThemeKey(): 'cult' | 'corporate' {
+function getInitialThemeKey(): ThemeKey {
   if (typeof window !== 'undefined') {
     const stored = getStoredThemePreference();
-    if (stored) return stored;
+    if (stored && VALID_THEME_KEYS.has(stored)) return stored as ThemeKey;
   }
   const envKey = process.env.NEXT_PUBLIC_CONTENT_THEME;
-  if (envKey === 'cult' || envKey === 'corporate') return envKey;
+  if (envKey && VALID_THEME_KEYS.has(envKey)) return envKey as ThemeKey;
   return 'cult';
 }
 
@@ -54,10 +69,10 @@ function getInitialDarkMode(): boolean {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeKey, setThemeKeyState] = useState<'cult' | 'corporate'>(getInitialThemeKey);
+  const [themeKey, setThemeKeyState] = useState<ThemeKey>(getInitialThemeKey);
   const [darkMode, setDarkMode] = useState<boolean>(getInitialDarkMode);
 
-  const setThemeKey = useCallback((key: 'cult' | 'corporate') => {
+  const setThemeKey = useCallback((key: ThemeKey) => {
     setThemeKeyState(key);
   }, []);
 

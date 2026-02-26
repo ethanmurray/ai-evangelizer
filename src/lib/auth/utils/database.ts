@@ -10,7 +10,7 @@ function userFromRow(row: UserRow): User {
     isStub: row.is_stub,
     isAdmin: row.is_admin ?? false,
     createdAt: new Date(row.created_at),
-    themePreference: (row.theme_preference as 'cult' | 'corporate') || null,
+    themePreference: row.theme_preference || null,
     emailOptIn: row.email_opt_in ?? true,
   };
 }
@@ -134,7 +134,7 @@ export async function updateUserTeam(
 
 export async function updateUserTheme(
   userId: string,
-  themePreference: 'cult' | 'corporate' | null
+  themePreference: string | null
 ): Promise<User> {
   const { data, error } = await supabase
     .from('users')

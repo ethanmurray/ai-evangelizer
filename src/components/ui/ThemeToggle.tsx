@@ -2,9 +2,23 @@
 
 import React, { useState } from 'react';
 import { useTheme } from '@/lib/theme';
+import type { ThemeKey } from '@/lib/theme';
 import { useAuth } from '@/lib/auth';
 import { updateUserTheme } from '@/lib/auth/utils/database';
 import { saveThemePreference } from '@/lib/auth/utils/storage';
+
+const THEME_ORDER: ThemeKey[] = ['cult', 'corporate', 'academic', 'startup', 'scifi', 'retro', 'nerdy', 'consulting'];
+
+const THEME_LABELS: Record<ThemeKey, string> = {
+  cult: 'Conspiracy Mode',
+  corporate: 'Corporate Mode',
+  academic: 'Academic Mode',
+  startup: 'Startup Mode',
+  scifi: 'Sci-Fi Mode',
+  retro: 'Retro Mode',
+  nerdy: 'Nerdy Mode',
+  consulting: 'Consulting Mode',
+};
 
 export function ThemeToggle() {
   const { themeKey, setThemeKey } = useTheme();
@@ -12,7 +26,8 @@ export function ThemeToggle() {
   const [saving, setSaving] = useState(false);
 
   const handleToggle = async () => {
-    const newKey = themeKey === 'cult' ? 'corporate' : 'cult';
+    const currentIndex = THEME_ORDER.indexOf(themeKey);
+    const newKey = THEME_ORDER[(currentIndex + 1) % THEME_ORDER.length];
 
     // Apply immediately (optimistic)
     setThemeKey(newKey);
@@ -46,7 +61,7 @@ export function ThemeToggle() {
         opacity: saving ? 0.6 : 1,
       }}
     >
-      <span>{themeKey === 'cult' ? 'Conspiracy Mode' : 'Corporate Mode'}</span>
+      <span>{THEME_LABELS[themeKey] || themeKey}</span>
     </button>
   );
 }

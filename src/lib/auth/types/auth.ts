@@ -6,7 +6,7 @@ export interface User {
   isStub: boolean;
   isAdmin: boolean;
   createdAt: Date;
-  themePreference: 'cult' | 'corporate' | null;
+  themePreference: string | null;
   emailOptIn: boolean;
 }
 
