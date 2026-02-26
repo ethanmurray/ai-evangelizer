@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       replySnippet: replyContent,
       originalSnippet: parentComment.content,
       useCaseTitle: useCaseTitle || 'a use case',
-      useCaseUrl: `${baseUrl}/use-cases/${useCaseId}`,
+      useCaseUrl: `${baseUrl}/library/${useCaseId}`,
     });
 
     await sendEmail({ to: parentAuthor.email, subject, html });

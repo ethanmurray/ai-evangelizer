@@ -97,7 +97,7 @@ export function NotificationBell() {
                 onClick={() => {
                   if (!n.is_read) markRead(n.id);
                   if (n.metadata?.use_case_id) {
-                    router.push(`/use-cases/${n.metadata.use_case_id}`);
+                    router.push(`/library/${n.metadata.use_case_id}`);
                     setOpen(false);
                   }
                 }}
