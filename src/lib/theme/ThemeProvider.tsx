@@ -2,8 +2,7 @@
 
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { ContentTheme, VisualTheme, AppTheme } from './types';
-import { cultTheme } from './content/cult';
-import { corporateTheme } from './content/corporate';
+import { cultTheme, corporateTheme } from './mergeSlices';
 import { getStoredThemePreference } from '@/lib/auth/utils/storage';
 
 const contentThemes: Record<string, ContentTheme> = {
