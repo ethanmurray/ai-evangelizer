@@ -28,6 +28,7 @@ export const corporateTheme: ContentTheme = {
     playbook: "Playbook",
     tip: "Tip",
     gotcha: "Gotcha",
+    skillRadar: "Skill Radar",
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",

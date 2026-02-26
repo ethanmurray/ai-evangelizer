@@ -26,6 +26,7 @@ export interface ContentTheme {
     playbook: string;
     tip: string;
     gotcha: string;
+    skillRadar: string;
     badges: string;
     difficulty: string;
     activityFeed: string;

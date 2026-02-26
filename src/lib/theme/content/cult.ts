@@ -28,6 +28,7 @@ export const cultTheme: ContentTheme = {
     playbook: "The Manuscript",
     tip: "Intel",
     gotcha: "Trap",
+    skillRadar: "The All-Seeing Eye",
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
