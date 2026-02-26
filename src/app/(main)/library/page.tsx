@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/Input';
 import { LabelFilter } from '@/components/ui/LabelFilter';
 import { LabelPill } from '@/components/ui/LabelPill';
 import { LabelSelector } from '@/components/ui/LabelSelector';
+import { DifficultyRating } from '@/components/ui/DifficultyRating';
+import { useDifficultyStats } from '@/hooks/useDifficultyStats';
 import { createUseCase } from '@/lib/data/use-cases';
 
 export default function LibraryPage() {
@@ -26,6 +28,8 @@ export default function LibraryPage() {
     selectedLabels.length > 0 ? selectedLabels : undefined
   );
   const { progress } = useProgress(user?.id);
+  const { stats: difficultyStats } = useDifficultyStats();
+  const [sortBy, setSortBy] = useState<'default' | 'easiest' | 'hardest'>('default');
   const [showSubmit, setShowSubmit] = useState(false);
   const [submitTitle, setSubmitTitle] = useState('');
   const [submitDesc, setSubmitDesc] = useState('');
@@ -40,6 +44,15 @@ export default function LibraryPage() {
   };
 
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
+
+  const sortedUseCases = [...useCases].sort((a, b) => {
+    if (sortBy === 'default') return 0;
+    const aStats = difficultyStats.get(a.id);
+    const bStats = difficultyStats.get(b.id);
+    const aAvg = aStats?.avg_difficulty ?? (sortBy === 'easiest' ? 999 : 0);
+    const bAvg = bStats?.avg_difficulty ?? (sortBy === 'easiest' ? 999 : 0);
+    return sortBy === 'easiest' ? aAvg - bAvg : bAvg - aAvg;
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,7 +145,24 @@ export default function LibraryPage() {
         placeholder={`Search ${t.concepts.useCasePlural.toLowerCase()}...`}
       />
 
-      {/* Label filters */}
+      {/* Sort + Label filters */}
+      <div className="flex gap-2 items-center">
+        <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Sort:</span>
+        {(['default', 'easiest', 'hardest'] as const).map((opt) => (
+          <button
+            key={opt}
+            className="text-xs px-2 py-1 rounded-full border"
+            style={{
+              borderColor: sortBy === opt ? 'var(--color-primary)' : 'var(--color-border)',
+              background: sortBy === opt ? 'var(--color-primary)' : 'transparent',
+              color: sortBy === opt ? '#fff' : 'var(--color-text-muted)',
+            }}
+            onClick={() => setSortBy(opt)}
+          >
+            {opt === 'default' ? 'Default' : opt === 'easiest' ? 'Easiest' : 'Hardest'}
+          </button>
+        ))}
+      </div>
       <LabelFilter
         selectedLabels={selectedLabels}
         onToggle={handleToggleLabel}
@@ -146,8 +176,9 @@ export default function LibraryPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {useCases.map((uc) => {
+          {sortedUseCases.map((uc) => {
             const p = progressMap.get(uc.id);
+            const ds = difficultyStats.get(uc.id);
             return (
               <Link key={uc.id} href={`/library/${uc.id}`}>
                 <Card hoverable className="mb-3">
@@ -159,13 +190,20 @@ export default function LibraryPage() {
                       <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>
                         {uc.description}
                       </p>
-                      {uc.labels && uc.labels.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {uc.labels.map((label) => (
-                            <LabelPill key={label} label={label} />
-                          ))}
-                        </div>
-                      )}
+                      <div className="flex flex-wrap gap-1 mt-2 items-center">
+                        {uc.labels && uc.labels.length > 0 && uc.labels.map((label) => (
+                          <LabelPill key={label} label={label} />
+                        ))}
+                        {ds && (
+                          <DifficultyRating
+                            avgDifficulty={ds.avg_difficulty}
+                            ratingCount={ds.rating_count}
+                            userRating={null}
+                            canRate={false}
+                            compact
+                          />
+                        )}
+                      </div>
                     </div>
                     <div className="ml-3 text-xs flex items-center gap-1" style={{ color: 'var(--color-text-muted)' }}>
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

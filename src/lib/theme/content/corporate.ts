@@ -24,6 +24,7 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    difficulty: "Difficulty",
     activityFeed: "Activity Feed",
   },
   ranks: [
