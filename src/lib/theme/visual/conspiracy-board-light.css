@@ -1,0 +1,15 @@
+[data-visual-theme="conspiracy-board-light"] {
+  --color-bg: #fef9f0;
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #fff7ed;
+  --color-primary: #e63946;
+  --color-secondary: #f4a261;
+  --color-text: #292524;
+  --color-text-muted: #78716c;
+  --color-text-heading: #c2410c;
+  --color-border: #e7e5e4;
+  --color-success: #2a9d8f;
+  --color-error: #e63946;
+  --font-heading: 'Special Elite', 'Courier Prime', monospace;
+  --font-body: 'Inter', sans-serif;
+}
