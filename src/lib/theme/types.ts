@@ -25,6 +25,8 @@ export interface ContentTheme {
     badges: string;
     difficulty: string;
     activityFeed: string;
+    teamDashboard: string;
+    skillGaps: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {

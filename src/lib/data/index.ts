@@ -39,3 +39,6 @@ export type { DifficultyStats } from './difficulty';
 
 export { logActivity, fetchActivityFeed, formatRelativeTime } from './activity';
 export type { ActivityEvent, ActivityEventType } from './activity';
+
+export { fetchTeamOverview, fetchTeamMembers, fetchTeamWeeklyGrowth, fetchTeamSkillGaps } from './team-dashboard';
+export type { TeamOverview, TeamMember, WeeklyGrowth, SkillGap } from './team-dashboard';

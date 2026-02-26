@@ -8,8 +8,9 @@ import { useLeaderboard } from '@/hooks/useLeaderboard';
 import { Card } from '@/components/ui/Card';
 import { getRank } from '@/lib/rank';
 import { deleteUser } from '@/lib/data/users';
+import { TeamDashboard } from '@/components/ui/TeamDashboard';
 
-type ViewMode = 'individuals' | 'teams';
+type ViewMode = 'individuals' | 'teams' | 'team-dashboard';
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
@@ -64,6 +65,16 @@ export default function LeaderboardPage() {
           >
             Teams
           </button>
+          <button
+            className="px-4 py-2 text-sm font-medium cursor-pointer"
+            style={{
+              background: viewMode === 'team-dashboard' ? 'var(--color-primary)' : 'var(--color-bg-surface)',
+              color: viewMode === 'team-dashboard' ? '#fff' : 'var(--color-text)',
+            }}
+            onClick={() => setViewMode('team-dashboard')}
+          >
+            {t.concepts.teamDashboard}
+          </button>
         </div>
 
         {viewMode === 'individuals' && (
@@ -86,7 +97,9 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
+      {viewMode === 'team-dashboard' ? (
+        <TeamDashboard teams={teams} defaultTeam={user?.team} />
+      ) : isLoading ? (
         <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Loading...</div>
       ) : viewMode === 'individuals' ? (
         /* Individuals table */

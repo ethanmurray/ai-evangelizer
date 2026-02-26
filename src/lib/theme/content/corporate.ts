@@ -27,6 +27,8 @@ export const corporateTheme: ContentTheme = {
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",
+    teamDashboard: "Team Dashboard",
+    skillGaps: "Skill Gaps",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },

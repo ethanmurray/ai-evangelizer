@@ -27,6 +27,8 @@ export const cultTheme: ContentTheme = {
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
+    teamDashboard: "Cult Census",
+    skillGaps: "Blind Spots",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
