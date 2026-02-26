@@ -4,11 +4,14 @@ export interface LeaderboardEntry {
   user_id: string;
   name: string;
   team: string;
+  teams: string[];
   points: number;
   completed_count?: number; // Keep for backwards compatibility
 }
 
 export async function fetchLeaderboard(teamFilter?: string): Promise<LeaderboardEntry[]> {
+  let userData: any[];
+
   if (teamFilter) {
     // Get user IDs in this team from user_teams junction table
     const { data: teamMembers } = await supabase
@@ -26,33 +29,42 @@ export async function fetchLeaderboard(teamFilter?: string): Promise<Leaderboard
       .order('total_points', { ascending: false });
 
     if (error || !data) return [];
+    userData = data;
+  } else {
+    // No filter — return all
+    const { data, error } = await supabase
+      .from('user_total_points')
+      .select('user_id, name, team, total_points')
+      .order('total_points', { ascending: false });
 
-    return data.map((u: any) => ({
-      user_id: u.user_id,
-      name: u.name,
-      team: u.team,
-      points: u.total_points,
-      completed_count: Math.floor(u.total_points / 10),
-    }));
+    if (error) {
+      console.error('Error fetching leaderboard:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) return [];
+    userData = data;
   }
 
-  // No filter — return all
-  const { data, error } = await supabase
-    .from('user_total_points')
-    .select('user_id, name, team, total_points')
-    .order('total_points', { ascending: false });
+  // Fetch all team associations from junction table
+  const userIds = userData.map((u: any) => u.user_id);
+  const { data: userTeamRows } = await supabase
+    .from('user_teams')
+    .select('user_id, team_name')
+    .in('user_id', userIds);
 
-  if (error) {
-    console.error('Error fetching leaderboard:', error);
-    return [];
+  const teamsMap = new Map<string, string[]>();
+  for (const row of userTeamRows || []) {
+    const existing = teamsMap.get(row.user_id) || [];
+    existing.push(row.team_name);
+    teamsMap.set(row.user_id, existing);
   }
 
-  if (!data || data.length === 0) return [];
-
-  return data.map((u: any) => ({
+  return userData.map((u: any) => ({
     user_id: u.user_id,
     name: u.name,
     team: u.team,
+    teams: teamsMap.get(u.user_id) || [u.team],
     points: u.total_points,
     completed_count: Math.floor(u.total_points / 10),
   }));

@@ -85,8 +85,22 @@ export function IndividualsTable({
                   </Link>
                   {isCurrentUser && <span className="ml-2 text-xs">(you)</span>}
                 </td>
-                <td className="px-4 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  {entry.team}
+                <td className="px-4 py-3 text-sm">
+                  <div className="flex flex-wrap gap-1">
+                    {(entry.teams && entry.teams.length > 0 ? entry.teams : [entry.team]).map((teamName) => (
+                      <span
+                        key={teamName}
+                        className="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+                        style={{
+                          background: 'var(--color-bg-elevated)',
+                          color: 'var(--color-text-muted)',
+                          border: '1px solid var(--color-border)',
+                        }}
+                      >
+                        {teamName}
+                      </span>
+                    ))}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-sm font-medium" style={{ color: 'var(--color-secondary)' }}>
                   {rank.name}
