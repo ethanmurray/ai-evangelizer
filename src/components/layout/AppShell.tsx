@@ -10,6 +10,9 @@ import { AboutModal } from '@/components/ui/AboutModal';
 import { PointsReferenceModal } from '@/components/ui/PointsReferenceModal';
 import { NotificationBell } from '@/components/ui/NotificationBell';
 import { DarkModeToggle } from '@/components/ui/DarkModeToggle';
+import { OnboardingWizard } from '@/components/ui/OnboardingWizard';
+import { OnboardingProvider } from '@/lib/onboarding/OnboardingContext';
+import { useOnboarding } from '@/hooks/useOnboarding';
 
 const DashboardIcon = () => (
   <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -64,6 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [showAbout, setShowAbout] = useState(false);
   const [showPoints, setShowPoints] = useState(false);
+  const { showOnboarding, completeOnboarding, replayOnboarding } = useOnboarding(user?.id);
 
   const navItems = [
     { href: '/dashboard', label: t.concepts.dashboard, icon: <DashboardIcon /> },
@@ -139,12 +143,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </svg>
             {t.concepts.about}
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-start font-semibold about-button-styled"
+            onClick={replayOnboarding}
+            style={{
+              color: 'var(--color-primary)',
+              borderColor: 'var(--color-primary)',
+              borderWidth: '2px',
+              backgroundColor: 'rgba(244, 162, 97, 0.1)',
+            }}
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+            </svg>
+            {t.microcopy.replayTour}
+          </Button>
         </div>
       </aside>
 
       {/* Main content */}
       <main className="flex-1 md:ml-56 pb-20 md:pb-0">
-        {children}
+        <OnboardingProvider replayOnboarding={replayOnboarding}>
+          {children}
+        </OnboardingProvider>
       </main>
 
       {/* Mobile bottom nav */}
@@ -170,6 +193,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <PointsReferenceModal
         isOpen={showPoints}
         onClose={() => setShowPoints(false)}
+      />
+
+      <OnboardingWizard
+        isOpen={showOnboarding}
+        onComplete={completeOnboarding}
       />
     </div>
   );
