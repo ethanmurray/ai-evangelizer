@@ -26,6 +26,9 @@ export interface ContentTheme {
     playbook: string;
     tip: string;
     gotcha: string;
+    badges: string;
+    difficulty: string;
+    activityFeed: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -67,7 +70,11 @@ export interface ContentTheme {
     noComments: string;
     noPlaybook: string;
     commentPlaceholder: string;
+    rankUpTitle: string;
+    rankUpBody: string;
+    feedEmpty: string;
   };
+  badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;
 }
 

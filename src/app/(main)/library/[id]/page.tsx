@@ -24,6 +24,8 @@ import { CommentThread } from '@/components/ui/CommentThread';
 import { CommentForm } from '@/components/ui/CommentForm';
 import { PlaybookSection } from '@/components/ui/PlaybookSection';
 import { CommentType } from '@/lib/data/comments';
+import { useDifficulty } from '@/hooks/useDifficulty';
+import { DifficultyRating } from '@/components/ui/DifficultyRating';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -34,6 +36,7 @@ export default function UseCaseDetailPage() {
   const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
   const { people, totalCount, isLoading: peopleLoading } = usePeopleForUseCase(id, user?.id);
   const { comments, playbookSteps, addComment, removeComment } = useComments(id);
+  const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn } = useDifficulty(id, user?.id);
 
   const [recipient1, setRecipient1] = useState('');
   const [recipient2, setRecipient2] = useState('');
@@ -227,6 +230,15 @@ export default function UseCaseDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Difficulty Rating */}
+      <DifficultyRating
+        avgDifficulty={difficultyStats?.avg_difficulty ?? null}
+        ratingCount={difficultyStats?.rating_count ?? 0}
+        userRating={difficultyUserRating}
+        canRate={!!user && !!useCase.done_at}
+        onRate={rateDifficultyFn}
+      />
 
       {/* Upvote + edit + delete */}
       <div className="flex items-center gap-4">
