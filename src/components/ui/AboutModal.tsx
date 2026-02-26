@@ -69,6 +69,17 @@ export function AboutModal({ isOpen, onClose, title, content }: AboutModalProps)
           ))}
         </div>
 
+        <div
+          className="text-xs pt-2"
+          style={{ color: 'var(--color-text-muted)', opacity: 0.6 }}
+        >
+          v{process.env.NEXT_PUBLIC_APP_VERSION}
+          {process.env.NEXT_PUBLIC_BUILD_DATE &&
+            ` · Built ${new Date(process.env.NEXT_PUBLIC_BUILD_DATE).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+          {process.env.NEXT_PUBLIC_BUILD_COMMIT &&
+            ` · ${process.env.NEXT_PUBLIC_BUILD_COMMIT}`}
+        </div>
+
         <div className="flex justify-end pt-4">
           <Button variant="primary" size="sm" onClick={onClose}>
             Close
