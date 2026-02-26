@@ -1,4 +1,6 @@
 import { supabase } from '../supabase';
+import { sendEmail } from '../email';
+import { buildReplyNotificationEmail } from '../email-templates/reply-notification';
 import { createNotification } from './notifications';
 
 export type CommentType = 'discussion' | 'tip' | 'gotcha' | 'playbook_step';
@@ -122,13 +124,72 @@ export async function createComment(
 
   if (error) throw new Error(error.message);
 
-  // Notify use case submitter (fire-and-forget)
+  // --- Notifications (fire-and-forget) ---
   const { data: useCase } = await supabase
     .from('use_cases')
     .select('submitted_by, title')
     .eq('id', useCaseId)
     .single();
-  if (useCase?.submitted_by && useCase.submitted_by !== authorId) {
+
+  const notifiedUserIds = new Set<string>();
+
+  // 1) Reply notification: notify the parent comment's author
+  if (parentId) {
+    const { data: parentComment } = await supabase
+      .from('comments')
+      .select('author_id, content')
+      .eq('id', parentId)
+      .single();
+
+    if (parentComment && parentComment.author_id !== authorId) {
+      notifiedUserIds.add(parentComment.author_id);
+
+      // In-app notification
+      createNotification(
+        parentComment.author_id,
+        'reply_received',
+        'New reply to your comment',
+        `Someone replied to your comment on "${useCase?.title || 'a use case'}"`,
+        { use_case_id: useCaseId, comment_id: data.id, parent_comment_id: parentId }
+      ).catch(() => {});
+
+      // Email notification (fire-and-forget)
+      (async () => {
+        try {
+          const { data: parentAuthor } = await supabase
+            .from('users')
+            .select('name, email, email_opt_in')
+            .eq('id', parentComment.author_id)
+            .single();
+
+          if (!parentAuthor || parentAuthor.email_opt_in === false) return;
+
+          const { data: replier } = await supabase
+            .from('users')
+            .select('name')
+            .eq('id', authorId)
+            .single();
+
+          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+          const { subject, html } = buildReplyNotificationEmail({
+            recipientName: parentAuthor.name || 'there',
+            replierName: replier?.name || 'Someone',
+            replySnippet: content,
+            originalSnippet: parentComment.content,
+            useCaseTitle: useCase?.title || 'a use case',
+            useCaseUrl: `${baseUrl}/use-cases/${useCaseId}`,
+          });
+
+          await sendEmail({ to: parentAuthor.email, subject, html });
+        } catch {
+          // Fire-and-forget: swallow email errors
+        }
+      })();
+    }
+  }
+
+  // 2) Use case submitter notification (skip if already notified as parent comment author)
+  if (useCase?.submitted_by && useCase.submitted_by !== authorId && !notifiedUserIds.has(useCase.submitted_by)) {
     createNotification(
       useCase.submitted_by,
       'comment_received',
