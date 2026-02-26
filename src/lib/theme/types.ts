@@ -22,11 +22,20 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    timeline: string;
+    discussion: string;
+    playbook: string;
+    tip: string;
+    gotcha: string;
+    skillRadar: string;
     badges: string;
     difficulty: string;
     activityFeed: string;
     teamDashboard: string;
     skillGaps: string;
+    heatmap: string;
+    recommended: string;
+    related: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -65,9 +74,15 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    timelineEmpty: string;
+    noComments: string;
+    noPlaybook: string;
+    commentPlaceholder: string;
     rankUpTitle: string;
     rankUpBody: string;
     feedEmpty: string;
+    heatmapSubtitle: string;
+    noRecommendations: string;
   };
   badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;

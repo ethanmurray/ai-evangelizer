@@ -28,6 +28,9 @@ export {
 } from './points';
 export type { UserPoints } from './points';
 
+export { fetchUserTimeline } from './timeline';
+export type { TimelineEvent, TimelineEventType } from './timeline';
+
 export { createNotification, fetchUnreadNotifications, fetchRecentNotifications, markNotificationRead, markAllRead } from './notifications';
 export type { Notification } from './notifications';
 
@@ -42,3 +45,9 @@ export type { ActivityEvent, ActivityEventType } from './activity';
 
 export { fetchTeamOverview, fetchTeamMembers, fetchTeamWeeklyGrowth, fetchTeamSkillGaps } from './team-dashboard';
 export type { TeamOverview, TeamMember, WeeklyGrowth, SkillGap } from './team-dashboard';
+
+export { fetchAdoptionHeatmap, fetchAdoptionByLabel } from './heatmap';
+export type { HeatmapCell, LabelHeatmapGroup, HeatLevel } from './heatmap';
+
+export { fetchRecommendations, fetchRelatedUseCases } from './recommendations';
+export type { Recommendation } from './recommendations';

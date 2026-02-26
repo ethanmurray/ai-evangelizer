@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/Button';
 import { AboutModal } from '@/components/ui/AboutModal';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { ActivityFeedItem } from '@/components/ui/ActivityFeedItem';
+import { useRecommendations } from '@/hooks/useRecommendations';
+import { RecommendationCard } from '@/components/ui/RecommendationCard';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -23,6 +25,7 @@ export default function DashboardPage() {
   const [showAbout, setShowAbout] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
   const { events: recentActivity, isLoading: activityLoading } = useActivityFeed();
+  const { recommendations, isLoading: recsLoading } = useRecommendations(user?.id);
 
   useEffect(() => {
     if (user?.id) {
@@ -110,7 +113,7 @@ export default function DashboardPage() {
             In Progress ({inProgressCount})
           </h2>
           <div className="space-y-3">
-            {inProgressItems.slice(0, 5).map((uc) => {
+            {inProgressItems.map((uc) => {
               const p = progressMap.get(uc.id)!;
               return (
                 <Link key={uc.id} href={`/library/${uc.id}`}>
@@ -148,6 +151,20 @@ export default function DashboardPage() {
                   </div>
                 </Card>
               </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recommendations */}
+      {!recsLoading && recommendations.length > 0 && (
+        <div>
+          <h2 className="text-lg font-bold mb-3">
+            {t.concepts.recommended}
+          </h2>
+          <div className="space-y-2">
+            {recommendations.slice(0, 5).map((rec) => (
+              <RecommendationCard key={rec.id} recommendation={rec} />
             ))}
           </div>
         </div>
