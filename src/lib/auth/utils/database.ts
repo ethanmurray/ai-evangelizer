@@ -11,6 +11,7 @@ function userFromRow(row: UserRow): User {
     isAdmin: row.is_admin ?? false,
     createdAt: new Date(row.created_at),
     themePreference: (row.theme_preference as 'cult' | 'corporate') || null,
+    emailOptIn: row.email_opt_in ?? true,
   };
 }
 
@@ -144,4 +145,16 @@ export async function updateUserTheme(
 
   if (error) throw new Error(error.message);
   return userFromRow(data);
+}
+
+export async function updateEmailOptIn(
+  userId: string,
+  optIn: boolean
+): Promise<void> {
+  const { error } = await supabase
+    .from('users')
+    .update({ email_opt_in: optIn })
+    .eq('id', userId);
+
+  if (error) throw new Error(error.message);
 }

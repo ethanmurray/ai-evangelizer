@@ -34,6 +34,17 @@ export async function POST(request: Request) {
     const confirmUrl = `${baseUrl}/share/respond?token=${confirmationToken}&action=confirm`;
     const denyUrl = `${baseUrl}/share/respond?token=${confirmationToken}&action=deny`;
 
+    // Check if recipient has opted out of emails
+    const { data: recipient } = await supabaseServer
+      .from('users')
+      .select('email_opt_in')
+      .eq('email', recipientEmail.toLowerCase().trim())
+      .maybeSingle();
+
+    if (recipient?.email_opt_in === false) {
+      return NextResponse.json({ success: true, skipped: 'recipient_opted_out' });
+    }
+
     const displayName = sharerName || 'A colleague';
 
     await sendEmail({

@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Fetch all non-stub users
+  // Fetch all non-stub users who opted in to emails
   const { data: users, error } = await supabase
     .from('users')
     .select('id, email')
-    .eq('is_stub', false);
+    .eq('is_stub', false)
+    .neq('email_opt_in', false);
 
   if (error || !users) {
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });

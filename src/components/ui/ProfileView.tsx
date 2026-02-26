@@ -23,6 +23,7 @@ interface ProfileViewProps {
   userName: string;
   userEmail: string;
   userTeam: string;
+  emailOptIn?: boolean;
   isOwnProfile: boolean;
   onTeamSaved?: (updatedUser: User) => void;
 }
@@ -32,6 +33,7 @@ export function ProfileView({
   userName,
   userEmail,
   userTeam,
+  emailOptIn = true,
   isOwnProfile,
   onTeamSaved,
 }: ProfileViewProps) {
@@ -61,6 +63,7 @@ export function ProfileView({
         userName={userName}
         userEmail={userEmail}
         userTeam={userTeam}
+        emailOptIn={emailOptIn}
         isOwnProfile={isOwnProfile}
         onTeamSaved={onTeamSaved}
       />

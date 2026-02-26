@@ -20,6 +20,7 @@ import { useTrending } from '@/hooks/useTrending';
 import { TrendingCard } from '@/components/ui/TrendingCard';
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist';
 import { OnboardingChecklist } from '@/components/ui/OnboardingChecklist';
+import { EmailConsentModal } from '@/components/ui/EmailConsentModal';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -32,12 +33,22 @@ export default function DashboardPage() {
   const { recommendations, isLoading: recsLoading } = useRecommendations(user?.id);
   const { trending, isLoading: trendingLoading } = useTrending();
   const { items: checklistItems, visible: showChecklist, dismiss: dismissChecklist } = useOnboardingChecklist(user?.id);
+  const [showEmailConsent, setShowEmailConsent] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
       fetchUserPoints(user.id).then(setUserPoints);
     }
   }, [user?.id]);
+
+  // Show email consent modal once after onboarding is no longer showing
+  useEffect(() => {
+    if (!user?.id || showChecklist) return;
+    const key = `email_consent_shown_${user.id}`;
+    if (!localStorage.getItem(key)) {
+      setShowEmailConsent(true);
+    }
+  }, [user?.id, showChecklist]);
 
   // Build a map of use_case_id -> progress
   const progressMap = new Map(progress.map((p) => [p.use_case_id, p]));
@@ -243,6 +254,23 @@ export default function DashboardPage() {
         title={t.microcopy.aboutTitle}
         content={t.microcopy.aboutContent}
       />
+
+      {showEmailConsent && user && (
+        <EmailConsentModal
+          onAccept={async () => {
+            const { updateEmailOptIn } = await import('@/lib/auth/utils/database');
+            await updateEmailOptIn(user.id, true).catch(() => {});
+            localStorage.setItem(`email_consent_shown_${user.id}`, '1');
+            setShowEmailConsent(false);
+          }}
+          onDecline={async () => {
+            const { updateEmailOptIn } = await import('@/lib/auth/utils/database');
+            await updateEmailOptIn(user.id, false).catch(() => {});
+            localStorage.setItem(`email_consent_shown_${user.id}`, '1');
+            setShowEmailConsent(false);
+          }}
+        />
+      )}
     </div>
   );
 }

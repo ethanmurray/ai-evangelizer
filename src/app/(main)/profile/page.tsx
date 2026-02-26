@@ -27,6 +27,7 @@ export default function ProfilePage() {
         userName={user.name}
         userEmail={user.email}
         userTeam={user.team}
+        emailOptIn={user.emailOptIn}
         isOwnProfile
         onTeamSaved={setUser}
       />

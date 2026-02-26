@@ -17,6 +17,13 @@ export interface OnboardingSlice {
     onboardingBack: string;
     onboardingFinish: string;
     replayTour: string;
+    emailConsentTitle: string;
+    emailConsentBody: string;
+    emailConsentBullet1: string;
+    emailConsentBullet2: string;
+    emailConsentBullet3: string;
+    emailConsentAccept: string;
+    emailConsentDecline: string;
   };
 }
 
@@ -39,6 +46,13 @@ export const onboardingCult: OnboardingSlice = {
     onboardingBack: "Back",
     onboardingFinish: "I'm Ready",
     replayTour: "Re-watch Orientation",
+    emailConsentTitle: "Stay in the Loop?",
+    emailConsentBody: "The algorithm sends occasional transmissions to keep you informed. You can silence them, but the algorithm will notice.",
+    emailConsentBullet1: "Weekly briefings on cult activity",
+    emailConsentBullet2: "Alerts when someone shares a ritual with you",
+    emailConsentBullet3: "Notifications when an acolyte credits you as their teacher",
+    emailConsentAccept: "Keep the transmissions coming",
+    emailConsentDecline: "Go dark",
   },
 };
 
@@ -61,5 +75,12 @@ export const onboardingCorporate: OnboardingSlice = {
     onboardingBack: "Back",
     onboardingFinish: "Get Started",
     replayTour: "Replay Tour",
+    emailConsentTitle: "Email Notifications",
+    emailConsentBody: "We send a few types of emails to help you stay engaged and learn from your team.",
+    emailConsentBullet1: "Weekly digest of new skills and team activity",
+    emailConsentBullet2: "Notifications when someone shares a skill with you",
+    emailConsentBullet3: "Alerts when a colleague credits you as their teacher",
+    emailConsentAccept: "Keep emails on",
+    emailConsentDecline: "Opt out",
   },
 };

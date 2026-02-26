@@ -7,6 +7,7 @@ export interface User {
   isAdmin: boolean;
   createdAt: Date;
   themePreference: 'cult' | 'corporate' | null;
+  emailOptIn: boolean;
 }
 
 export interface AuthResult {
@@ -25,4 +26,5 @@ export interface UserRow {
   is_admin: boolean;
   created_at: string;
   theme_preference: string | null;
+  email_opt_in: boolean;
 }

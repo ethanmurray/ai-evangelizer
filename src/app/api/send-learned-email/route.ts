@@ -25,6 +25,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Check if teacher has opted out of emails
+    const { data: teacher } = await supabase
+      .from('users')
+      .select('email_opt_in')
+      .eq('email', teacherEmail.toLowerCase().trim())
+      .maybeSingle();
+
+    if (teacher?.email_opt_in === false) {
+      return NextResponse.json({ ok: true, skipped: 'teacher_opted_out' });
+    }
+
     const displayName = learnerName || learnerEmail;
 
     // Send email to the teacher, cc the learner
