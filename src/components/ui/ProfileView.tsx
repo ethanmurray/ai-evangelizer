@@ -16,6 +16,9 @@ import { BadgeDisplay } from '@/components/ui/BadgeDisplay';
 import { ProfileHeader } from '@/components/ui/ProfileHeader';
 import { ProfileProgressLists } from '@/components/ui/ProfileProgressLists';
 import { ShareProfileButton } from '@/components/ui/ShareProfileButton';
+import { ExportPdfButton } from '@/components/ui/ExportPdfButton';
+import { useRank } from '@/hooks/useRank';
+import { BADGE_DEFINITIONS } from '@/lib/data/badges';
 import type { User } from '@/lib/auth/types/auth';
 
 interface ProfileViewProps {
@@ -54,9 +57,29 @@ export function ProfileView({
     fetchUserPoints(userId).then(setPoints);
   }, [userId]);
 
+  const { t } = useTheme();
+  const { current: currentRank } = useRank(points);
+
   const useCaseMap = new Map(useCases.map((uc) => [uc.id, uc]));
   const completed = progress.filter((p) => p.is_completed);
   const inProgress = progress.filter((p) => !p.is_completed);
+
+  const pdfBadges = earnedBadges.map((b) => {
+    const def = BADGE_DEFINITIONS.find((d) => d.id === b.badge_id);
+    const themed = t.badgeNames?.[b.badge_id];
+    return {
+      name: themed?.name || b.badge_id.replace(/_/g, ' '),
+      category: def?.category || 'special',
+    };
+  });
+
+  const pdfCompleted = completed.map((p) => ({
+    title: useCaseMap.get(p.use_case_id)?.title || 'Unknown',
+  }));
+
+  const pdfInProgress = inProgress.map((p) => ({
+    title: useCaseMap.get(p.use_case_id)?.title || 'Unknown',
+  }));
 
   return (
     <div className="space-y-6">
@@ -71,7 +94,21 @@ export function ProfileView({
         onTeamSaved={onTeamSaved}
       />
 
-      <ShareProfileButton userId={userId} userName={userName} />
+      <div className="flex flex-wrap gap-2">
+        <ShareProfileButton userId={userId} userName={userName} />
+        <ExportPdfButton
+          userName={userName}
+          userEmail={userEmail}
+          userTeams={userTeams || [userTeam]}
+          points={points}
+          rankName={currentRank.name}
+          rankDesc={currentRank.desc}
+          earnedBadges={pdfBadges}
+          completedUseCases={pdfCompleted}
+          inProgressUseCases={pdfInProgress}
+          skillRadarData={skillRadarData}
+        />
+      </div>
 
       <RankDisplay points={points} />
 
