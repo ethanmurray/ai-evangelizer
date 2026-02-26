@@ -21,6 +21,8 @@ import { usePeopleForUseCase } from '@/hooks/usePeopleForUseCase';
 import { PeopleWhoKnowThis } from '@/components/ui/PeopleWhoKnowThis';
 import { useDifficulty } from '@/hooks/useDifficulty';
 import { DifficultyRating } from '@/components/ui/DifficultyRating';
+import { useRelatedUseCases } from '@/hooks/useRelatedUseCases';
+import { RelatedUseCases } from '@/components/ui/RelatedUseCases';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -31,6 +33,7 @@ export default function UseCaseDetailPage() {
   const { useCase, isLoading, refresh } = useUseCase(id, user?.id);
   const { people, totalCount, isLoading: peopleLoading } = usePeopleForUseCase(id, user?.id);
   const { stats: difficultyStats, userRating: difficultyUserRating, rate: rateDifficultyFn } = useDifficulty(id, user?.id);
+  const { related, isLoading: relatedLoading } = useRelatedUseCases(id);
 
   const [recipient1, setRecipient1] = useState('');
   const [recipient2, setRecipient2] = useState('');
@@ -430,6 +433,9 @@ export default function UseCaseDetailPage() {
         isLoading={peopleLoading}
         useCaseTitle={useCase.title}
       />
+
+      {/* Related use cases */}
+      <RelatedUseCases related={related} isLoading={relatedLoading} />
 
       {editSuccess && (
         <Alert variant="success">{editSuccess}</Alert>

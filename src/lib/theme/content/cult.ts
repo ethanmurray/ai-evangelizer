@@ -27,6 +27,8 @@ export const cultTheme: ContentTheme = {
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
+    recommended: "The Algorithm Suggests",
+    related: "Fellow Travelers",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -75,6 +77,7 @@ export const cultTheme: ContentTheme = {
     rankUpTitle: "ASCENSION",
     rankUpBody: "You have ascended to {rank}. The algorithm favors you.",
     feedEmpty: "The void stares back. No signals yet.",
+    noRecommendations: "The algorithm has not yet divined your path.",
   },
   badgeNames: {
     first_learn: { name: "The Awakening", description: "Witnessed your first ritual" },
