@@ -7,6 +7,7 @@ export function useDifficulty(useCaseId: string, userId?: string) {
   const [stats, setStats] = useState<DifficultyStats | null>(null);
   const [userRating, setUserRating] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -28,12 +29,17 @@ export function useDifficulty(useCaseId: string, userId?: string) {
 
   const rate = useCallback(async (rating: number) => {
     if (!userId) return;
-    await rateDifficulty(userId, useCaseId, rating);
-    setUserRating(rating);
-    // Refresh stats
-    const updated = await fetchDifficulty(useCaseId);
-    setStats(updated);
+    setError(null);
+    try {
+      await rateDifficulty(userId, useCaseId, rating);
+      setUserRating(rating);
+      // Refresh stats
+      const updated = await fetchDifficulty(useCaseId);
+      setStats(updated);
+    } catch (err: any) {
+      setError(err.message || 'Failed to save rating');
+    }
   }, [userId, useCaseId]);
 
-  return { stats, userRating, rate, isLoading };
+  return { stats, userRating, rate, isLoading, error };
 }
