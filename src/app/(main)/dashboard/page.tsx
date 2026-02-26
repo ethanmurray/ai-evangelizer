@@ -110,7 +110,7 @@ export default function DashboardPage() {
             In Progress ({inProgressCount})
           </h2>
           <div className="space-y-3">
-            {inProgressItems.slice(0, 5).map((uc) => {
+            {inProgressItems.map((uc) => {
               const p = progressMap.get(uc.id)!;
               return (
                 <Link key={uc.id} href={`/library/${uc.id}`}>
