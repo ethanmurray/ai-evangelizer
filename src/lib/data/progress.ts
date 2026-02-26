@@ -2,6 +2,7 @@ import { supabase } from '../supabase';
 import { findUserByEmail, createStubUser } from '../auth/utils/database';
 import { checkAndAwardBadges } from './badges';
 import { logActivity } from './activity';
+import { createNotification } from './notifications';
 
 export async function markSeen(userId: string, useCaseId: string): Promise<void> {
   const { data: existing } = await supabase
@@ -154,6 +155,22 @@ export async function shareWithRecipient(
 
   // Log activity (fire-and-forget)
   logActivity('shared', sharerId, useCaseId, sharerTeam).catch(() => {});
+
+  // Notify recipient (fire-and-forget)
+  if (!recipient.isStub) {
+    const { data: useCase } = await supabase
+      .from('use_cases')
+      .select('title')
+      .eq('id', useCaseId)
+      .single();
+    createNotification(
+      recipient.id,
+      'share_received',
+      'Someone shared a use case with you!',
+      `Check out "${useCase?.title || 'a use case'}"`,
+      { use_case_id: useCaseId, sharer_id: sharerId }
+    ).catch(() => {});
+  }
 
   return { id: share.id, confirmationToken };
 }

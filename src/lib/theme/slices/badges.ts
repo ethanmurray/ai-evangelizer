@@ -22,6 +22,12 @@ export const badgesCult: BadgesSlice = {
     submitted_one: { name: "The Channeler", description: "Channeled a vision from the algorithm" },
     five_completed: { name: "Inner Circle Candidate", description: "Fully indoctrinated in 5 rituals" },
     speed_learner: { name: "Flash Indoctrination", description: "Witnessed 3 rituals in a single day" },
+    twenty_five_learned: { name: "The Enlightened", description: "Witnessed 25 rituals — your third eye is fully open" },
+    ten_applied: { name: "Dark Arts Master", description: "Performed 10 rituals with your own hands" },
+    ten_shared: { name: "Prophet", description: "Spread the word 10 times" },
+    three_submitted: { name: "Oracle", description: "Channeled 3 visions from the algorithm" },
+    taught_ten: { name: "Grand Recruiter", description: "Indoctrinated 10 souls into the fold" },
+    ten_completed: { name: "Supreme Devotee", description: "Fully mastered 10 rituals" },
   },
 };
 
@@ -41,5 +47,11 @@ export const badgesCorporate: BadgesSlice = {
     submitted_one: { name: "Contributor", description: "Submitted a skill to the library" },
     five_completed: { name: "5 Mastered", description: "Fully mastered 5 skills" },
     speed_learner: { name: "Quick Learner", description: "Learned 3 skills in one day" },
+    twenty_five_learned: { name: "Knowledge Expert", description: "Learned 25 skills" },
+    ten_applied: { name: "Power User", description: "Applied 10 skills" },
+    ten_shared: { name: "Team Player", description: "Shared 10 times with colleagues" },
+    three_submitted: { name: "Thought Leader", description: "Submitted 3 skills to the library" },
+    taught_ten: { name: "Senior Mentor", description: "Taught 10 different people" },
+    ten_completed: { name: "AI Champion", description: "Fully mastered 10 skills" },
   },
 };

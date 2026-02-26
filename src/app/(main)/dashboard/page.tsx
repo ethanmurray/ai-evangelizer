@@ -16,6 +16,10 @@ import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { ActivityFeedItem } from '@/components/ui/ActivityFeedItem';
 import { useRecommendations } from '@/hooks/useRecommendations';
 import { RecommendationCard } from '@/components/ui/RecommendationCard';
+import { useTrending } from '@/hooks/useTrending';
+import { TrendingCard } from '@/components/ui/TrendingCard';
+import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist';
+import { OnboardingChecklist } from '@/components/ui/OnboardingChecklist';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -26,6 +30,8 @@ export default function DashboardPage() {
   const [userPoints, setUserPoints] = useState(0);
   const { events: recentActivity, isLoading: activityLoading } = useActivityFeed();
   const { recommendations, isLoading: recsLoading } = useRecommendations(user?.id);
+  const { trending, isLoading: trendingLoading } = useTrending();
+  const { items: checklistItems, visible: showChecklist, dismiss: dismissChecklist } = useOnboardingChecklist(user?.id);
 
   useEffect(() => {
     if (user?.id) {
@@ -78,6 +84,11 @@ export default function DashboardPage() {
           {t.concepts.about}
         </Button>
       </div>
+
+      {/* Onboarding Checklist */}
+      {showChecklist && (
+        <OnboardingChecklist items={checklistItems} onDismiss={dismissChecklist} />
+      )}
 
       {/* Rank Card */}
       <RankDisplay points={userPoints} completedCount={completedCount} />
@@ -165,6 +176,20 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {recommendations.slice(0, 5).map((rec) => (
               <RecommendationCard key={rec.id} recommendation={rec} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Trending This Week */}
+      {!trendingLoading && trending.length > 0 && (
+        <div>
+          <h2 className="text-lg font-bold mb-3">
+            Trending This Week
+          </h2>
+          <div className="space-y-2">
+            {trending.map((item) => (
+              <TrendingCard key={item.id} item={item} />
             ))}
           </div>
         </div>

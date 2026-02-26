@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "../lib/theme/visual/conspiracy-board.css";
+@import "../lib/theme/visual/conspiracy-board-light.css";
 @import "../lib/theme/visual/clean.css";
+@import "../lib/theme/visual/clean-dark.css";
 
 @theme inline {
   --color-bg: var(--color-bg);

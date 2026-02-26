@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { createNotification } from './notifications';
 
 export type CommentType = 'discussion' | 'tip' | 'gotcha' | 'playbook_step';
 
@@ -120,6 +121,23 @@ export async function createComment(
     .single();
 
   if (error) throw new Error(error.message);
+
+  // Notify use case submitter (fire-and-forget)
+  const { data: useCase } = await supabase
+    .from('use_cases')
+    .select('submitted_by, title')
+    .eq('id', useCaseId)
+    .single();
+  if (useCase?.submitted_by && useCase.submitted_by !== authorId) {
+    createNotification(
+      useCase.submitted_by,
+      'comment_received',
+      'New comment on your use case',
+      `Someone commented on "${useCase.title || 'your use case'}"`,
+      { use_case_id: useCaseId, comment_id: data.id }
+    ).catch(() => {});
+  }
+
   return data;
 }
 

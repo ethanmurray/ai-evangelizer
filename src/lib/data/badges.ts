@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import { PREDEFINED_LABELS } from './use-cases';
+import { createNotification } from './notifications';
 
 export interface BadgeDefinition {
   id: string;
@@ -83,6 +84,42 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'learning',
     check: (s) => s.learnedToday >= 3,
   },
+  {
+    id: 'twenty_five_learned',
+    icon: '\uD83E\uDDE0',
+    category: 'learning',
+    check: (s) => s.learnedCount >= 25,
+  },
+  {
+    id: 'ten_applied',
+    icon: '\uD83D\uDEE0\uFE0F',
+    category: 'applying',
+    check: (s) => s.appliedCount >= 10,
+  },
+  {
+    id: 'ten_shared',
+    icon: '\uD83D\uDCE3',
+    category: 'sharing',
+    check: (s) => s.sharedCount >= 10,
+  },
+  {
+    id: 'three_submitted',
+    icon: '\uD83D\uDCA1',
+    category: 'special',
+    check: (s) => s.submittedCount >= 3,
+  },
+  {
+    id: 'taught_ten',
+    icon: '\uD83C\uDFEB',
+    category: 'sharing',
+    check: (s) => s.distinctPeopleTaught >= 10,
+  },
+  {
+    id: 'ten_completed',
+    icon: '\uD83D\uDC8E',
+    category: 'special',
+    check: (s) => s.completedCount >= 10,
+  },
 ];
 
 export interface UserBadge {
@@ -101,7 +138,7 @@ export async function fetchUserBadges(userId: string): Promise<UserBadge[]> {
   return data;
 }
 
-async function getUserBadgeStats(userId: string): Promise<UserBadgeStats> {
+export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats> {
   // Fetch user progress
   const { data: progressData } = await supabase
     .from('user_progress_summary')
@@ -177,6 +214,13 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
         );
       if (!error) {
         newBadges.push(badge.id);
+        createNotification(
+          userId,
+          'badge_earned',
+          `Badge Earned: ${badge.icon}`,
+          `You earned the "${badge.id}" badge!`,
+          { badge_id: badge.id }
+        ).catch(() => {});
       }
     }
   }

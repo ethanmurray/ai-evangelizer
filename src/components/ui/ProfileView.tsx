@@ -15,6 +15,7 @@ import { useBadges } from '@/hooks/useBadges';
 import { BadgeDisplay } from '@/components/ui/BadgeDisplay';
 import { ProfileHeader } from '@/components/ui/ProfileHeader';
 import { ProfileProgressLists } from '@/components/ui/ProfileProgressLists';
+import { ShareProfileButton } from '@/components/ui/ShareProfileButton';
 import type { User } from '@/lib/auth/types/auth';
 
 interface ProfileViewProps {
@@ -63,6 +64,8 @@ export function ProfileView({
         isOwnProfile={isOwnProfile}
         onTeamSaved={onTeamSaved}
       />
+
+      <ShareProfileButton userId={userId} userName={userName} />
 
       <RankDisplay points={points} />
 
