@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    activityFeed: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -60,6 +61,7 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    feedEmpty: string;
   };
   toneGuidance: string;
 }
