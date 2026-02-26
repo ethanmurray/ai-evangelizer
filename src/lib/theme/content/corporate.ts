@@ -33,6 +33,8 @@ export const corporateTheme: ContentTheme = {
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",
+    recommended: "Recommended For You",
+    related: "Related Skills",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -85,6 +87,7 @@ export const corporateTheme: ContentTheme = {
     rankUpTitle: "Rank Up!",
     rankUpBody: "Congratulations! You've reached {rank}.",
     feedEmpty: "No activity yet. Be the first!",
+    noRecommendations: "Start learning to get personalized recommendations.",
   },
   badgeNames: {
     first_learn: { name: "First Step", description: "Learned your first skill" },

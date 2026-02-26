@@ -42,3 +42,6 @@ export type { DifficultyStats } from './difficulty';
 
 export { logActivity, fetchActivityFeed, formatRelativeTime } from './activity';
 export type { ActivityEvent, ActivityEventType } from './activity';
+
+export { fetchRecommendations, fetchRelatedUseCases } from './recommendations';
+export type { Recommendation } from './recommendations';
