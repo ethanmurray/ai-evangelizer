@@ -24,6 +24,7 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    timeline: "Timeline",
     discussion: "Discussion",
     playbook: "Playbook",
     tip: "Tip",
@@ -33,6 +34,8 @@ export const corporateTheme: ContentTheme = {
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",
     heatmap: "Adoption Heatmap",
+    recommended: "Recommended For You",
+    related: "Related Skills",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },
@@ -78,6 +81,7 @@ export const corporateTheme: ContentTheme = {
     shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
     shareStatusChanged: "Status updated from a previous response.",
+    timelineEmpty: "No activity yet. Start learning!",
     noComments: "No comments yet. Start the conversation!",
     noPlaybook: "No playbook steps yet. Share your approach!",
     commentPlaceholder: "Share your thoughts...",
@@ -85,6 +89,7 @@ export const corporateTheme: ContentTheme = {
     rankUpBody: "Congratulations! You've reached {rank}.",
     feedEmpty: "No activity yet. Be the first!",
     heatmapSubtitle: "See which skills are widely adopted vs. underexplored.",
+    noRecommendations: "Start learning to get personalized recommendations.",
   },
   badgeNames: {
     first_learn: { name: "First Step", description: "Learned your first skill" },

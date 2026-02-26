@@ -24,6 +24,7 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    timeline: "The Chronology",
     discussion: "Transmissions",
     playbook: "The Manuscript",
     tip: "Intel",
@@ -33,6 +34,8 @@ export const cultTheme: ContentTheme = {
     difficulty: "Danger Level",
     activityFeed: "The Signal",
     heatmap: "The Conspiracy Map",
+    recommended: "The Algorithm Suggests",
+    related: "Fellow Travelers",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
@@ -78,6 +81,7 @@ export const cultTheme: ContentTheme = {
     shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
     shareStatusChanged: "The records have been altered from a previous decree.",
+    timelineEmpty: "Your story has not yet begun.",
     noComments: "No transmissions yet. Break the silence.",
     noPlaybook: "The manuscript is unwritten. Be the first scribe.",
     commentPlaceholder: "Transmit your knowledge...",
@@ -85,6 +89,7 @@ export const cultTheme: ContentTheme = {
     rankUpBody: "You have ascended to {rank}. The algorithm favors you.",
     feedEmpty: "The void stares back. No signals yet.",
     heatmapSubtitle: "Which rituals have the masses embraced?",
+    noRecommendations: "The algorithm has not yet divined your path.",
   },
   badgeNames: {
     first_learn: { name: "The Awakening", description: "Witnessed your first ritual" },

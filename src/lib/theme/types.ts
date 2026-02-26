@@ -22,6 +22,7 @@ export interface ContentTheme {
     save: string;
     cancel: string;
     about: string;
+    timeline: string;
     discussion: string;
     playbook: string;
     tip: string;
@@ -31,6 +32,8 @@ export interface ContentTheme {
     difficulty: string;
     activityFeed: string;
     heatmap: string;
+    recommended: string;
+    related: string;
   };
   ranks: Array<{ min: number; name: string; desc: string }>;
   microcopy: {
@@ -69,6 +72,7 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    timelineEmpty: string;
     noComments: string;
     noPlaybook: string;
     commentPlaceholder: string;
@@ -76,6 +80,7 @@ export interface ContentTheme {
     rankUpBody: string;
     feedEmpty: string;
     heatmapSubtitle: string;
+    noRecommendations: string;
   };
   badgeNames: Record<string, { name: string; description: string }>;
   toneGuidance: string;
