@@ -75,7 +75,7 @@ export function AboutModal({ isOpen, onClose, title, content }: AboutModalProps)
         >
           v{process.env.NEXT_PUBLIC_APP_VERSION}
           {process.env.NEXT_PUBLIC_BUILD_DATE &&
-            ` · Built ${new Date(process.env.NEXT_PUBLIC_BUILD_DATE).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+            ` · Built ${new Date(process.env.NEXT_PUBLIC_BUILD_DATE).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}`}
           {process.env.NEXT_PUBLIC_BUILD_COMMIT &&
             ` · ${process.env.NEXT_PUBLIC_BUILD_COMMIT}`}
         </div>
