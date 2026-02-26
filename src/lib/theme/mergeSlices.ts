@@ -9,6 +9,7 @@ import { badgesCult, badgesCorporate, type BadgesSlice } from './slices/badges';
 import { difficultyCult, difficultyCorporate, type DifficultySlice } from './slices/difficulty';
 import { teamsCult, teamsCorporate, type TeamsSlice } from './slices/teams';
 import { discoveryCult, discoveryCorporate, type DiscoverySlice } from './slices/discovery';
+import { onboardingCult, onboardingCorporate, type OnboardingSlice } from './slices/onboarding';
 
 interface ThemeSlices {
   core: CoreSlice;
@@ -21,6 +22,7 @@ interface ThemeSlices {
   difficulty: DifficultySlice;
   teams: TeamsSlice;
   discovery: DiscoverySlice;
+  onboarding: OnboardingSlice;
 }
 
 function mergeSlices(slices: ThemeSlices): ContentTheme {
@@ -48,6 +50,7 @@ function mergeSlices(slices: ThemeSlices): ContentTheme {
       ...slices.social.microcopy,
       ...slices.teams.microcopy,
       ...slices.discovery.microcopy,
+      ...slices.onboarding.microcopy,
     },
     badgeNames: slices.badges.badgeNames,
   };
@@ -64,6 +67,7 @@ export const cultTheme: ContentTheme = mergeSlices({
   difficulty: difficultyCult,
   teams: teamsCult,
   discovery: discoveryCult,
+  onboarding: onboardingCult,
 });
 
 export const corporateTheme: ContentTheme = mergeSlices({
@@ -77,4 +81,5 @@ export const corporateTheme: ContentTheme = mergeSlices({
   difficulty: difficultyCorporate,
   teams: teamsCorporate,
   discovery: discoveryCorporate,
+  onboarding: onboardingCorporate,
 });

@@ -7,10 +7,12 @@ import { ProfileView } from '@/components/ui/ProfileView';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { useOnboardingActions } from '@/lib/onboarding/OnboardingContext';
 
 export default function ProfilePage() {
   const { user, logout, setUser } = useAuth();
   const { t } = useTheme();
+  const { replayOnboarding } = useOnboardingActions();
 
   if (!user) return null;
 
@@ -41,6 +43,23 @@ export default function ProfilePage() {
             </p>
           </div>
           <ThemeToggle />
+        </div>
+      </Card>
+
+      {/* Replay tour */}
+      <Card>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-bold" style={{ color: 'var(--color-text-heading)' }}>
+              {t.microcopy.replayTour}
+            </h3>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+              Review the app walkthrough
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={replayOnboarding}>
+            {t.microcopy.replayTour}
+          </Button>
         </div>
       </Card>
 
