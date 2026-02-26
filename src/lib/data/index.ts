@@ -30,3 +30,9 @@ export type { UserPoints } from './points';
 
 export { fetchUserBadges, checkAndAwardBadges, BADGE_DEFINITIONS } from './badges';
 export type { BadgeDefinition, UserBadge } from './badges';
+
+export { fetchDifficulty, fetchAllDifficultyStats, fetchUserRating, rateDifficulty } from './difficulty';
+export type { DifficultyStats } from './difficulty';
+
+export { logActivity, fetchActivityFeed, formatRelativeTime } from './activity';
+export type { ActivityEvent, ActivityEventType } from './activity';
