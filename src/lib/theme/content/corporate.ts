@@ -24,6 +24,7 @@ export const corporateTheme: ContentTheme = {
     save: "Save Changes",
     cancel: "Cancel",
     about: "About This App",
+    skillRadar: "Skill Radar",
   },
   ranks: [
     { min: 0, name: "Newcomer", desc: "Just getting started" },

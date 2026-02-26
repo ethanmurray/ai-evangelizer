@@ -12,6 +12,8 @@ import { RankDisplay } from '@/components/ui/RankDisplay';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
+import { useSkillRadar } from '@/hooks/useSkillRadar';
+import { SkillRadarChart } from '@/components/ui/SkillRadarChart';
 import type { User } from '@/lib/auth/types/auth';
 
 interface ProfileViewProps {
@@ -34,6 +36,7 @@ export function ProfileView({
   const { t } = useTheme();
   const { progress, completedCount } = useProgress(userId);
   const { useCases } = useUseCases();
+  const { data: skillRadarData, isLoading: radarLoading } = useSkillRadar(userId);
   const [shares, setShares] = useState<ShareRecord[]>([]);
   const [receivedShares, setReceivedShares] = useState<ShareRecord[]>([]);
   const [points, setPoints] = useState<number>(0);
@@ -208,6 +211,9 @@ export function ProfileView({
 
       {/* Rank */}
       <RankDisplay points={points} />
+
+      {/* Skill Radar */}
+      <SkillRadarChart data={skillRadarData} isLoading={radarLoading} />
 
       {/* Completed use cases */}
       {completed.length > 0 && (

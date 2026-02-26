@@ -24,6 +24,7 @@ export const cultTheme: ContentTheme = {
     save: "Inscribe",
     cancel: "Abandon",
     about: "Behind the Curtain",
+    skillRadar: "The All-Seeing Eye",
   },
   ranks: [
     { min: 0, name: "Outsider", desc: "Still thinks for themselves" },
