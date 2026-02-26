@@ -60,6 +60,8 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    rankUpTitle: string;
+    rankUpBody: string;
   };
   toneGuidance: string;
 }

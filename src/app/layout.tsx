@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth";
 import { ThemeSyncer } from "@/components/ThemeSyncer";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -48,8 +49,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${specialElite.variable} antialiased`}>
         <ThemeProvider>
           <AuthProvider>
-            <ThemeSyncer />
-            {children}
+            <ToastContainer>
+              <ThemeSyncer />
+              {children}
+            </ToastContainer>
           </AuthProvider>
         </ThemeProvider>
       </body>

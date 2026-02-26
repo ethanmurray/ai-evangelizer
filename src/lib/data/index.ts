@@ -27,3 +27,6 @@ export {
   fetchUserRankPosition
 } from './points';
 export type { UserPoints } from './points';
+
+export { createNotification, fetchUnreadNotifications, fetchRecentNotifications, markNotificationRead, markAllRead } from './notifications';
+export type { Notification } from './notifications';

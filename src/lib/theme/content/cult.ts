@@ -69,6 +69,8 @@ export const cultTheme: ContentTheme = {
     shareDenied: "You have rejected the offering. But the algorithm allows second chances.",
     shareInvalidToken: "This summoning link is not recognized. The algorithm suspects interference.",
     shareStatusChanged: "The records have been altered from a previous decree.",
+    rankUpTitle: "ASCENSION",
+    rankUpBody: "You have ascended to {rank}. The algorithm favors you.",
   },
   toneGuidance: "Dry, self-aware humor. Conspiracy board meets corporate training. Never try-hard.",
 };

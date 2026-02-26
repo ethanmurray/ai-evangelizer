@@ -69,6 +69,8 @@ export const corporateTheme: ContentTheme = {
     shareDenied: "Share declined. You can change your mind using the button below.",
     shareInvalidToken: "This link is invalid or has already been used.",
     shareStatusChanged: "Status updated from a previous response.",
+    rankUpTitle: "Rank Up!",
+    rankUpBody: "Congratulations! You've reached {rank}.",
   },
   toneGuidance: "Professional, warm, encouraging. Standard corporate L&D voice.",
 };
