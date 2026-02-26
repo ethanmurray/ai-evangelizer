@@ -66,7 +66,7 @@ export async function fetchRecommendations(userId: string, limit = 5): Promise<R
   // Fetch use case details
   const { data: useCases } = await supabase
     .from('use_cases')
-    .select('id, title, description, labels, upvote_count')
+    .select('id, title, description, labels')
     .in('id', ranked);
 
   if (!useCases || useCases.length === 0) {
@@ -85,7 +85,7 @@ export async function fetchRecommendations(userId: string, limit = 5): Promise<R
         title: uc.title,
         description: uc.description || '',
         labels: uc.labels || [],
-        upvote_count: uc.upvote_count || 0,
+        upvote_count: 0,
         reason: `${count} people who share your interests also learned this`,
       });
     }
@@ -149,7 +149,7 @@ export async function fetchRelatedUseCases(useCaseId: string, limit = 4): Promis
 
   const { data: useCases } = await supabase
     .from('use_cases')
-    .select('id, title, description, labels, upvote_count')
+    .select('id, title, description, labels')
     .in('id', ranked);
 
   if (!useCases) return [];
@@ -164,7 +164,7 @@ export async function fetchRelatedUseCases(useCaseId: string, limit = 4): Promis
         title: uc.title,
         description: uc.description || '',
         labels: uc.labels || [],
-        upvote_count: uc.upvote_count || 0,
+        upvote_count: 0,
         reason: `Also learned by ${freq.get(id)} people who know this`,
       });
     }
@@ -174,26 +174,59 @@ export async function fetchRelatedUseCases(useCaseId: string, limit = 4): Promis
 }
 
 async function fetchPopularFallback(limit: number, excludeIds: string[] = []): Promise<Recommendation[]> {
-  let query = supabase
-    .from('use_cases')
-    .select('id, title, description, labels, upvote_count')
+  // Get upvote counts from the view
+  const { data: upvoteCounts } = await supabase
+    .from('use_case_upvote_counts')
+    .select('use_case_id, upvote_count')
     .order('upvote_count', { ascending: false })
-    .limit(limit + excludeIds.length);
+    .limit(limit + excludeIds.length + 10);
 
-  const { data } = await query;
+  const upvoteMap = new Map((upvoteCounts || []).map((u: any) => [u.use_case_id, u.upvote_count]));
+  const topIds = (upvoteCounts || [])
+    .filter((u: any) => !excludeIds.includes(u.use_case_id))
+    .slice(0, limit)
+    .map((u: any) => u.use_case_id);
+
+  if (topIds.length === 0) {
+    // No upvotes at all, just get recent use cases
+    const { data } = await supabase
+      .from('use_cases')
+      .select('id, title, description, labels')
+      .order('created_at', { ascending: false })
+      .limit(limit + excludeIds.length);
+
+    if (!data) return [];
+    return data
+      .filter((uc: any) => !excludeIds.includes(uc.id))
+      .slice(0, limit)
+      .map((uc: any) => ({
+        id: uc.id,
+        title: uc.title,
+        description: uc.description || '',
+        labels: uc.labels || [],
+        upvote_count: 0,
+        reason: 'Popular with the community',
+      }));
+  }
+
+  const { data } = await supabase
+    .from('use_cases')
+    .select('id, title, description, labels')
+    .in('id', topIds);
+
   if (!data) return [];
 
+  // Sort by upvote count
   return data
-    .filter((uc: any) => !excludeIds.includes(uc.id))
-    .slice(0, limit)
     .map((uc: any) => ({
       id: uc.id,
       title: uc.title,
       description: uc.description || '',
       labels: uc.labels || [],
-      upvote_count: uc.upvote_count || 0,
+      upvote_count: upvoteMap.get(uc.id) || 0,
       reason: 'Popular with the community',
-    }));
+    }))
+    .sort((a, b) => b.upvote_count - a.upvote_count);
 }
 
 async function fetchLabelFallback(myUseCaseIds: string[], limit: number, excludeIds: string[] = []): Promise<Recommendation[]> {
@@ -217,8 +250,8 @@ async function fetchByLabelOverlap(labels: string[], excludeIds: string[], limit
   // (Supabase array overlap queries are limited)
   const { data: allUc } = await supabase
     .from('use_cases')
-    .select('id, title, description, labels, upvote_count')
-    .order('upvote_count', { ascending: false })
+    .select('id, title, description, labels')
+    .order('created_at', { ascending: false })
     .limit(200);
 
   if (!allUc) return [];
@@ -237,7 +270,7 @@ async function fetchByLabelOverlap(labels: string[], excludeIds: string[], limit
         title: uc.title,
         description: uc.description || '',
         labels: uc.labels || [],
-        upvote_count: uc.upvote_count || 0,
+        upvote_count: 0,
         reason: `Similar skills: ${overlap.join(', ')}`,
       };
     });
