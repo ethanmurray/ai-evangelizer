@@ -1,6 +1,4 @@
 import { supabase } from '../supabase';
-import { sendEmail } from '../email';
-import { buildReplyNotificationEmail } from '../email-templates/reply-notification';
 import { createNotification } from './notifications';
 
 export type CommentType = 'discussion' | 'tip' | 'gotcha' | 'playbook_step';
@@ -153,9 +151,12 @@ export async function createComment(
         { use_case_id: useCaseId, comment_id: data.id, parent_comment_id: parentId }
       ).catch(() => {});
 
-      // Email notification (fire-and-forget)
+      // Email notification (fire-and-forget, dynamic import to avoid loading Resend client-side)
       (async () => {
         try {
+          const { sendEmail } = await import('../email');
+          const { buildReplyNotificationEmail } = await import('../email-templates/reply-notification');
+
           const { data: parentAuthor } = await supabase
             .from('users')
             .select('name, email, email_opt_in')
