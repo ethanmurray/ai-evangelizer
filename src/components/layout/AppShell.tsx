@@ -7,6 +7,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { AboutModal } from '@/components/ui/AboutModal';
 import { PointsReferenceModal } from '@/components/ui/PointsReferenceModal';
+import { NotificationBell } from '@/components/ui/NotificationBell';
 
 const DashboardIcon = () => (
   <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -68,13 +69,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           borderColor: 'var(--color-border)',
         }}
       >
-        <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-          <h1 className="text-lg font-bold animate-flicker" style={{ color: 'var(--color-text-heading)' }}>
-            {t.appName}
-          </h1>
-          <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-            {t.tagline}
-          </p>
+        <div className="p-4 border-b flex items-start justify-between" style={{ borderColor: 'var(--color-border)' }}>
+          <div>
+            <h1 className="text-lg font-bold animate-flicker" style={{ color: 'var(--color-text-heading)' }}>
+              {t.appName}
+            </h1>
+            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+              {t.tagline}
+            </p>
+          </div>
+          <NotificationBell />
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => (

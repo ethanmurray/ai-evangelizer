@@ -28,6 +28,9 @@ export {
 } from './points';
 export type { UserPoints } from './points';
 
+export { createNotification, fetchUnreadNotifications, fetchRecentNotifications, markNotificationRead, markAllRead } from './notifications';
+export type { Notification } from './notifications';
+
 export { fetchUserBadges, checkAndAwardBadges, BADGE_DEFINITIONS } from './badges';
 export type { BadgeDefinition, UserBadge } from './badges';
 

@@ -63,6 +63,8 @@ export interface ContentTheme {
     shareDenied: string;
     shareInvalidToken: string;
     shareStatusChanged: string;
+    rankUpTitle: string;
+    rankUpBody: string;
     feedEmpty: string;
   };
   badgeNames: Record<string, { name: string; description: string }>;
