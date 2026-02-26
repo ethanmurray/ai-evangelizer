@@ -8,9 +8,10 @@ import { useLeaderboard } from '@/hooks/useLeaderboard';
 import { Card } from '@/components/ui/Card';
 import { getRank } from '@/lib/rank';
 import { deleteUser } from '@/lib/data/users';
+import { TeamDashboard } from '@/components/ui/TeamDashboard';
 import { HeatmapGrid } from '@/components/ui/HeatmapGrid';
 
-type ViewMode = 'individuals' | 'teams' | 'heatmap';
+type ViewMode = 'individuals' | 'teams' | 'team-dashboard' | 'heatmap';
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
@@ -68,6 +69,16 @@ export default function LeaderboardPage() {
           <button
             className="px-4 py-2 text-sm font-medium cursor-pointer"
             style={{
+              background: viewMode === 'team-dashboard' ? 'var(--color-primary)' : 'var(--color-bg-surface)',
+              color: viewMode === 'team-dashboard' ? '#fff' : 'var(--color-text)',
+            }}
+            onClick={() => setViewMode('team-dashboard')}
+          >
+            {t.concepts.teamDashboard}
+          </button>
+          <button
+            className="px-4 py-2 text-sm font-medium cursor-pointer"
+            style={{
               background: viewMode === 'heatmap' ? 'var(--color-primary)' : 'var(--color-bg-surface)',
               color: viewMode === 'heatmap' ? '#fff' : 'var(--color-text)',
             }}
@@ -97,7 +108,9 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Content */}
-      {viewMode === 'heatmap' ? (
+      {viewMode === 'team-dashboard' ? (
+        <TeamDashboard teams={teams} defaultTeam={user?.team} />
+      ) : viewMode === 'heatmap' ? (
         <HeatmapGrid />
       ) : isLoading ? (
         <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Loading...</div>

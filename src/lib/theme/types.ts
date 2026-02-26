@@ -31,6 +31,8 @@ export interface ContentTheme {
     badges: string;
     difficulty: string;
     activityFeed: string;
+    teamDashboard: string;
+    skillGaps: string;
     heatmap: string;
     recommended: string;
     related: string;

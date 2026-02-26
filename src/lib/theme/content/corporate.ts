@@ -33,6 +33,8 @@ export const corporateTheme: ContentTheme = {
     badges: "Badges",
     difficulty: "Difficulty",
     activityFeed: "Activity Feed",
+    teamDashboard: "Team Dashboard",
+    skillGaps: "Skill Gaps",
     heatmap: "Adoption Heatmap",
     recommended: "Recommended For You",
     related: "Related Skills",

@@ -33,6 +33,8 @@ export const cultTheme: ContentTheme = {
     badges: "Sacred Marks",
     difficulty: "Danger Level",
     activityFeed: "The Signal",
+    teamDashboard: "Cult Census",
+    skillGaps: "Blind Spots",
     heatmap: "The Conspiracy Map",
     recommended: "The Algorithm Suggests",
     related: "Fellow Travelers",
