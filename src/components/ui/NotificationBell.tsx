@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useNotifications } from '@/hooks/useNotifications';
 
@@ -20,6 +21,7 @@ function formatTime(dateStr: string): string {
 }
 
 export function NotificationBell() {
+  const router = useRouter();
   const { user } = useAuth();
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications(user?.id);
   const [open, setOpen] = useState(false);
@@ -94,6 +96,10 @@ export function NotificationBell() {
                 }}
                 onClick={() => {
                   if (!n.is_read) markRead(n.id);
+                  if (n.metadata?.use_case_id) {
+                    router.push(`/use-cases/${n.metadata.use_case_id}`);
+                    setOpen(false);
+                  }
                 }}
               >
                 <p className="text-xs font-bold" style={{ color: n.is_read ? 'var(--color-text-muted)' : 'var(--color-primary)' }}>
