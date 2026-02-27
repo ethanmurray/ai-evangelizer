@@ -4,6 +4,7 @@ export interface PointsConfig {
   learned: number;
   applied: number;
   shared: number;
+  extraShare: number;
   submitted: number;
   teaching: number;
   viralBonus: number;
@@ -13,7 +14,8 @@ export interface PointsConfig {
 export const POINTS_CONFIG: PointsConfig = {
   learned: 1,       // Points for marking as learned (seen_at)
   applied: 3,       // Additional points for marking as applied (done_at)
-  shared: 6,        // Additional points for sharing
+  shared: 6,        // Additional points for sharing (first share)
+  extraShare: 1,    // Bonus points per share beyond 2
   submitted: 5,     // Points for submitting a new use case
   teaching: 1,      // Points when someone credits you for teaching them
   viralBonus: 15,   // Bonus points when 5+ people share your submission
@@ -86,6 +88,10 @@ export function calculateUseCasePoints(
     points += POINTS_CONFIG.shared;
   }
 
+  if (shareCount > 2) {
+    points += (shareCount - 2) * POINTS_CONFIG.extraShare;
+  }
+
   return points;
 }
 
@@ -100,6 +106,7 @@ export function calculatePointsBreakdown(
   let learned = 0;
   let applied = 0;
   let shared = 0;
+  let extraSharePoints = 0;
 
   let learnedCount = 0;
   let appliedCount = 0;
@@ -120,10 +127,14 @@ export function calculatePointsBreakdown(
       shared += POINTS_CONFIG.shared;
       sharedCount++;
     }
+
+    if (item.share_count > 2) {
+      extraSharePoints += (item.share_count - 2) * POINTS_CONFIG.extraShare;
+    }
   }
 
   const submitted = submittedCount * POINTS_CONFIG.submitted;
-  const bonuses = viralCount * POINTS_CONFIG.viralBonus;
+  const bonuses = viralCount * POINTS_CONFIG.viralBonus + extraSharePoints;
   const total = learned + applied + shared + submitted + bonuses;
 
   return {
@@ -160,6 +171,7 @@ export function getPointsDescription(): string[] {
     `Learn a use case: +${POINTS_CONFIG.learned} point`,
     `Apply it: +${POINTS_CONFIG.applied} points`,
     `Share with others: +${POINTS_CONFIG.shared} points`,
+    `Extra shares beyond 2: +${POINTS_CONFIG.extraShare} point each`,
     `Submit a new use case: +${POINTS_CONFIG.submitted} points`,
     `When someone credits you for teaching them: +${POINTS_CONFIG.teaching} point`,
     `When ${POINTS_CONFIG.viralThreshold}+ people share your submission: +${POINTS_CONFIG.viralBonus} bonus points`

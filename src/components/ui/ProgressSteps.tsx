@@ -16,7 +16,12 @@ export function ProgressSteps({ seenAt, doneAt, shareCount, compact = false }: P
   const steps = [
     { label: t.concepts.step1, done: !!seenAt },
     { label: t.concepts.step2, done: !!doneAt },
-    { label: `${t.concepts.step3} (${shareCount}/2)`, done: shareCount >= 2 },
+    {
+      label: shareCount >= 2
+        ? `${t.concepts.step3} (${shareCount} shared)`
+        : `${t.concepts.step3} (${shareCount}/2)`,
+      done: shareCount >= 2,
+    },
   ];
 
   if (compact) {

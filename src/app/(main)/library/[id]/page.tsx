@@ -16,6 +16,7 @@ import { RelatedUseCases } from '@/components/ui/RelatedUseCases';
 import { UseCaseProgressCard } from '@/components/ui/UseCaseProgressCard';
 import { UseCaseActions } from '@/components/ui/UseCaseActions';
 import { UseCaseCommentsSection } from '@/components/ui/UseCaseCommentsSection';
+import { FollowButton } from '@/components/ui/FollowButton';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -62,6 +63,9 @@ export default function UseCaseDetailPage() {
             ))}
           </div>
         )}
+        <div className="mt-3">
+          <FollowButton useCaseId={id} userId={user?.id} />
+        </div>
       </div>
 
       {/* Difficulty Rating */}

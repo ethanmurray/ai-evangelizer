@@ -54,6 +54,20 @@ export async function deleteUser(userId: string): Promise<void> {
     .eq('user_id', userId);
   if (upvotesError) throw new Error(upvotesError.message);
 
+  // Clean up follow subscriptions
+  const { error: followsError } = await supabase
+    .from('use_case_follows')
+    .delete()
+    .eq('user_id', userId);
+  if (followsError) throw new Error(followsError.message);
+
+  // Clean up digest queue
+  const { error: digestError } = await supabase
+    .from('follow_digest_queue')
+    .delete()
+    .eq('follower_id', userId);
+  if (digestError) throw new Error(digestError.message);
+
   const { error: useCasesError } = await supabase
     .from('use_cases')
     .update({ submitted_by: null })
