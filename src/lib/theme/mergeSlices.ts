@@ -1,15 +1,15 @@
 import type { ContentTheme } from './types';
-import { coreCult, coreCorporate, coreAcademic, coreStartup, coreScifi, coreRetro, coreNerdy, coreConsulting, type CoreSlice } from './slices/core';
-import { progressCult, progressCorporate, progressAcademic, progressStartup, progressScifi, progressRetro, progressNerdy, progressConsulting, type ProgressSlice } from './slices/progress';
-import { crudCult, crudCorporate, crudAcademic, crudStartup, crudScifi, crudRetro, crudNerdy, crudConsulting, type CrudSlice } from './slices/crud';
-import { authCult, authCorporate, authAcademic, authStartup, authScifi, authRetro, authNerdy, authConsulting, type AuthSlice } from './slices/auth';
-import { sharingCult, sharingCorporate, sharingAcademic, sharingStartup, sharingScifi, sharingRetro, sharingNerdy, sharingConsulting, type SharingSlice } from './slices/sharing';
-import { socialCult, socialCorporate, socialAcademic, socialStartup, socialScifi, socialRetro, socialNerdy, socialConsulting, type SocialSlice } from './slices/social';
-import { badgesCult, badgesCorporate, badgesAcademic, badgesStartup, badgesScifi, badgesRetro, badgesNerdy, badgesConsulting, type BadgesSlice } from './slices/badges';
-import { difficultyCult, difficultyCorporate, difficultyAcademic, difficultyStartup, difficultyScifi, difficultyRetro, difficultyNerdy, difficultyConsulting, type DifficultySlice } from './slices/difficulty';
-import { teamsCult, teamsCorporate, teamsAcademic, teamsStartup, teamsScifi, teamsRetro, teamsNerdy, teamsConsulting, type TeamsSlice } from './slices/teams';
-import { discoveryCult, discoveryCorporate, discoveryAcademic, discoveryStartup, discoveryScifi, discoveryRetro, discoveryNerdy, discoveryConsulting, type DiscoverySlice } from './slices/discovery';
-import { onboardingCult, onboardingCorporate, onboardingAcademic, onboardingStartup, onboardingScifi, onboardingRetro, onboardingNerdy, onboardingConsulting, type OnboardingSlice } from './slices/onboarding';
+import { coreCult, coreCorporate, coreAcademic, coreStartup, coreScifi, coreRetro, coreNerdy, coreConsulting, corePirate, coreNoir, coreMedieval, type CoreSlice } from './slices/core';
+import { progressCult, progressCorporate, progressAcademic, progressStartup, progressScifi, progressRetro, progressNerdy, progressConsulting, progressPirate, progressNoir, progressMedieval, type ProgressSlice } from './slices/progress';
+import { crudCult, crudCorporate, crudAcademic, crudStartup, crudScifi, crudRetro, crudNerdy, crudConsulting, crudPirate, crudNoir, crudMedieval, type CrudSlice } from './slices/crud';
+import { authCult, authCorporate, authAcademic, authStartup, authScifi, authRetro, authNerdy, authConsulting, authPirate, authNoir, authMedieval, type AuthSlice } from './slices/auth';
+import { sharingCult, sharingCorporate, sharingAcademic, sharingStartup, sharingScifi, sharingRetro, sharingNerdy, sharingConsulting, sharingPirate, sharingNoir, sharingMedieval, type SharingSlice } from './slices/sharing';
+import { socialCult, socialCorporate, socialAcademic, socialStartup, socialScifi, socialRetro, socialNerdy, socialConsulting, socialPirate, socialNoir, socialMedieval, type SocialSlice } from './slices/social';
+import { badgesCult, badgesCorporate, badgesAcademic, badgesStartup, badgesScifi, badgesRetro, badgesNerdy, badgesConsulting, badgesPirate, badgesNoir, badgesMedieval, type BadgesSlice } from './slices/badges';
+import { difficultyCult, difficultyCorporate, difficultyAcademic, difficultyStartup, difficultyScifi, difficultyRetro, difficultyNerdy, difficultyConsulting, difficultyPirate, difficultyNoir, difficultyMedieval, type DifficultySlice } from './slices/difficulty';
+import { teamsCult, teamsCorporate, teamsAcademic, teamsStartup, teamsScifi, teamsRetro, teamsNerdy, teamsConsulting, teamsPirate, teamsNoir, teamsMedieval, type TeamsSlice } from './slices/teams';
+import { discoveryCult, discoveryCorporate, discoveryAcademic, discoveryStartup, discoveryScifi, discoveryRetro, discoveryNerdy, discoveryConsulting, discoveryPirate, discoveryNoir, discoveryMedieval, type DiscoverySlice } from './slices/discovery';
+import { onboardingCult, onboardingCorporate, onboardingAcademic, onboardingStartup, onboardingScifi, onboardingRetro, onboardingNerdy, onboardingConsulting, onboardingPirate, onboardingNoir, onboardingMedieval, type OnboardingSlice } from './slices/onboarding';
 
 interface ThemeSlices {
   core: CoreSlice;
@@ -166,4 +166,46 @@ export const consultingTheme: ContentTheme = mergeSlices({
   teams: teamsConsulting,
   discovery: discoveryConsulting,
   onboarding: onboardingConsulting,
+});
+
+export const pirateTheme: ContentTheme = mergeSlices({
+  core: corePirate,
+  progress: progressPirate,
+  crud: crudPirate,
+  auth: authPirate,
+  sharing: sharingPirate,
+  social: socialPirate,
+  badges: badgesPirate,
+  difficulty: difficultyPirate,
+  teams: teamsPirate,
+  discovery: discoveryPirate,
+  onboarding: onboardingPirate,
+});
+
+export const noirTheme: ContentTheme = mergeSlices({
+  core: coreNoir,
+  progress: progressNoir,
+  crud: crudNoir,
+  auth: authNoir,
+  sharing: sharingNoir,
+  social: socialNoir,
+  badges: badgesNoir,
+  difficulty: difficultyNoir,
+  teams: teamsNoir,
+  discovery: discoveryNoir,
+  onboarding: onboardingNoir,
+});
+
+export const medievalTheme: ContentTheme = mergeSlices({
+  core: coreMedieval,
+  progress: progressMedieval,
+  crud: crudMedieval,
+  auth: authMedieval,
+  sharing: sharingMedieval,
+  social: socialMedieval,
+  badges: badgesMedieval,
+  difficulty: difficultyMedieval,
+  teams: teamsMedieval,
+  discovery: discoveryMedieval,
+  onboarding: onboardingMedieval,
 });

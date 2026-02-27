@@ -206,3 +206,75 @@ export const progressConsulting: ProgressSlice = {
     { min: 210, name: "Managing Director of Synergy", desc: "Has transcended mere thought leadership into pure buzzword nirvana" },
   ],
 };
+
+export const progressNoir: ProgressSlice = {
+  concepts: {
+    step1: "Investigated",
+    step2: "Cracked",
+    step3: "Tipped Off",
+    completed: "Case Closed",
+    recruit: "Informant",
+  },
+  microcopy: {
+    emptyDashboard: "Your desk is clean. Too clean. Head to the Case Files and pick up a lead before the trail goes cold.",
+    recruitSuccess: "New informant on the payroll. They don't know it yet, but they're in deep now.",
+    completionCelebration: "Case closed. File it away and pour yourself a drink. You've earned it.",
+    stubAccountWelcome: "Word on the street says you've already turned up in {count} cases. Somebody out there knows your name.",
+  },
+  ranks: [
+    { min: 0, name: "Gumshoe", desc: "Fresh off the bus with cheap shoes and big questions" },
+    { min: 10, name: "Private Eye", desc: "Knows which alleys to avoid and which to explore" },
+    { min: 30, name: "Detective", desc: "The kind of operator who finds what others miss" },
+    { min: 60, name: "Inspector", desc: "Runs the board and connects the dots" },
+    { min: 110, name: "Chief", desc: "Nothing moves in this town without the Chief knowing" },
+    { min: 210, name: "Commissioner", desc: "Runs the whole damn operation from the top floor" },
+  ],
+};
+
+export const progressPirate: ProgressSlice = {
+  concepts: {
+    step1: "Scouted",
+    step2: "Plundered",
+    step3: "Conscripted",
+    completed: "Legendary Haul",
+    recruit: "Crewmate",
+  },
+  microcopy: {
+    emptyDashboard: "Yer hold be empty, Captain. Set sail to the Treasure Map and find some plunder worth chasing.",
+    recruitSuccess: "A new scallywag has joined the crew! The fleet grows mightier.",
+    completionCelebration: "Shiver me timbers! That be a legendary haul. The seas sing of yer conquest!",
+    stubAccountWelcome: "Ahoy! Word on the trade winds says ye've already been spotted in {count} plunders. Time to captain yer own raids.",
+  },
+  ranks: [
+    { min: 0, name: "Stowaway", desc: "Hiding below deck, hoping no one notices" },
+    { min: 10, name: "Deckhand", desc: "Swabbing the deck and learning the ropes" },
+    { min: 30, name: "Boatswain", desc: "Barking orders and tying proper knots" },
+    { min: 60, name: "First Mate", desc: "The captain's right hand, savvy?" },
+    { min: 110, name: "Captain", desc: "Master of the ship and terror of the seas" },
+    { min: 210, name: "Pirate King", desc: "Ruler of all seven seas. Legends are told of ye." },
+  ],
+};
+
+export const progressMedieval: ProgressSlice = {
+  concepts: {
+    step1: "Proclaimed",
+    step2: "Enacted",
+    step3: "Heralded",
+    completed: "Enshrined",
+    recruit: "Subject",
+  },
+  microcopy: {
+    emptyDashboard: "The Throne Room stands empty, Your Grace. Venture to the Royal Archives and proclaim your first decree.",
+    recruitSuccess: "A new subject has pledged fealty to the Crown. The court grows ever mightier.",
+    completionCelebration: "By the grace of the Crown, this decree has been enshrined in the annals of the realm for all eternity.",
+    stubAccountWelcome: "Hail, good subject! The royal scribes record your name in {count} decrees already proclaimed throughout the realm.",
+  },
+  ranks: [
+    { min: 0, name: "Peasant", desc: "A humble soul toiling in the fields" },
+    { min: 10, name: "Squire", desc: "Sworn into service of the court" },
+    { min: 30, name: "Knight", desc: "Bearing the Crown's colours with honour" },
+    { min: 60, name: "Baron", desc: "Lord of lands and keeper of wisdom" },
+    { min: 110, name: "Duke", desc: "Trusted counsellor to the Crown" },
+    { min: 210, name: "Sovereign", desc: "Supreme ruler of the realm — long may you reign" },
+  ],
+};

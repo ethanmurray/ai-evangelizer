@@ -169,3 +169,78 @@ export const badgesConsulting: BadgesSlice = {
     speed_learner: { name: "Agile Learner", description: "Fast-tracked 3 competency sprints in a single billing cycle -- let's double-click on that" },
   },
 };
+
+export const badgesNoir: BadgesSlice = {
+  concepts: {
+    badges: "Commendations",
+    skillRadar: "The Evidence Board",
+  },
+  badgeNames: {
+    first_learn: { name: "First Lead", description: "Picked up your first case and started asking questions" },
+    first_apply: { name: "Fieldwork", description: "Got your hands dirty on an actual case" },
+    first_share: { name: "The Tipoff", description: "Slipped intel to a fellow operative" },
+    ten_learned: { name: "Seasoned Eye", description: "Investigated 10 cases -- you're starting to see the pattern" },
+    five_applied: { name: "Street Smart", description: "Cracked 5 cases through good old-fashioned legwork" },
+    taught_five: { name: "Handler", description: "Ran 5 informants -- your network is growing" },
+    full_stack_ai: { name: "The Closer", description: "Worked every beat in town -- nothing gets past you" },
+    submitted_one: { name: "Case Opener", description: "Filed a new case with the agency" },
+    five_completed: { name: "Cold Case Specialist", description: "Closed 5 cases from open to shut" },
+    speed_learner: { name: "Hot Streak", description: "Investigated 3 cases in one day -- somebody's pulling double shifts" },
+    twenty_five_learned: { name: "Veteran", description: "25 cases investigated -- you've seen things that would keep a rookie up at night" },
+    ten_applied: { name: "Hard-Boiled", description: "Cracked 10 cases -- nothing surprises you anymore" },
+    ten_shared: { name: "Confidential Source", description: "Passed along tips 10 times -- the department's best-connected operative" },
+    three_submitted: { name: "Case Builder", description: "Filed 3 new cases -- you keep the agency busy" },
+    taught_ten: { name: "Chief Informant", description: "Put 10 operatives wise to the game" },
+    ten_completed: { name: "Decorated Detective", description: "10 cases closed -- they'll name a precinct after you" },
+  },
+};
+
+export const badgesPirate: BadgesSlice = {
+  concepts: {
+    badges: "Bounties",
+    skillRadar: "The Spyglass",
+  },
+  badgeNames: {
+    first_learn: { name: "Land Ho!", description: "Scouted yer first plunder on the horizon" },
+    first_apply: { name: "First Raid", description: "Boarded yer first vessel and seized the loot" },
+    first_share: { name: "Parley", description: "Shared treasure with a fellow buccaneer" },
+    ten_learned: { name: "Old Salt", description: "Scouted 10 plunders -- ye know these waters well" },
+    five_applied: { name: "Cutlass Veteran", description: "Plundered 5 targets with yer own hands" },
+    taught_five: { name: "Press Gang Captain", description: "Conscripted 5 souls into the pirate life" },
+    full_stack_ai: { name: "Scourge of the Seven Seas", description: "Conquered every sea of AI -- there be nothing left to plunder" },
+    submitted_one: { name: "Cartographer", description: "Charted a new plunder on the Treasure Map" },
+    five_completed: { name: "Dread Pirate", description: "Completed 5 legendary hauls -- yer name strikes fear across the seas" },
+    speed_learner: { name: "Broadside Blitz", description: "Scouted 3 plunders in a single day -- the wind was at yer back" },
+    twenty_five_learned: { name: "Sea Legend", description: "Scouted 25 plunders -- even the kraken respects ye" },
+    ten_applied: { name: "Plundermaster", description: "Raided 10 targets -- the trade routes fear yer flag" },
+    ten_shared: { name: "Generous Corsair", description: "Shared the booty 10 times -- honor among thieves" },
+    three_submitted: { name: "Master Cartographer", description: "Charted 3 new plunders -- the map grows richer" },
+    taught_ten: { name: "Admiral of the Fleet", description: "Conscripted 10 pirates -- yer armada is formidable" },
+    ten_completed: { name: "Pirate Legend", description: "10 legendary hauls -- they write sea shanties about ye" },
+  },
+};
+
+export const badgesMedieval: BadgesSlice = {
+  concepts: {
+    badges: "Royal Honours",
+    skillRadar: "The Coat of Arms",
+  },
+  badgeNames: {
+    first_learn: { name: "The Oath of Fealty", description: "Proclaimed your first decree before the court" },
+    first_apply: { name: "First Conquest", description: "Enacted a decree with your own hand upon the realm" },
+    first_share: { name: "Herald's Charge", description: "Heralded knowledge to a fellow subject of the Crown" },
+    ten_learned: { name: "Keeper of Scrolls", description: "Proclaimed 10 decrees from the Royal Archives" },
+    five_applied: { name: "Champion of the Realm", description: "Enacted 5 decrees in service to the Crown" },
+    taught_five: { name: "Master of Pages", description: "Tutored 5 subjects in the arcane arts" },
+    full_stack_ai: { name: "Lord Protector", description: "Mastered every domain of knowledge across the realm" },
+    submitted_one: { name: "Royal Scribe", description: "Authored a new decree for the Royal Archives" },
+    five_completed: { name: "Knight Commander", description: "Enshrined 5 decrees in the annals of the realm" },
+    speed_learner: { name: "Swift Falcon", description: "Proclaimed 3 decrees in a single day of court" },
+    twenty_five_learned: { name: "Grand Chancellor", description: "Proclaimed 25 decrees -- the Crown's most learned counsellor" },
+    ten_applied: { name: "Warden of the Realm", description: "Enacted 10 decrees across the kingdom" },
+    ten_shared: { name: "High Herald", description: "Spread the Crown's wisdom 10 times throughout the land" },
+    three_submitted: { name: "Keeper of the Great Seal", description: "Authored 3 decrees bearing the royal imprimatur" },
+    taught_ten: { name: "Grand Maester", description: "Tutored 10 subjects in service to the Crown" },
+    ten_completed: { name: "Hand of the Sovereign", description: "Enshrined 10 decrees -- the Crown's most trusted vassal" },
+  },
+};

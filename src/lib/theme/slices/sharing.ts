@@ -78,3 +78,30 @@ export const sharingConsulting: SharingSlice = {
     shareStatusChanged: "Status already updated per a previous stakeholder decision. Let's take this offline if further alignment is needed.",
   },
 };
+
+export const sharingNoir: SharingSlice = {
+  microcopy: {
+    shareConfirmed: "Tip confirmed. You've accepted the intel. Now do something useful with it before it gets you in trouble.",
+    shareDenied: "You waved off the tip. Fair enough. But the offer's still on the table if you change your mind.",
+    shareInvalidToken: "This dead drop's been compromised. The note's either a fake or somebody got here first.",
+    shareStatusChanged: "Somebody already made the call on this one. The file's been updated from a prior decision.",
+  },
+};
+
+export const sharingPirate: SharingSlice = {
+  microcopy: {
+    shareConfirmed: "Arr, the loot has been shared! Yer crewmate accepted the treasure. The fleet sails stronger together!",
+    shareDenied: "They refused the booty! No matter — ye can always offer again when the wind changes.",
+    shareInvalidToken: "That treasure map be a forgery! The X marks nothing. It may have already been claimed or lost to the deep.",
+    shareStatusChanged: "A previous captain already charted this course. The map has been redrawn.",
+  },
+};
+
+export const sharingMedieval: SharingSlice = {
+  microcopy: {
+    shareConfirmed: "The knowledge has been received and accepted with gratitude. The bonds of fealty between courtiers grow ever stronger.",
+    shareDenied: "The offering has been declined. Fear not — the court permits a change of heart in due course.",
+    shareInvalidToken: "This royal writ bears no recognized seal. It may have been revoked or claimed by another subject of the realm.",
+    shareStatusChanged: "The royal scribes note that this matter was already settled by a prior decree.",
+  },
+};

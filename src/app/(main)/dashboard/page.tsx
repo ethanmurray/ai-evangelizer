@@ -21,6 +21,7 @@ import { TrendingCard } from '@/components/ui/TrendingCard';
 import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist';
 import { OnboardingChecklist } from '@/components/ui/OnboardingChecklist';
 import { EmailConsentModal } from '@/components/ui/EmailConsentModal';
+import { useThemeUnlockCheck } from '@/hooks/useThemeUnlockCheck';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -40,6 +41,9 @@ export default function DashboardPage() {
       fetchUserPoints(user.id).then(setUserPoints);
     }
   }, [user?.id]);
+
+  // Toast notification when a theme unlock threshold is crossed
+  useThemeUnlockCheck(userPoints);
 
   // Show email consent modal once after onboarding is no longer showing
   useEffect(() => {

@@ -195,3 +195,69 @@ export const crudConsulting: CrudSlice = {
     editError: "Action item blocked. Let's take this offline, regroup with key stakeholders, and circle back.",
   },
 };
+
+export const crudNoir: CrudSlice = {
+  concepts: {
+    delete: "Burn the File",
+    edit: "Revise the Report",
+    save: "File It",
+    cancel: "Walk Away",
+  },
+  microcopy: {
+    deleteConfirmTitle: "Burn this case file?",
+    deleteConfirmBody: "Once it's gone, it's gone — like a witness in protective custody who never made it to the courthouse. All leads, progress, and tips vanish. Type DELETE to strike the match.",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteConfirmButton: "Burn It",
+    deleteSuccess: "The file's been torched. No evidence, no trail, no case. It's like it never happened.",
+    editTitle: "Revise the Case Report",
+    editTitleLabel: "Case Name",
+    editDescriptionLabel: "Case Notes",
+    editResourcesLabel: "Evidence & Exhibits",
+    editSuccess: "Report amended. The new version reads a lot cleaner than the original.",
+    editError: "Something's not right. The filing clerk kicked it back. Try again.",
+  },
+};
+
+export const crudPirate: CrudSlice = {
+  concepts: {
+    delete: "Scuttle",
+    edit: "Refit",
+    save: "Stash the Loot",
+    cancel: "Belay That",
+  },
+  microcopy: {
+    deleteConfirmTitle: "Scuttle this plunder?",
+    deleteConfirmBody: "This plunder will be sunk to the bottom of the ocean. All progress, upvotes, and shares go down with the ship. Type DELETE to scuttle her.",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteConfirmButton: "Send It to Davy Jones",
+    deleteSuccess: "The plunder has been scuttled. Nothing but barnacles and regret remain.",
+    editTitle: "Refit the Plunder",
+    editTitleLabel: "Plunder Name",
+    editDescriptionLabel: "Captain's Log Entry",
+    editResourcesLabel: "Buried Treasure & Hidden Caches",
+    editSuccess: "The plunder has been refitted and she's seaworthy once more. Fair winds!",
+    editError: "Blimey! The refit failed. The hull's not holding. Try again, ye sea dog.",
+  },
+};
+
+export const crudMedieval: CrudSlice = {
+  concepts: {
+    delete: "Banish from the Realm",
+    edit: "Amend the Decree",
+    save: "Affix the Royal Seal",
+    cancel: "Stay the Hand",
+  },
+  microcopy: {
+    deleteConfirmTitle: "Banish this decree from the realm?",
+    deleteConfirmBody: "By order of the Crown, this decree and all record of its proclamation, fealty, and heraldry shall be struck from the annals for all time. Type DELETE to execute the banishment.",
+    deleteConfirmPlaceholder: "Type DELETE to confirm",
+    deleteConfirmButton: "Banish by Royal Command",
+    deleteSuccess: "The decree has been banished from the realm. Let it never be spoken of again.",
+    editTitle: "Amend the Royal Decree",
+    editTitleLabel: "Decree Title",
+    editDescriptionLabel: "The Royal Writ",
+    editResourcesLabel: "Scrolls & Supporting Artefacts",
+    editSuccess: "The decree has been amended and sealed anew. So it is written, so it shall be done.",
+    editError: "The royal scribes reject your amendments. Revise your petition and present it once more before the court.",
+  },
+};

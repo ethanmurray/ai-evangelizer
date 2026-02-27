@@ -26,9 +26,19 @@ const themeScript = `
 (function() {
   try {
     var pref = localStorage.getItem('cult_of_ai_theme_pref');
-    var map = { cult: 'conspiracy-board', corporate: 'clean' };
-    if (pref && map[pref]) {
-      document.documentElement.setAttribute('data-visual-theme', map[pref]);
+    var dark = localStorage.getItem('cult_of_ai_dark_mode');
+    var isDark = dark === null ? true : dark === 'true';
+    var conspiracy = { cult:1, scifi:1, retro:1, nerdy:1, pirate:1, medieval:1 };
+    var visual;
+    if (pref === 'noir') {
+      visual = isDark ? 'noir' : 'noir-light';
+    } else if (conspiracy[pref]) {
+      visual = isDark ? 'conspiracy-board' : 'conspiracy-board-light';
+    } else if (pref) {
+      visual = isDark ? 'clean-dark' : 'clean';
+    }
+    if (visual) {
+      document.documentElement.setAttribute('data-visual-theme', visual);
     }
   } catch(e) {}
 })();
