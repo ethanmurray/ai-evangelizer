@@ -168,6 +168,7 @@ export async function createComment(
 
   // 2) Use case submitter notification (skip if already notified as parent comment author)
   if (useCase?.submitted_by && useCase.submitted_by !== authorId && !notifiedUserIds.has(useCase.submitted_by)) {
+    notifiedUserIds.add(useCase.submitted_by);
     createNotification(
       useCase.submitted_by,
       'comment_received',
@@ -176,6 +177,19 @@ export async function createComment(
       { use_case_id: useCaseId, comment_id: data.id }
     ).catch(() => {});
   }
+
+  // 3) Notify followers (fire-and-forget)
+  fetch('/api/notify-followers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      commentId: data.id,
+      useCaseId,
+      commentAuthorId: authorId,
+      useCaseTitle: useCase?.title || '',
+      alreadyNotifiedUserIds: [...notifiedUserIds],
+    }),
+  }).catch(() => {});
 
   return data;
 }

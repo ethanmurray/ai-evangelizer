@@ -115,6 +115,18 @@ export function PointsReferenceModal({ isOpen, onClose }: PointsReferenceModalPr
 
             <div className="flex justify-between items-center p-3 rounded" style={{ background: 'var(--color-bg-surface)' }}>
               <div>
+                <div className="font-medium">Extra Shares</div>
+                <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                  Each additional share beyond 2
+                </div>
+              </div>
+              <div className="font-bold" style={{ color: 'var(--color-primary)' }}>
+                +{POINTS_CONFIG.extraShare} point each
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center p-3 rounded" style={{ background: 'var(--color-bg-surface)' }}>
+              <div>
                 <div className="font-medium">Submit a {t.concepts.useCase}</div>
                 <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
                   Contribute new content

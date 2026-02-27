@@ -5,7 +5,7 @@ import { useTheme } from '@/lib/theme';
 import { markSeen, markDone, unmarkSeen, unmarkDone, shareWithRecipient } from '@/lib/data/progress';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { EmailPicker } from '@/components/ui/EmailPicker';
 import { Alert } from '@/components/ui/Alert';
 import { ProgressSteps } from '@/components/ui/ProgressSteps';
 
@@ -144,7 +144,8 @@ export function UseCaseProgressCard({
 
   const canMarkSeen = !useCase.seen_at;
   const canMarkDone = useCase.seen_at && !useCase.done_at;
-  const canShare = useCase.done_at && useCase.share_count < 2;
+  const canShare = !!useCase.done_at;
+  const isBonusSharing = useCase.done_at && useCase.share_count >= 2;
 
   return (
     <>
@@ -184,11 +185,11 @@ export function UseCaseProgressCard({
               }}
             >
               <p className="text-sm font-medium">{t.microcopy.teacherPrompt}</p>
-              <Input
-                type="email"
+              <EmailPicker
                 placeholder={t.microcopy.teacherPlaceholder}
                 value={teacherEmail}
-                onChange={(e) => setTeacherEmail(e.target.value)}
+                onChange={setTeacherEmail}
+                userId={userId}
               />
               <div className="flex gap-2">
                 <Button
@@ -236,6 +237,15 @@ export function UseCaseProgressCard({
             </Button>
           )}
 
+          {/* Completed state */}
+          {useCase.is_completed && (
+            <div className="text-center py-2">
+              <span className="text-lg font-bold" style={{ color: 'var(--color-success)' }}>
+                &#10003; {t.concepts.completed}
+              </span>
+            </div>
+          )}
+
           {/* Step 3: Teach */}
           {canShare && (
             <div
@@ -246,10 +256,12 @@ export function UseCaseProgressCard({
               }}
             >
               <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--color-secondary)' }}>
-                {t.concepts.step3}: Share with colleagues
+                {isBonusSharing ? 'Bonus: Share with more people' : `${t.concepts.step3}: Share with colleagues`}
               </h3>
               <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>
-                Enter the email(s) of people you taught this to ({useCase.share_count}/2 shared)
+                {isBonusSharing
+                  ? `You've shared with ${useCase.share_count} people. Each additional share earns 1 bonus point!`
+                  : `Enter the email(s) of people you taught this to (${useCase.share_count}/2 to complete)`}
               </p>
 
               {shareSuccess && (
@@ -260,34 +272,23 @@ export function UseCaseProgressCard({
               )}
 
               <form onSubmit={handleShare} className="space-y-3">
-                <Input
-                  type="email"
+                <EmailPicker
                   placeholder="colleague@company.com"
                   value={recipient1}
-                  onChange={(e) => setRecipient1(e.target.value)}
+                  onChange={setRecipient1}
+                  userId={userId}
                   required
                 />
-                {useCase.share_count === 0 && (
-                  <Input
-                    type="email"
-                    placeholder="another@company.com (optional)"
-                    value={recipient2}
-                    onChange={(e) => setRecipient2(e.target.value)}
-                  />
-                )}
+                <EmailPicker
+                  placeholder="another@company.com (optional)"
+                  value={recipient2}
+                  onChange={setRecipient2}
+                  userId={userId}
+                />
                 <Button type="submit" isLoading={sharing} loadingText="Sharing..." className="w-full">
                   {t.concepts.step3}
                 </Button>
               </form>
-            </div>
-          )}
-
-          {/* Completed state */}
-          {useCase.is_completed && (
-            <div className="text-center py-2">
-              <span className="text-lg font-bold" style={{ color: 'var(--color-success)' }}>
-                &#10003; {t.concepts.completed}
-              </span>
             </div>
           )}
         </div>
