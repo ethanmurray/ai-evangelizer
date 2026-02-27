@@ -4,26 +4,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@/lib/theme';
 import type { ThemeKey } from '@/lib/theme';
 import { useAuth } from '@/lib/auth';
-import { updateUserTheme } from '@/lib/auth/utils/database';
 import { saveThemePreference } from '@/lib/auth/utils/storage';
-
-const THEME_OPTIONS: { key: ThemeKey; label: string }[] = [
-  { key: 'cult', label: 'Conspiracy Mode' },
-  { key: 'corporate', label: 'Corporate Mode' },
-  { key: 'academic', label: 'Academic Mode' },
-  { key: 'startup', label: 'Startup Mode' },
-  { key: 'scifi', label: 'Sci-Fi Mode' },
-  { key: 'retro', label: 'Retro Mode' },
-  { key: 'nerdy', label: 'Nerdy Mode' },
-  { key: 'consulting', label: 'Consulting Mode' },
-];
+import { THEME_UNLOCK_CONFIG, isThemeUnlocked } from '@/lib/theme/themeUnlocks';
+import { fetchUserPoints } from '@/lib/data/points';
 
 export function ThemeToggle() {
   const { themeKey, setThemeKey } = useTheme();
   const { user, setUser } = useAuth();
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
+  const [userPoints, setUserPoints] = useState<number>(0);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Fetch user points to determine which themes are unlocked
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserPoints(user.id).then(setUserPoints);
+    }
+  }, [user?.id]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -38,13 +36,16 @@ export function ThemeToggle() {
     }
   }, [open]);
 
-  const currentLabel = THEME_OPTIONS.find((o) => o.key === themeKey)?.label || themeKey;
+  const currentLabel = THEME_UNLOCK_CONFIG.find((o) => o.key === themeKey)?.label || themeKey;
 
   const handleSelect = async (newKey: ThemeKey) => {
     if (newKey === themeKey) {
       setOpen(false);
       return;
     }
+
+    // Don't allow selecting locked themes
+    if (!isThemeUnlocked(newKey, userPoints)) return;
 
     const previousKey = themeKey;
     setOpen(false);
@@ -53,12 +54,18 @@ export function ThemeToggle() {
     setThemeKey(newKey);
     saveThemePreference(newKey);
 
-    // Persist to database
+    // Persist to database via API route
     if (user) {
       setSaving(true);
       try {
-        const updated = await updateUserTheme(user.id, newKey);
-        setUser(updated);
+        const res = await fetch('/api/users/theme', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, themeKey: newKey }),
+        });
+        if (!res.ok) throw new Error('Failed to update theme');
+        const data = await res.json();
+        setUser(data.user);
       } catch {
         // Revert on failure
         setThemeKey(previousKey);
@@ -101,27 +108,50 @@ export function ThemeToggle() {
             overflow: 'hidden',
             zIndex: 50,
             boxShadow: '0 -4px 12px rgba(0,0,0,0.15)',
+            maxHeight: 400,
+            overflowY: 'auto',
           }}
         >
-          {THEME_OPTIONS.map((option) => (
-            <button
-              key={option.key}
-              onClick={() => handleSelect(option.key)}
-              className="text-sm transition-colors cursor-pointer"
-              style={{
-                display: 'block',
-                width: '100%',
-                padding: '8px 12px',
-                textAlign: 'left',
-                background: option.key === themeKey ? 'var(--color-accent, #6366f1)' : 'transparent',
-                color: option.key === themeKey ? '#fff' : 'var(--color-text)',
-                border: 'none',
-                fontWeight: option.key === themeKey ? 600 : 400,
-              }}
-            >
-              {option.label}
-            </button>
-          ))}
+          {THEME_UNLOCK_CONFIG.map((option) => {
+            const locked = !isThemeUnlocked(option.key, userPoints);
+            const isActive = option.key === themeKey;
+            const isEarned = !locked && option.requiredPoints !== null;
+
+            return (
+              <button
+                key={option.key}
+                onClick={() => !locked && handleSelect(option.key)}
+                disabled={locked}
+                className="text-sm transition-colors"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  padding: '8px 12px',
+                  textAlign: 'left',
+                  background: isActive ? 'var(--color-accent, #6366f1)' : 'transparent',
+                  color: locked ? 'var(--color-text-muted)' : isActive ? '#fff' : 'var(--color-text)',
+                  border: 'none',
+                  fontWeight: isActive ? 600 : 400,
+                  opacity: locked ? 0.5 : 1,
+                  cursor: locked ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <span>{option.label}</span>
+                {locked && (
+                  <span style={{ fontSize: '0.7em', color: 'var(--color-text-muted)' }}>
+                    {option.requiredPoints} pts
+                  </span>
+                )}
+                {isEarned && !isActive && (
+                  <span style={{ fontSize: '0.7em', color: 'var(--color-success)' }}>
+                    Unlocked
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

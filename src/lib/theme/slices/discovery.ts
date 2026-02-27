@@ -87,3 +87,33 @@ export const discoveryConsulting: DiscoverySlice = {
     noRecommendations: "Let's circle back once you've built out your capability stack to surface net-new paradigm-shifting recommendations.",
   },
 };
+
+export const discoveryNoir: DiscoverySlice = {
+  concepts: {
+    recommended: "Cases You Should Look Into",
+    related: "Connected Cases",
+  },
+  microcopy: {
+    noRecommendations: "Not enough to go on yet. Work a few cases first, and the leads will start coming to you.",
+  },
+};
+
+export const discoveryPirate: DiscoverySlice = {
+  concepts: {
+    recommended: "Targets on the Horizon",
+    related: "Nearby Plunders",
+  },
+  microcopy: {
+    noRecommendations: "The spyglass shows nothing yet. Plunder a few targets first and new treasure will appear on the horizon.",
+  },
+};
+
+export const discoveryMedieval: DiscoverySlice = {
+  concepts: {
+    recommended: "The Crown Recommends",
+    related: "Neighbouring Dominions",
+  },
+  microcopy: {
+    noRecommendations: "The royal advisors have not yet divined your path. Proclaim your first decree, and counsel shall follow.",
+  },
+};

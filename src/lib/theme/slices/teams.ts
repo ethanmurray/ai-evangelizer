@@ -96,3 +96,36 @@ export const teamsConsulting: TeamsSlice = {
     heatmapSubtitle: "Leverage this best-in-class visualization to identify white-space opportunities across your human capital portfolio.",
   },
 };
+
+export const teamsNoir: TeamsSlice = {
+  concepts: {
+    teamDashboard: "The Precinct Board",
+    skillGaps: "Cold Leads",
+    heatmap: "The Crime Map",
+  },
+  microcopy: {
+    heatmapSubtitle: "Who's working what beat, and where the cases are piling up with nobody on them.",
+  },
+};
+
+export const teamsPirate: TeamsSlice = {
+  concepts: {
+    teamDashboard: "Crew Manifest",
+    skillGaps: "Uncharted Waters",
+    heatmap: "The Sea Chart",
+  },
+  microcopy: {
+    heatmapSubtitle: "See which plunders the crew has raided and which waters remain uncharted, ye landlubbers.",
+  },
+};
+
+export const teamsMedieval: TeamsSlice = {
+  concepts: {
+    teamDashboard: "The Court Census",
+    skillGaps: "Weaknesses in the Realm's Defences",
+    heatmap: "Dominion Map",
+  },
+  microcopy: {
+    heatmapSubtitle: "Survey the realm to discern which arts the court has mastered and which provinces remain unconquered.",
+  },
+};

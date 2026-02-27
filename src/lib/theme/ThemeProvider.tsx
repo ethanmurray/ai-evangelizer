@@ -2,10 +2,10 @@
 
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { ContentTheme, VisualTheme, AppTheme } from './types';
-import { cultTheme, corporateTheme, academicTheme, startupTheme, scifiTheme, retroTheme, nerdyTheme, consultingTheme } from './mergeSlices';
+import { cultTheme, corporateTheme, academicTheme, startupTheme, scifiTheme, retroTheme, nerdyTheme, consultingTheme, pirateTheme, noirTheme, medievalTheme } from './mergeSlices';
 import { getStoredThemePreference } from '@/lib/auth/utils/storage';
 
-export type ThemeKey = 'cult' | 'corporate' | 'academic' | 'startup' | 'scifi' | 'retro' | 'nerdy' | 'consulting';
+export type ThemeKey = 'cult' | 'corporate' | 'academic' | 'startup' | 'scifi' | 'retro' | 'nerdy' | 'consulting' | 'pirate' | 'noir' | 'medieval';
 
 const DARK_MODE_KEY = 'cult_of_ai_dark_mode';
 
@@ -18,6 +18,9 @@ const contentThemes: Record<ThemeKey, ContentTheme> = {
   retro: retroTheme,
   nerdy: nerdyTheme,
   consulting: consultingTheme,
+  pirate: pirateTheme,
+  noir: noirTheme,
+  medieval: medievalTheme,
 };
 
 const visualThemes: Record<string, VisualTheme> = {
@@ -25,12 +28,17 @@ const visualThemes: Record<string, VisualTheme> = {
   'conspiracy-board-light': { name: 'Conspiracy Board Light', cssClass: 'conspiracy-board-light' },
   clean: { name: 'Clean', cssClass: 'clean' },
   'clean-dark': { name: 'Clean Dark', cssClass: 'clean-dark' },
+  noir: { name: 'Noir', cssClass: 'noir' },
+  'noir-light': { name: 'Noir Light', cssClass: 'noir-light' },
 };
 
 // Themes that use the conspiracy-board visual style; all others use clean
-const CONSPIRACY_THEMES: Set<ThemeKey> = new Set(['cult', 'scifi', 'retro', 'nerdy']);
+const CONSPIRACY_THEMES: Set<ThemeKey> = new Set(['cult', 'scifi', 'retro', 'nerdy', 'pirate', 'medieval']);
 
 function getVisualThemeKey(contentKey: string, darkMode: boolean): string {
+  if (contentKey === 'noir') {
+    return darkMode ? 'noir' : 'noir-light';
+  }
   if (CONSPIRACY_THEMES.has(contentKey as ThemeKey)) {
     return darkMode ? 'conspiracy-board' : 'conspiracy-board-light';
   }

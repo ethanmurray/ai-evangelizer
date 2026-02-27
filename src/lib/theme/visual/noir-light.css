@@ -1,0 +1,15 @@
+[data-visual-theme="noir-light"] {
+  --color-bg: #f5f0e8;
+  --color-bg-surface: #ebe4d8;
+  --color-bg-elevated: #ddd5c6;
+  --color-primary: #8b6914;
+  --color-secondary: #6b5a3e;
+  --color-text: #2a2520;
+  --color-text-muted: #6b6358;
+  --color-text-heading: #8b6914;
+  --color-border: #c8bfb0;
+  --color-success: #4a7030;
+  --color-error: #8b2020;
+  --font-heading: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Inter', sans-serif;
+}

@@ -222,3 +222,78 @@ export const coreConsulting: CoreSlice = {
     aboutContent: "Per our last conversation, this app is a net-new greenfield initiative designed to synergize AI adoption and drive transformational value-add across the enterprise. If this pilot moves the needle, we'll circle back to right-size the solution for end-to-end deployment across the organization and potentially leverage it to boil the ocean with our client-facing engagements. Current state: early-stage MVP — vibe-coded with zero governance, hosted on an unsanctioned public-facing environment, no security or authentication frameworks — so please do not upload any sensitive deliverables to this platform.\n\nWe're operationalizing this as an open-source center of excellence. David Friedman and Ethan Murray were the initial thought leaders, but this initiative belongs to any stakeholder who wants to lean in and add value. Anyone can submit Issues (strategic enhancement proposals) or directly push code change pull requests at https://github.com/ethanmurray/ai-evangelizer; anyone can merge changes which auto-deploy to production, so please exercise due diligence to avoid disrupting the value stream for other stakeholders. This began with no design and just a few directional hypotheses, so feel empowered to ideate, iterate, and drive net-new innovation. The north star: build something that catalyzes AI adoption on the highest-ROI use cases we want to scale across the business. Let's take this offline and align on next steps.",
   },
 };
+
+export const coreNoir: CoreSlice = {
+  appName: "The AI Files",
+  tagline: "Every algorithm has a story. Most of them are lies.",
+  toneGuidance: "Hard-boiled detective fiction. 1940s noir, Raymond Chandler meets AI adoption. Cynical, atmospheric, world-weary but sharp. 'Case', 'lead', 'trail', 'gumshoe', 'dame', 'stakeout', 'alibi'. Like a private eye narrating from a dimly lit office with a bottle of bourbon in the desk drawer.",
+  concepts: {
+    useCase: "Case",
+    useCasePlural: "Cases",
+    library: "The Case Files",
+    dashboard: "Your Office",
+    leaderboard: "The Lineup",
+    profile: "Your Rap Sheet",
+    login: "Walk Through the Door",
+    submit: "Open a new case",
+    newUser: "Stranger",
+    about: "The Back Story",
+  },
+  microcopy: {
+    notFound: "This page is gone, pal. Vanished like a witness who knew too much. Somebody cleaned this place out before you got here.",
+    loginSubtext: "The door's unlocked. Step inside and state your business.",
+    submissionPrompt: "Got a case worth filing? Lay it on the desk and don't leave anything out.",
+    aboutTitle: "The Back Story",
+    aboutContent: "Here's the setup, and I'll give it to you straight. This app is a side job — built on spec to get more people wise to AI at work. If this little operation pans out, we'll rebuild it proper and take it city-wide across the whole company, maybe even loop in the clients. Right now it's still a back-alley job: vibe-coded with no oversight, hosted on some public server with no lock on the door — so don't go leaving anything sensitive lying around.\n\nWe're running this like an open case. David Friedman and Ethan Murray kicked the whole thing off, but this job belongs to anybody with the nerve to pitch in. File an Issue (tip off the detectives) or submit a pull request at https://github.com/ethanmurray/ai-evangelizer; anybody can merge changes and they go live immediately, so try not to blow up the joint for the other operatives. There was no blueprint — just a hunch and a half-empty coffee cup — so bring your own leads, follow your own instincts, and make something of this place. The only standing order: build something that gets more people using AI on the cases that actually matter at work. Now quit reading and start investigating.",
+  },
+};
+
+export const corePirate: CoreSlice = {
+  appName: "AI Plunderers",
+  tagline: "Hoist the sails and plunder the seven seas of AI",
+  toneGuidance: "Swashbuckling, irreverent, nautical. Captain Jack Sparrow meets AI adoption. Self-aware humor with salty language. 'Plunder', 'booty', 'scallywag', 'sea dog', 'broadside'. Dry wit wrapped in pirate bravado.",
+  concepts: {
+    useCase: "Plunder",
+    useCasePlural: "Plunders",
+    library: "The Treasure Map",
+    dashboard: "Captain's Quarters",
+    leaderboard: "Crew Rankings",
+    profile: "Yer Wanted Poster",
+    login: "Board the Ship",
+    submit: "Chart a plunder",
+    newUser: "Stowaway",
+    about: "The Pirate Code",
+  },
+  microcopy: {
+    notFound: "Arrr! This page be lost to Davy Jones' locker. Turn the ship around, ye bilge rat.",
+    loginSubtext: "Every pirate needs a crew. Sign aboard or walk the plank.",
+    submissionPrompt: "What AI treasure have ye plundered? Chart it on the map for the rest of the crew",
+    aboutTitle: "The Pirate Code (More Like Guidelines, Really)",
+    aboutContent: "Ahoy! This ship be built for fun — to plunder more valuable AI booty at work. If it proves seaworthy, we'll commission a proper galleon and sail it across the whole company, maybe even raid our clients' shores. We're still in early waters: vibe-coded with no code review, moored at an unapproved public port, no security or authentication — so don't stash any sensitive treasure here, savvy?\n\nWe're running this like a pirate fleet — no navy, no admiralty, just free sailors. David Friedman and Ethan Murray hoisted the first Jolly Roger, but this ship belongs to any scallywag bold enough to grab the wheel. Anyone can file Issues (mutiny requests) or submit pull request raids at https://github.com/ethanmurray/ai-evangelizer; anyone can merge code and it auto-deploys to production, so try not to sink the ship for the rest of the crew. There was no blueprint — just rum, ambition, and a rough sketch on a napkin — so bring your own ideas and make this vessel yours. The only rule of the Pirate Code: build something that drives more AI adoption on the plunders worth plundering at work. Now hoist the colors!",
+  },
+};
+
+export const coreMedieval: CoreSlice = {
+  appName: "The Royal Court of AI",
+  tagline: "By decree of the Crown, ye shall master the arcane arts",
+  toneGuidance: "Regal, formal, courtly medieval voice. 'By decree', 'henceforth', 'the Crown commands', 'sovereign will', 'the realm prospers'. Think Game of Thrones royal court meets AI adoption. Grand proclamations, noble language, feudal hierarchy. Earnest and majestic, never ironic about its own grandeur.",
+  concepts: {
+    useCase: "Decree",
+    useCasePlural: "Decrees",
+    library: "The Royal Archives",
+    dashboard: "The Throne Room",
+    leaderboard: "Court Rankings",
+    profile: "Your Royal Charter",
+    login: "Enter the Court",
+    submit: "Issue a decree",
+    newUser: "Peasant",
+    about: "The Crown's Proclamation",
+  },
+  microcopy: {
+    notFound: "This page has been lost to the ages. Neither herald nor cartographer can locate it within the realm. Turn back, good subject.",
+    loginSubtext: "Present your seal and be admitted to the Royal Court",
+    submissionPrompt: "Issue a royal decree proclaiming a valuable application of AI for the good of the realm",
+    aboutTitle: "A Proclamation from the Crown",
+    aboutContent: "Hear ye, hear ye! By sovereign decree, this court has been convened to advance the arcane arts of artificial intelligence throughout the realm. Should this noble endeavour prove its worth, the Crown shall commission a grand reconstruction for deployment across the entire kingdom and, perhaps, to allied dominions beyond our borders. Be it known that this court is in its earliest days — forged in haste with no master craftsman's review, housed upon unsanctioned public grounds, with neither guard nor gate — therefore let no subject entrust sensitive scrolls to these halls.\n\nThis court operates as an open charter. Lord David Friedman and Lord Ethan Murray founded this institution, yet it belongs to any loyal subject who would serve the realm. Any citizen may petition with Issues (proposals for royal improvement) or contribute code directly at https://github.com/ethanmurray/ai-evangelizer; any member of the court may approve changes, which are proclaimed to the realm immediately — so exercise the wisdom befitting your station and do not bring ruin upon your fellow courtiers. This court was established with neither blueprint nor grand design, merely a sovereign vision and the will to act. All subjects are hereby encouraged to bring forth their own counsel and shape these halls. The sole commandment of this court: build something that advances AI adoption upon the most worthy endeavours of the realm.",
+  },
+};

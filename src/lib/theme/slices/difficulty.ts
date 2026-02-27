@@ -51,3 +51,21 @@ export const difficultyConsulting: DifficultySlice = {
     difficulty: "Strategic Complexity Index",
   },
 };
+
+export const difficultyNoir: DifficultySlice = {
+  concepts: {
+    difficulty: "How Deep the Rabbit Hole",
+  },
+};
+
+export const difficultyPirate: DifficultySlice = {
+  concepts: {
+    difficulty: "Treachery of the Seas",
+  },
+};
+
+export const difficultyMedieval: DifficultySlice = {
+  concepts: {
+    difficulty: "Peril of the Realm",
+  },
+};

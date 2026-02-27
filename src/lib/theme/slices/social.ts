@@ -186,3 +186,66 @@ export const socialConsulting: SocialSlice = {
     feedEmpty: "The stakeholder pulse is flatlined. Let's proactively drive cross-functional engagement.",
   },
 };
+
+export const socialNoir: SocialSlice = {
+  concepts: {
+    upvote: "Follow This Lead",
+    timeline: "The Case History",
+    discussion: "Interrogation Room",
+    playbook: "The Dossier",
+    tip: "Inside Tip",
+    gotcha: "Red Herring",
+    activityFeed: "The Wire",
+  },
+  microcopy: {
+    timelineEmpty: "Nothing on the record yet. Clean slate — or maybe somebody wiped it.",
+    noComments: "The interrogation room is empty. Nobody's talking. Be the first to break the silence.",
+    noPlaybook: "The dossier is blank. Somebody's got to write the first page.",
+    commentPlaceholder: "Spill what you know...",
+    rankUpTitle: "PROMOTION",
+    rankUpBody: "Word came down from the top. You've been made {rank}. Don't let it go to your head.",
+    feedEmpty: "The wire is dead quiet. Not a whisper on any channel.",
+  },
+};
+
+export const socialPirate: SocialSlice = {
+  concepts: {
+    upvote: "Arr, That's Gold!",
+    timeline: "Ship's Log",
+    discussion: "Crew Parley",
+    playbook: "Captain's Orders",
+    tip: "Smuggler's Tip",
+    gotcha: "Siren's Warning",
+    activityFeed: "Crow's Nest Watch",
+  },
+  microcopy: {
+    timelineEmpty: "Yer ship's log be blank, Captain. Set sail and start making history.",
+    noComments: "The crew is silent. Someone start the parley!",
+    noPlaybook: "No captain's orders have been issued. Be the first to chart the course.",
+    commentPlaceholder: "Speak yer mind, ye scurvy dog...",
+    rankUpTitle: "PROMOTION ON DECK!",
+    rankUpBody: "By the powers vested in Davy Jones, ye've been promoted to {rank}. The crew salutes ye!",
+    feedEmpty: "The crow's nest reports nothing on the horizon. Dead calm, Captain.",
+  },
+};
+
+export const socialMedieval: SocialSlice = {
+  concepts: {
+    upvote: "By Royal Decree!",
+    timeline: "The Royal Chronicle",
+    discussion: "Court Deliberations",
+    playbook: "The Grand Strategy",
+    tip: "Counsel of the Wise",
+    gotcha: "Treachery Afoot",
+    activityFeed: "Heralds' Tidings",
+  },
+  microcopy: {
+    timelineEmpty: "The royal chronicle is yet unwritten. Let your deeds fill its pages.",
+    noComments: "The court is silent. No counsel has been offered. Speak, good subject.",
+    noPlaybook: "No grand strategy has been composed. Be the first to advise the Crown.",
+    commentPlaceholder: "Offer your counsel to the court...",
+    rankUpTitle: "ROYAL ELEVATION",
+    rankUpBody: "Hear ye! By grace of the Crown, you have been elevated to {rank}. May you serve the realm with distinction.",
+    feedEmpty: "The heralds have no tidings to report. The realm awaits your noble deeds.",
+  },
+};

@@ -141,3 +141,51 @@ export const authConsulting: AuthSlice = {
     teacherSubmit: "Attribute the referral",
   },
 };
+
+export const authNoir: AuthSlice = {
+  microcopy: {
+    checkEmailTitle: "Check Your Dead Drop",
+    checkEmailBody: "A verification note has been slipped under the door at {email}. Open it and follow the instructions if you want in.",
+    checkEmailExpiry: "The note self-destructs in 15 minutes. This town doesn't wait for anybody.",
+    verifySuccess: "You're in. Welcome to the agency, detective. Try not to get yourself killed.",
+    verifyExpired: "That note's gone cold. The ink faded. Head back to the front door and try again.",
+    verifyAlreadyUsed: "Somebody already used this ticket. You can't cash the same favor twice in this business.",
+    verifyInvalid: "This doesn't check out. Smells like a forgery. Go back to the beginning and start over.",
+    teacherPrompt: "Who put you wise to this case?",
+    teacherPlaceholder: "their@email.com",
+    teacherSkip: "I work alone",
+    teacherSubmit: "Give them the credit",
+  },
+};
+
+export const authPirate: AuthSlice = {
+  microcopy: {
+    checkEmailTitle: "Message in a Bottle Sent!",
+    checkEmailBody: "A message in a bottle has been cast into the seas toward {email}. Fish it out and click the link to join the crew.",
+    checkEmailExpiry: "The ink fades in 15 minutes. The tide waits for no pirate.",
+    verifySuccess: "Welcome aboard, matey! Yer part of the crew now. No turning back.",
+    verifyExpired: "That message washed away with the tide. Head back to port and send another.",
+    verifyAlreadyUsed: "Ye already used that bottle, ye greedy barnacle. Try signing in instead.",
+    verifyInvalid: "That be a forged letter of marque! The harbormaster doesn't recognize it.",
+    teacherPrompt: "Which salty sea dog showed ye the ropes on this one?",
+    teacherPlaceholder: "their@email.com",
+    teacherSkip: "I plundered it meself",
+    teacherSubmit: "Tip yer hat to the captain",
+  },
+};
+
+export const authMedieval: AuthSlice = {
+  microcopy: {
+    checkEmailTitle: "A Royal Summons Has Been Dispatched",
+    checkEmailBody: "A sealed letter bearing the Crown's sigil has been dispatched to {email}. Break the seal and follow the summons to take your place at court.",
+    checkEmailExpiry: "The summons expires in 15 minutes. The Crown does not wait upon tardy subjects.",
+    verifySuccess: "Your identity has been verified by the royal herald. Welcome to the court, loyal subject. May you serve the realm with honour.",
+    verifyExpired: "This summons has expired. The court's patience is not infinite. Return to the gates and petition for a new letter of passage.",
+    verifyAlreadyUsed: "This letter of passage has already been presented at the gates. You may not enter twice upon the same writ.",
+    verifyInvalid: "The royal seal upon this document is not recognized. The court suspects forgery. Petition anew through the proper channels.",
+    teacherPrompt: "Which noble lord or lady of the court first instructed you in these arts?",
+    teacherPlaceholder: "their@email.com",
+    teacherSkip: "I am self-taught in the arcane arts",
+    teacherSubmit: "Honour thy mentor",
+  },
+};
