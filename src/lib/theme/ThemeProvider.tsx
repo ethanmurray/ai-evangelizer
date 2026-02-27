@@ -63,7 +63,7 @@ function getInitialThemeKey(): ThemeKey {
   }
   const envKey = process.env.NEXT_PUBLIC_CONTENT_THEME;
   if (envKey && VALID_THEME_KEYS.has(envKey)) return envKey as ThemeKey;
-  return 'cult';
+  return 'corporate';
 }
 
 function getInitialDarkMode(): boolean {
@@ -101,8 +101,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<ThemeContextType>(() => {
     const visualKey = getVisualThemeKey(themeKey, darkMode);
     return {
-      content: contentThemes[themeKey] || cultTheme,
-      visual: visualThemes[visualKey] || visualThemes['conspiracy-board'],
+      content: contentThemes[themeKey] || corporateTheme,
+      visual: visualThemes[visualKey] || visualThemes['clean-dark'],
       themeKey,
       setThemeKey,
       darkMode,

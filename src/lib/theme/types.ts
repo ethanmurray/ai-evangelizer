@@ -45,6 +45,13 @@ export interface ContentTheme {
     stubAccountWelcome: string;
     notFound: string;
     loginSubtext: string;
+    loginExplainer: string;
+    loginStep1Title: string;
+    loginStep1Desc: string;
+    loginStep2Title: string;
+    loginStep2Desc: string;
+    loginStep3Title: string;
+    loginStep3Desc: string;
     submissionPrompt: string;
     deleteConfirmTitle: string;
     deleteConfirmBody: string;
