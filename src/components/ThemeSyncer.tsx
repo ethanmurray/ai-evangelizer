@@ -22,13 +22,13 @@ export function ThemeSyncer() {
           saveThemePreference(user.themePreference);
         } else {
           // Fall back to default if theme is locked
-          const defaultKey = (process.env.NEXT_PUBLIC_CONTENT_THEME || 'cult') as ThemeKey;
+          const defaultKey = (process.env.NEXT_PUBLIC_CONTENT_THEME || 'corporate') as ThemeKey;
           setThemeKey(defaultKey);
           saveThemePreference(defaultKey);
         }
       });
     } else if (user === null) {
-      const defaultKey = (process.env.NEXT_PUBLIC_CONTENT_THEME || 'cult') as ThemeKey;
+      const defaultKey = (process.env.NEXT_PUBLIC_CONTENT_THEME || 'corporate') as ThemeKey;
       setThemeKey(defaultKey);
       saveThemePreference(null);
     }

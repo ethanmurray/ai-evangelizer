@@ -18,8 +18,8 @@ const specialElite = Special_Elite({
 });
 
 export const metadata: Metadata = {
-  title: "The Cult of AI",
-  description: "Adjust your tinfoil hat and join us",
+  title: "AI Skills Tracker",
+  description: "Learn, practice, share",
 };
 
 const themeScript = `
@@ -49,7 +49,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const visualTheme = process.env.NEXT_PUBLIC_VISUAL_THEME || "conspiracy-board";
+  const visualTheme = process.env.NEXT_PUBLIC_VISUAL_THEME || "clean-dark";
 
   return (
     <html lang="en" data-visual-theme={visualTheme} suppressHydrationWarning>
