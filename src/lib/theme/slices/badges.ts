@@ -28,6 +28,9 @@ export const badgesCult: BadgesSlice = {
     three_submitted: { name: "Oracle", description: "Channeled 3 visions from the algorithm" },
     taught_ten: { name: "Grand Recruiter", description: "Indoctrinated 10 souls into the fold" },
     ten_completed: { name: "Supreme Devotee", description: "Fully mastered 10 rituals" },
+    streak_3: { name: "The Binding", description: "Three consecutive days of devotion" },
+    streak_7: { name: "The Covenant", description: "Seven days without breaking the chain" },
+    streak_30: { name: "The Eternal Flame", description: "30 days of unwavering commitment to the cause" },
   },
 };
 
@@ -53,6 +56,9 @@ export const badgesCorporate: BadgesSlice = {
     three_submitted: { name: "Thought Leader", description: "Submitted 3 skills to the library" },
     taught_ten: { name: "Senior Mentor", description: "Taught 10 different people" },
     ten_completed: { name: "AI Champion", description: "Fully mastered 10 skills" },
+    streak_3: { name: "3-Day Streak", description: "Completed the daily challenge 3 days in a row" },
+    streak_7: { name: "Week Warrior", description: "7-day daily challenge streak" },
+    streak_30: { name: "Monthly Master", description: "30-day daily challenge streak" },
   },
 };
 
@@ -72,6 +78,9 @@ export const badgesAcademic: BadgesSlice = {
     submitted_one: { name: "Peer-Reviewed Author", description: "Submitted a thesis for peer review" },
     five_completed: { name: "Summa Cum Laude", description: "Completed 5 full courses with distinction" },
     speed_learner: { name: "Accelerated Program", description: "Completed 3 courses in a single symposium session" },
+    streak_3: { name: "Attendance Award", description: "3 consecutive days of academic engagement" },
+    streak_7: { name: "Honor Roll", description: "A full week of scholarly dedication" },
+    streak_30: { name: "Magna Cum Laude", description: "30 days of sustained academic excellence" },
   },
 };
 
@@ -91,6 +100,9 @@ export const badgesStartup: BadgesSlice = {
     submitted_one: { name: "Open Source Contributor", description: "Submitted a skill -- building in public" },
     five_completed: { name: "Product-Market Fit", description: "Fully completed 5 skills -- you found your niche" },
     speed_learner: { name: "Blitzscaler", description: "Learned 3 skills in one day -- hypergrowth mode" },
+    streak_3: { name: "Traction", description: "3 days of consistent shipping -- PMF incoming" },
+    streak_7: { name: "Series A Momentum", description: "7-day streak -- investors are watching" },
+    streak_30: { name: "Unicorn Status", description: "30 days of relentless execution -- you're the 1%" },
   },
 };
 
@@ -110,6 +122,9 @@ export const badgesScifi: BadgesSlice = {
     submitted_one: { name: "Code Injector", description: "Uploaded new firmware to the collective mainframe" },
     five_completed: { name: "Cyber-Enhanced", description: "5 full augmentation cycles completed" },
     speed_learner: { name: "Overclock", description: "3 data uploads in a single cycle -- neural link overheating" },
+    streak_3: { name: "Triple Cycle", description: "3 consecutive processing cycles completed" },
+    streak_7: { name: "Seven-Day Protocol", description: "Sustained neural uplink for 7 cycles" },
+    streak_30: { name: "Infinite Loop", description: "30 cycles of unbroken consciousness -- approaching singularity" },
   },
 };
 
@@ -129,6 +144,9 @@ export const badgesRetro: BadgesSlice = {
     submitted_one: { name: "UPLOAD COMPLETE", description: "1 FILE UPLOADED TO THE BOARD SUCCESSFULLY" },
     five_completed: { name: "ELITE STATUS", description: "5 PROGRAMS FULLY EXECUTED -- WELCOME TO L33T" },
     speed_learner: { name: "TURBO MODE", description: "3 PROGRAMS IN 1 SESSION -- CPU OVERCLOCKED" },
+    streak_3: { name: "AUTOEXEC.BAT", description: "3 CONSECUTIVE BOOT CYCLES COMPLETED" },
+    streak_7: { name: "CRON JOB", description: "7 DAYS OF SCHEDULED EXECUTION -- NO ERRORS" },
+    streak_30: { name: "UPTIME: 30 DAYS", description: "SYSTEM RUNNING CONTINUOUSLY FOR 30 DAYS -- LEGENDARY STABILITY" },
   },
 };
 
@@ -148,6 +166,9 @@ export const badgesNerdy: BadgesSlice = {
     submitted_one: { name: "Side Quest Complete", description: "Submitted a new quest to the guild board" },
     five_completed: { name: "Completionist", description: "100% completion on 5 quests -- no collectibles missed" },
     speed_learner: { name: "Speed Run", description: "3 quests in one session -- any% no glitches" },
+    streak_3: { name: "Daily Quest Chain", description: "3 consecutive daily quests completed -- combo x3" },
+    streak_7: { name: "Weekly Raid Boss", description: "7-day streak -- you've unlocked the bonus dungeon" },
+    streak_30: { name: "Legendary Persistence", description: "30-day streak -- achievement unlocked: The Grind Never Stops" },
   },
 };
 
@@ -167,6 +188,9 @@ export const badgesConsulting: BadgesSlice = {
     submitted_one: { name: "IP Contributor", description: "Drove net-new intellectual property into the firm's asset portfolio" },
     five_completed: { name: "Circle-Back Champion", description: "Closed the loop on 5 end-to-end capability-building workstreams" },
     speed_learner: { name: "Agile Learner", description: "Fast-tracked 3 competency sprints in a single billing cycle -- let's double-click on that" },
+    streak_3: { name: "Consistent Deliverer", description: "3 consecutive days of value-add engagement cadence" },
+    streak_7: { name: "High-Performer", description: "7-day sustained throughput -- flagged for accelerated career trajectory" },
+    streak_30: { name: "Partner Track", description: "30 days of relentless client impact -- let's take this offline and circle back" },
   },
 };
 
@@ -192,6 +216,9 @@ export const badgesNoir: BadgesSlice = {
     three_submitted: { name: "Case Builder", description: "Filed 3 new cases -- you keep the agency busy" },
     taught_ten: { name: "Chief Informant", description: "Put 10 operatives wise to the game" },
     ten_completed: { name: "Decorated Detective", description: "10 cases closed -- they'll name a precinct after you" },
+    streak_3: { name: "Three Nights Running", description: "3 nights on the case without a break" },
+    streak_7: { name: "The Long Game", description: "7 days of tailing the suspect -- patience pays" },
+    streak_30: { name: "30 Days of Shadows", description: "A month in the dark -- you've become the night itself" },
   },
 };
 
@@ -217,6 +244,9 @@ export const badgesPirate: BadgesSlice = {
     three_submitted: { name: "Master Cartographer", description: "Charted 3 new plunders -- the map grows richer" },
     taught_ten: { name: "Admiral of the Fleet", description: "Conscripted 10 pirates -- yer armada is formidable" },
     ten_completed: { name: "Pirate Legend", description: "10 legendary hauls -- they write sea shanties about ye" },
+    streak_3: { name: "Three Tides", description: "3 tides of plunderin' without rest -- yer crew's impressed" },
+    streak_7: { name: "Seven Seas", description: "7 days sailin' -- ye've crossed every ocean" },
+    streak_30: { name: "Cursed Captain", description: "30 days at sea -- ye can't stop even if ye wanted to" },
   },
 };
 
@@ -242,5 +272,8 @@ export const badgesMedieval: BadgesSlice = {
     three_submitted: { name: "Keeper of the Great Seal", description: "Authored 3 decrees bearing the royal imprimatur" },
     taught_ten: { name: "Grand Maester", description: "Tutored 10 subjects in service to the Crown" },
     ten_completed: { name: "Hand of the Sovereign", description: "Enshrined 10 decrees -- the Crown's most trusted vassal" },
+    streak_3: { name: "Three Dawns", description: "3 dawns of service to the Crown without falter" },
+    streak_7: { name: "The Sworn Week", description: "7 days of unwavering loyalty -- the realm takes notice" },
+    streak_30: { name: "The Iron Will", description: "30 days of steadfast devotion -- forged in the fires of duty" },
   },
 };

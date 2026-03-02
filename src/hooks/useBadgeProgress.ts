@@ -34,6 +34,9 @@ function getProgressInfo(id: string, stats: UserBadgeStats): { progress: number;
       const total = 16; // PREDEFINED_LABELS count
       return { progress: Math.min(stats.labelsCovered.length / total, 1), label: `${stats.labelsCovered.length}/${total} labels` };
     }
+    case 'streak_3': return { progress: Math.min(stats.dailyChallengeStreak / 3, 1), label: `${Math.min(stats.dailyChallengeStreak, 3)}/3 days` };
+    case 'streak_7': return { progress: Math.min(stats.dailyChallengeStreak / 7, 1), label: `${Math.min(stats.dailyChallengeStreak, 7)}/7 days` };
+    case 'streak_30': return { progress: Math.min(stats.dailyChallengeStreak / 30, 1), label: `${Math.min(stats.dailyChallengeStreak, 30)}/30 days` };
     default: return { progress: 0, label: '' };
   }
 }

@@ -31,6 +31,9 @@ const HOW_TO_EARN: Record<string, string> = {
   three_submitted: 'Submit 3 use cases',
   taught_ten: 'Teach 10 different people',
   ten_completed: 'Complete 10 use cases',
+  streak_3: 'Complete a daily challenge 3 days in a row',
+  streak_7: 'Complete a daily challenge 7 days in a row',
+  streak_30: 'Complete a daily challenge 30 days in a row',
 };
 
 export default function BadgesPage() {

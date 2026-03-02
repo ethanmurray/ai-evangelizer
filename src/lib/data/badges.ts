@@ -18,6 +18,7 @@ export interface UserBadgeStats {
   distinctPeopleTaught: number;
   labelsCovered: string[];
   learnedToday: number;
+  dailyChallengeStreak: number;
 }
 
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
@@ -120,6 +121,24 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     category: 'special',
     check: (s) => s.completedCount >= 10,
   },
+  {
+    id: 'streak_3',
+    icon: '\uD83D\uDD25',
+    category: 'special',
+    check: (s) => s.dailyChallengeStreak >= 3,
+  },
+  {
+    id: 'streak_7',
+    icon: '\uD83D\uDD25',
+    category: 'special',
+    check: (s) => s.dailyChallengeStreak >= 7,
+  },
+  {
+    id: 'streak_30',
+    icon: '\uD83D\uDD25',
+    category: 'special',
+    check: (s) => s.dailyChallengeStreak >= 30,
+  },
 ];
 
 export interface UserBadge {
@@ -183,6 +202,11 @@ export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats>
   todayStart.setHours(0, 0, 0, 0);
   const learnedToday = rows.filter((r: any) => r.seen_at && new Date(r.seen_at) >= todayStart).length;
 
+  // Calculate daily challenge streak
+  const { calculateStreak } = await import('./dailyChallenge');
+  const { getUTCDateString } = await import('../dailyChallenge');
+  const dailyChallengeStreak = await calculateStreak(userId, getUTCDateString());
+
   return {
     learnedCount,
     appliedCount,
@@ -192,6 +216,7 @@ export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats>
     distinctPeopleTaught,
     labelsCovered,
     learnedToday,
+    dailyChallengeStreak,
   };
 }
 
