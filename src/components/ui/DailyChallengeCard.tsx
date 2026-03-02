@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
-import { DAILY_CHALLENGE_BONUS_POINTS, getNextWorkday, getWeekdayName, getUTCDateString } from '@/lib/dailyChallenge';
+import { DAILY_CHALLENGE_BONUS_POINTS, getNextWorkday, getWeekdayName, getLocalDateString } from '@/lib/dailyChallenge';
 import type { DailyChallengeItem } from '@/lib/data/dailyChallenge';
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -67,7 +67,7 @@ export function DailyChallengeCard({
             Enjoy your day off!
           </div>
           <div className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-            Challenges resume {getWeekdayName(getNextWorkday(getUTCDateString()))}.
+            Challenges resume {getWeekdayName(getNextWorkday(getLocalDateString()))}.
             {streak > 0 && ' Your streak is safe!'}
           </div>
         </div>

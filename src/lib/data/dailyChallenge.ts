@@ -2,7 +2,7 @@ import { supabase } from '../supabase';
 import { checkAndAwardBadges } from './badges';
 import {
   getTodaysChallenges,
-  getUTCDateString,
+  getLocalDateString,
   isWorkday,
   getPreviousWorkday,
   type ChallengeDefinition,
@@ -27,9 +27,9 @@ export interface DailyChallengeStatus {
 export async function fetchDailyChallengeStatus(
   userId: string
 ): Promise<DailyChallengeStatus> {
-  const today = getUTCDateString();
+  const today = getLocalDateString();
   const todayIsWorkday = isWorkday(today);
-  const challenges = getTodaysChallenges();
+  const challenges = getTodaysChallenges(today);
 
   // Non-workday: return streak only, no challenges
   if (!todayIsWorkday || !challenges) {
@@ -59,10 +59,10 @@ export async function fetchDailyChallengeStatus(
     };
   }
 
-  // Check each challenge for auto-completion
-  const todayStart = `${today}T00:00:00.000Z`;
-  const tomorrowDate = new Date(Date.now() + 86400000);
-  const tomorrowStart = `${getUTCDateString(tomorrowDate)}T00:00:00.000Z`;
+  // Check each challenge for auto-completion (local midnight → UTC)
+  const [y, m, d] = today.split('-').map(Number);
+  const todayStart = new Date(y, m - 1, d).toISOString();
+  const tomorrowStart = new Date(y, m - 1, d + 1).toISOString();
 
   for (const challenge of challenges) {
     const completed = await checkChallengeCompletion(
@@ -242,7 +242,7 @@ export async function calculateStreak(
     .from('daily_challenge_completions')
     .select('challenge_date')
     .eq('user_id', userId)
-    .gte('challenge_date', getUTCDateString(ninetyDaysAgo))
+    .gte('challenge_date', getLocalDateString(ninetyDaysAgo))
     .order('challenge_date', { ascending: false });
 
   if (!completions || completions.length === 0) return 0;
