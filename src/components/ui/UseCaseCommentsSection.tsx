@@ -20,7 +20,7 @@ export function UseCaseCommentsSection({
   canAddPlaybookStep,
 }: UseCaseCommentsSectionProps) {
   const { t } = useTheme();
-  const { comments, playbookSteps, addComment, removeComment } = useComments(useCaseId);
+  const { comments, playbookSteps, addComment, editComment, removeComment } = useComments(useCaseId);
 
   return (
     <>
@@ -30,6 +30,7 @@ export function UseCaseCommentsSection({
         canAddStep={canAddPlaybookStep}
         currentUserId={userId}
         onAddStep={(content) => userId && addComment(userId, content, 'playbook_step')}
+        onEditStep={editComment}
         onDeleteStep={removeComment}
       />
 

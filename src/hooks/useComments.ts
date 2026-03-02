@@ -5,6 +5,7 @@ import {
   fetchComments,
   fetchPlaybookSteps,
   createComment,
+  updateComment as updateCommentApi,
   deleteComment as deleteCommentApi,
   Comment,
   CommentType,
@@ -43,10 +44,15 @@ export function useComments(useCaseId: string) {
     load();
   }, [useCaseId, load]);
 
+  const editComment = useCallback(async (commentId: string, content: string) => {
+    await updateCommentApi(commentId, content);
+    load();
+  }, [load]);
+
   const removeComment = useCallback(async (commentId: string) => {
     await deleteCommentApi(commentId);
     load();
   }, [load]);
 
-  return { comments, playbookSteps, isLoading, refresh: load, addComment, removeComment };
+  return { comments, playbookSteps, isLoading, refresh: load, addComment, editComment, removeComment };
 }

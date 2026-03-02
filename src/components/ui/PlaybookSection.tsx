@@ -11,6 +11,7 @@ interface PlaybookSectionProps {
   canAddStep: boolean;
   currentUserId?: string;
   onAddStep?: (content: string) => void;
+  onEditStep?: (commentId: string, content: string) => void;
   onDeleteStep?: (commentId: string) => void;
 }
 
@@ -19,15 +20,35 @@ export function PlaybookSection({
   canAddStep,
   currentUserId,
   onAddStep,
+  onEditStep,
   onDeleteStep,
 }: PlaybookSectionProps) {
   const { t } = useTheme();
   const [newStep, setNewStep] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState('');
 
   const handleAdd = () => {
     if (!newStep.trim() || !onAddStep) return;
     onAddStep(newStep.trim());
     setNewStep('');
+  };
+
+  const startEdit = (step: Comment) => {
+    setEditingId(step.id);
+    setEditingContent(step.content);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingContent('');
+  };
+
+  const saveEdit = () => {
+    if (!editingId || !editingContent.trim() || !onEditStep) return;
+    onEditStep(editingId, editingContent.trim());
+    setEditingId(null);
+    setEditingContent('');
   };
 
   return (
@@ -51,23 +72,65 @@ export function PlaybookSection({
                 {idx + 1}
               </span>
               <div className="flex-1">
-                <p className="text-sm" style={{ color: 'var(--color-text)' }}>
-                  {step.content}
-                </p>
-                <div className="flex gap-2 mt-0.5">
-                  <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                    by {step.author_name}
-                  </span>
-                  {currentUserId === step.author_id && onDeleteStep && (
+                {editingId === step.id ? (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      className="flex-1 rounded-lg border px-2 py-1 text-sm"
+                      style={{
+                        background: 'var(--color-bg-surface)',
+                        color: 'var(--color-text)',
+                        borderColor: 'var(--color-border)',
+                      }}
+                      value={editingContent}
+                      onChange={(e) => setEditingContent(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') saveEdit();
+                        if (e.key === 'Escape') cancelEdit();
+                      }}
+                      autoFocus
+                    />
+                    <Button size="sm" onClick={saveEdit} disabled={!editingContent.trim()}>
+                      Save
+                    </Button>
                     <button
-                      className="text-[10px]"
-                      style={{ color: 'var(--color-error)' }}
-                      onClick={() => onDeleteStep(step.id)}
+                      className="text-xs px-2"
+                      style={{ color: 'var(--color-text-muted)' }}
+                      onClick={cancelEdit}
                     >
-                      Remove
+                      Cancel
                     </button>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm" style={{ color: 'var(--color-text)' }}>
+                      {step.content}
+                    </p>
+                    <div className="flex gap-2 mt-0.5">
+                      <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                        by {step.author_name}
+                      </span>
+                      {currentUserId === step.author_id && onEditStep && (
+                        <button
+                          className="text-[10px]"
+                          style={{ color: 'var(--color-primary)' }}
+                          onClick={() => startEdit(step)}
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {currentUserId === step.author_id && onDeleteStep && (
+                        <button
+                          className="text-[10px]"
+                          style={{ color: 'var(--color-error)' }}
+                          onClick={() => onDeleteStep(step.id)}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </li>
           ))}
