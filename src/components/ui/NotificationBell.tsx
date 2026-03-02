@@ -1,24 +1,11 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useNotifications } from '@/hooks/useNotifications';
-
-function formatTime(dateStr: string): string {
-  // Simple relative time for notifications
-  const now = Date.now();
-  const then = new Date(dateStr).getTime();
-  const diffMs = now - then;
-  const diffMinutes = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffMinutes < 1) return 'just now';
-  if (diffMinutes < 60) return `${diffMinutes}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return `${diffDays}d ago`;
-}
+import { useClickOutside } from '@/hooks/useClickOutside';
+import { formatRelativeTime } from '@/lib/data/activity';
 
 export function NotificationBell() {
   const router = useRouter();
@@ -26,16 +13,8 @@ export function NotificationBell() {
   const { notifications, unreadCount, markRead, markAllRead } = useNotifications(user?.id);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const closeDropdown = useCallback(() => setOpen(false), []);
+  useClickOutside(dropdownRef, closeDropdown);
 
   if (!user) return null;
 
@@ -109,7 +88,7 @@ export function NotificationBell() {
                   {n.body}
                 </p>
                 <p className="text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                  {formatTime(n.created_at)}
+                  {formatRelativeTime(n.created_at)}
                 </p>
               </button>
             ))}

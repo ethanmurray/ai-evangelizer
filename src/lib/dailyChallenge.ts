@@ -34,7 +34,10 @@ export const HARD_CHALLENGES: ChallengeDefinition[] = [
   { type: 'submit', difficulty: 'hard', title: 'Create new content', description: 'Submit a new use case to the library', icon: '\u2728' },
 ];
 
-export const DAILY_CHALLENGE_BONUS_POINTS = 2;
+// Re-export from the single source of truth
+export { POINTS_CONFIG } from './points';
+import { POINTS_CONFIG } from './points';
+export const DAILY_CHALLENGE_BONUS_POINTS = POINTS_CONFIG.dailyChallenge;
 
 // --- Workday logic ---
 

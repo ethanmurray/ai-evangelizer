@@ -7,17 +7,7 @@ export interface ReplyNotificationData {
   useCaseUrl: string;
 }
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max) + '...' : str;
-}
+import { escapeHtml, truncate } from './utils';
 
 export function buildReplyNotificationEmail(data: ReplyNotificationData): { subject: string; html: string } {
   const reply = escapeHtml(truncate(data.replySnippet, 200));

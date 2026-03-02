@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { sendEmail } from '@/lib/email';
 import { fetchDigestDataForUser } from '@/lib/data/digest';
 import { buildWeeklyDigestEmail } from '@/lib/email-templates/weekly-digest';
+import { fetchTrendingUseCases } from '@/lib/data/trending';
 
 export async function GET(req: NextRequest) {
   // Verify cron secret
@@ -25,13 +26,16 @@ export async function GET(req: NextRequest) {
   let sent = 0;
   let failed = 0;
 
+  // Fetch trending once for all users (same data for everyone)
+  const trending = await fetchTrendingUseCases(7, 3);
+
   // Process in batches of 10 to respect Resend rate limits
   for (let i = 0; i < users.length; i += 10) {
     const batch = users.slice(i, i + 10);
 
     const results = await Promise.allSettled(
       batch.map(async (user) => {
-        const digestData = await fetchDigestDataForUser(user.id);
+        const digestData = await fetchDigestDataForUser(user.id, trending);
         if (!digestData) return;
 
         const { subject, html } = buildWeeklyDigestEmail(digestData);

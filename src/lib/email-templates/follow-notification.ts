@@ -6,17 +6,7 @@ export interface FollowNotificationData {
   useCaseUrl: string;
 }
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max) + '...' : str;
-}
+import { escapeHtml, truncate } from './utils';
 
 export function buildFollowNotificationEmail(data: FollowNotificationData): { subject: string; html: string } {
   const snippet = escapeHtml(truncate(data.commentSnippet, 200));

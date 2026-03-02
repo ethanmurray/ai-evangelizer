@@ -158,11 +158,22 @@ export async function fetchUserBadges(userId: string): Promise<UserBadge[]> {
 }
 
 export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats> {
-  // Fetch user progress
-  const { data: progressData } = await supabase
-    .from('user_progress_summary')
-    .select('use_case_id, seen_at, done_at, share_count, is_completed')
-    .eq('user_id', userId);
+  // Parallelize the three independent queries
+  const [{ data: progressData }, { data: submitted }, { data: shareRecords }] =
+    await Promise.all([
+      supabase
+        .from('user_progress_summary')
+        .select('use_case_id, seen_at, done_at, share_count, is_completed')
+        .eq('user_id', userId),
+      supabase
+        .from('use_cases')
+        .select('id')
+        .eq('submitted_by', userId),
+      supabase
+        .from('shares')
+        .select('recipient_id')
+        .eq('sharer_id', userId),
+    ]);
 
   const rows = progressData || [];
 
@@ -170,42 +181,28 @@ export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats>
   const appliedCount = rows.filter((r: any) => r.done_at).length;
   const completedCount = rows.filter((r: any) => r.is_completed).length;
   const sharedCount = rows.reduce((sum: number, r: any) => sum + (r.share_count || 0), 0);
-
-  // Fetch submitted use cases
-  const { data: submitted } = await supabase
-    .from('use_cases')
-    .select('id')
-    .eq('submitted_by', userId);
   const submittedCount = submitted?.length || 0;
-
-  // Fetch distinct people taught
-  const { data: shareRecords } = await supabase
-    .from('shares')
-    .select('recipient_id')
-    .eq('sharer_id', userId);
   const distinctPeopleTaught = new Set((shareRecords || []).map((s: any) => s.recipient_id)).size;
 
-  // Fetch labels of completed use cases
+  // Fetch labels of completed use cases + streak in parallel
   const completedUseCaseIds = rows.filter((r: any) => r.is_completed).map((r: any) => r.use_case_id);
-  let labelsCovered: string[] = [];
-  if (completedUseCaseIds.length > 0) {
-    const { data: useCases } = await supabase
-      .from('use_cases')
-      .select('labels')
-      .in('id', completedUseCaseIds);
-    const allLabels = (useCases || []).flatMap((uc: any) => uc.labels || []);
-    labelsCovered = [...new Set(allLabels)];
-  }
+  const { calculateStreak } = await import('./dailyChallenge');
+  const { getLocalDateString } = await import('../dailyChallenge');
+
+  const [labelsResult, dailyChallengeStreak] = await Promise.all([
+    completedUseCaseIds.length > 0
+      ? supabase.from('use_cases').select('labels').in('id', completedUseCaseIds)
+      : Promise.resolve({ data: [] as any[] }),
+    calculateStreak(userId, getLocalDateString()),
+  ]);
+
+  const allLabels = (labelsResult.data || []).flatMap((uc: any) => uc.labels || []);
+  const labelsCovered = [...new Set(allLabels)];
 
   // Count learned today
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
   const learnedToday = rows.filter((r: any) => r.seen_at && new Date(r.seen_at) >= todayStart).length;
-
-  // Calculate daily challenge streak
-  const { calculateStreak } = await import('./dailyChallenge');
-  const { getLocalDateString } = await import('../dailyChallenge');
-  const dailyChallengeStreak = await calculateStreak(userId, getLocalDateString());
 
   return {
     learnedCount,
@@ -227,27 +224,35 @@ export async function checkAndAwardBadges(userId: string): Promise<string[]> {
   ]);
 
   const existingIds = new Set(existing.map((b) => b.badge_id));
-  const newBadges: string[] = [];
 
-  for (const badge of BADGE_DEFINITIONS) {
-    if (!existingIds.has(badge.id) && badge.check(stats)) {
-      const { error } = await supabase
-        .from('user_badges')
-        .upsert(
-          { user_id: userId, badge_id: badge.id },
-          { onConflict: 'user_id,badge_id' }
-        );
-      if (!error) {
-        newBadges.push(badge.id);
-        createNotification(
-          userId,
-          'badge_earned',
-          `Badge Earned: ${badge.icon}`,
-          `You earned the "${badge.id}" badge!`,
-          { badge_id: badge.id }
-        ).catch(() => {});
-      }
-    }
+  // Determine which badges are newly earned
+  const badgesToAward = BADGE_DEFINITIONS.filter(
+    (badge) => !existingIds.has(badge.id) && badge.check(stats)
+  );
+
+  if (badgesToAward.length === 0) return [];
+
+  // Batch insert all new badges at once
+  const { error } = await supabase
+    .from('user_badges')
+    .upsert(
+      badgesToAward.map((b) => ({ user_id: userId, badge_id: b.id })),
+      { onConflict: 'user_id,badge_id' }
+    );
+
+  if (error) return [];
+
+  const newBadges = badgesToAward.map((b) => b.id);
+
+  // Fire-and-forget notifications in parallel
+  for (const badge of badgesToAward) {
+    createNotification(
+      userId,
+      'badge_earned',
+      `Badge Earned: ${badge.icon}`,
+      `You earned the "${badge.id}" badge!`,
+      { badge_id: badge.id }
+    ).catch(() => {});
   }
 
   return newBadges;

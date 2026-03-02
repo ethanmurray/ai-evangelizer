@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useFollow } from '@/hooks/useFollow';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 interface FollowButtonProps {
   useCaseId: string;
@@ -12,20 +13,10 @@ export function FollowButton({ useCaseId, userId }: FollowButtonProps) {
   const { frequency, updateFollow, isLoading } = useFollow(useCaseId, userId);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeDropdown = useCallback(() => setShowDropdown(false), []);
+  useClickOutside(dropdownRef, closeDropdown, showDropdown);
 
   const isFollowing = frequency === 'instant' || frequency === 'daily';
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showDropdown]);
 
   if (!userId) return null;
 
