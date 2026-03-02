@@ -12,7 +12,7 @@ Perform ad-hoc UI testing against the live AI Evangelizer app using Chrome DevTo
 
 ### 1. Determine What to Test
 
-Parse the user's request into concrete test steps. If vague, read `references/app-routes.md` to identify the relevant pages and features.
+Parse the user's request into concrete test steps. If vague, read `references/app-routes.md` to identify the relevant pages and features. For specific test cases per page/feature, consult `scripts/mcp-test-runbook.md` and run the relevant subset. Distinguish between non-invasive tests (Suites 0–13, read-only) and invasive tests (Suite 14, data-changing) — only run invasive tests when the user explicitly requests actions that modify data.
 
 ### 2. Ensure Authentication
 
