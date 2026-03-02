@@ -73,6 +73,5 @@ All templates in `src/lib/email-templates/`.
 - `max-width: 480px` container
 - Brand colors: `#2a9d8f`, `#f4a261`
 - CTA buttons as styled anchor tags
-- `escapeHtml()` helper used in newer templates (follow-notification, reply-notification)
+- `escapeHtml()` helper used in all 4 templates
 - `truncate()` helper for snippet content
-- Some older templates may lack escaping (security concern — see P0-6 in PRODUCTION_READINESS.md)

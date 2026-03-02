@@ -1,7 +1,7 @@
 ---
 name: email-preview
 description: Use this skill to render and visually preview email templates using Chrome DevTools MCP. Invoke when the user says "/preview-email", "preview the email", "test the email template", "check email rendering", "how does the email look", or wants to see how an email template renders. Also use when modifying email templates to verify the visual output.
-user-invocable: true
+user-invokable: true
 ---
 
 # Email Template Preview — Chrome DevTools MCP
@@ -30,19 +30,7 @@ Create realistic sample data matching the template's TypeScript interface. Use p
 
 ### 3. Render the Template
 
-Use `evaluate_script` or write a temp Node.js script to invoke the template's build function with the sample data:
-
-```bash
-node -e "
-const { buildXxxEmail } = require('./src/lib/email-templates/xxx.ts');
-const data = { /* sample data */ };
-const { subject, html } = buildXxxEmail(data);
-require('fs').writeFileSync('/tmp/email-preview.html', html);
-console.log('Subject:', subject);
-"
-```
-
-Since this is a TypeScript project, use `npx tsx` instead of `node`:
+Write a temp script to invoke the template's build function with the sample data, then run it with `npx tsx`:
 
 ```bash
 npx tsx -e "
