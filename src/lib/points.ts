@@ -9,6 +9,7 @@ export interface PointsConfig {
   teaching: number;
   viralBonus: number;
   viralThreshold: number;
+  dailyChallenge: number;
 }
 
 export const POINTS_CONFIG: PointsConfig = {
@@ -19,7 +20,8 @@ export const POINTS_CONFIG: PointsConfig = {
   submitted: 5,     // Points for submitting a new use case
   teaching: 1,      // Points when someone credits you for teaching them
   viralBonus: 15,   // Bonus points when 5+ people share your submission
-  viralThreshold: 5 // Number of unique sharers needed for viral bonus
+  viralThreshold: 5, // Number of unique sharers needed for viral bonus
+  dailyChallenge: 2, // Bonus points for completing a daily challenge
 };
 
 export interface PointsBreakdown {
@@ -174,6 +176,7 @@ export function getPointsDescription(): string[] {
     `Extra shares beyond 2: +${POINTS_CONFIG.extraShare} point each`,
     `Submit a new use case: +${POINTS_CONFIG.submitted} points`,
     `When someone credits you for teaching them: +${POINTS_CONFIG.teaching} point`,
-    `When ${POINTS_CONFIG.viralThreshold}+ people share your submission: +${POINTS_CONFIG.viralBonus} bonus points`
+    `When ${POINTS_CONFIG.viralThreshold}+ people share your submission: +${POINTS_CONFIG.viralBonus} bonus points`,
+    `Complete a daily challenge: +${POINTS_CONFIG.dailyChallenge} bonus points`
   ];
 }

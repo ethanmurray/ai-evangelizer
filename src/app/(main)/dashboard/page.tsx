@@ -22,6 +22,8 @@ import { useOnboardingChecklist } from '@/hooks/useOnboardingChecklist';
 import { OnboardingChecklist } from '@/components/ui/OnboardingChecklist';
 import { EmailConsentModal } from '@/components/ui/EmailConsentModal';
 import { useThemeUnlockCheck } from '@/hooks/useThemeUnlockCheck';
+import { useDailyChallenge } from '@/hooks/useDailyChallenge';
+import { DailyChallengeCard } from '@/components/ui/DailyChallengeCard';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -35,6 +37,13 @@ export default function DashboardPage() {
   const { trending, isLoading: trendingLoading } = useTrending();
   const { items: checklistItems, visible: showChecklist, dismiss: dismissChecklist } = useOnboardingChecklist(user?.id);
   const [showEmailConsent, setShowEmailConsent] = useState(false);
+  const {
+    challenges: dailyChallenges,
+    completedType: dailyCompletedType,
+    streak: dailyStreak,
+    isWorkday: dailyIsWorkday,
+    isLoading: dailyChallengeLoading,
+  } = useDailyChallenge(user?.id);
 
   useEffect(() => {
     if (user?.id) {
@@ -104,6 +113,15 @@ export default function DashboardPage() {
       {showChecklist && (
         <OnboardingChecklist items={checklistItems} onDismiss={dismissChecklist} />
       )}
+
+      {/* Daily Challenge */}
+      <DailyChallengeCard
+        challenges={dailyChallenges}
+        completedType={dailyCompletedType}
+        streak={dailyStreak}
+        isWorkday={dailyIsWorkday}
+        isLoading={dailyChallengeLoading}
+      />
 
       {/* Rank Card */}
       <RankDisplay points={userPoints} completedCount={completedCount} />
