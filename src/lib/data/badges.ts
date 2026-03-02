@@ -204,8 +204,8 @@ export async function getUserBadgeStats(userId: string): Promise<UserBadgeStats>
 
   // Calculate daily challenge streak
   const { calculateStreak } = await import('./dailyChallenge');
-  const { getUTCDateString } = await import('../dailyChallenge');
-  const dailyChallengeStreak = await calculateStreak(userId, getUTCDateString());
+  const { getLocalDateString } = await import('../dailyChallenge');
+  const dailyChallengeStreak = await calculateStreak(userId, getLocalDateString());
 
   return {
     learnedCount,

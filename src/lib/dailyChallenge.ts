@@ -118,7 +118,7 @@ export function getNextWorkday(dateStr: string): string {
 
   for (let i = 0; i < 10; i++) {
     const candidate = new Date(date.getTime() + i * 86400000);
-    const str = getUTCDateString(candidate);
+    const str = getLocalDateString(candidate);
     if (isWorkday(str)) return str;
   }
 
@@ -134,7 +134,7 @@ export function getPreviousWorkday(dateStr: string): string {
 
   for (let i = 1; i <= 10; i++) {
     const candidate = new Date(date.getTime() - i * 86400000);
-    const str = getUTCDateString(candidate);
+    const str = getLocalDateString(candidate);
     if (isWorkday(str)) return str;
   }
 
@@ -143,9 +143,12 @@ export function getPreviousWorkday(dateStr: string): string {
 
 // --- Date utilities ---
 
-export function getUTCDateString(date?: Date): string {
+export function getLocalDateString(date?: Date): string {
   const d = date || new Date();
-  return d.toISOString().split('T')[0];
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 /**
@@ -153,8 +156,8 @@ export function getUTCDateString(date?: Date): string {
  */
 export function getWeekdayName(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d));
-  return date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
 // --- Challenge selection ---
@@ -174,14 +177,14 @@ function hashString(str: string): number {
  * Get today's 3 challenges (1 easy, 1 medium, 1 hard).
  * Returns null if the date is not a workday.
  */
-export function getTodaysChallenges(date?: Date): ChallengeDefinition[] | null {
-  const dateStr = getUTCDateString(date);
+export function getTodaysChallenges(dateStr?: string): ChallengeDefinition[] | null {
+  const ds = dateStr || getLocalDateString();
 
-  if (!isWorkday(dateStr)) return null;
+  if (!isWorkday(ds)) return null;
 
-  const easyIdx = hashString(dateStr + 'easy') % EASY_CHALLENGES.length;
-  const medIdx = hashString(dateStr + 'medium') % MEDIUM_CHALLENGES.length;
-  const hardIdx = hashString(dateStr + 'hard') % HARD_CHALLENGES.length;
+  const easyIdx = hashString(ds + 'easy') % EASY_CHALLENGES.length;
+  const medIdx = hashString(ds + 'medium') % MEDIUM_CHALLENGES.length;
+  const hardIdx = hashString(ds + 'hard') % HARD_CHALLENGES.length;
 
   return [
     EASY_CHALLENGES[easyIdx],
