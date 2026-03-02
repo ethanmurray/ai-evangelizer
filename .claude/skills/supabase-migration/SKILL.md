@@ -1,7 +1,7 @@
 ---
 name: supabase-migration
 description: Use this skill to generate Supabase migration files for the AI Evangelizer project. Invoke when the user says "/migrate", "create a migration", "add a database table", "modify the schema", "add a column", or needs to make any database schema changes. This skill follows the project's existing migration conventions and includes RLS policies.
-user-invocable: true
+user-invokable: true
 ---
 
 # Supabase Migration Generator
@@ -11,7 +11,7 @@ Generate migration files for the AI Evangelizer project following existing conve
 ## Project Context
 
 - **Migrations directory:** `supabase/migrations/`
-- **Current migrations:** `001_` through `019_` (19 files)
+- **Current migrations:** `001_` through `020_` (21 files, including two `001_*` variants)
 - **Database:** Supabase (PostgreSQL)
 - **Known issue:** RLS is currently disabled on most tables (P0 security item). New migrations should include RLS policies.
 
@@ -21,7 +21,7 @@ Generate migration files for the AI Evangelizer project following existing conve
 
 Read the `supabase/migrations/` directory to find the highest-numbered migration. The new file should be the next number, zero-padded to 3 digits.
 
-Example: If the latest is `019_unlockable_themes.sql`, the next is `020_your_feature.sql`.
+Example: If the latest is `020_daily_challenges.sql`, the next is `021_your_feature.sql`.
 
 ### 2. Follow Naming Convention
 
