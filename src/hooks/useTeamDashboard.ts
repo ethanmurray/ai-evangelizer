@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import {
+  getTeamMemberIds,
   fetchTeamOverview,
   fetchTeamMembers,
   fetchTeamWeeklyGrowth,
@@ -23,12 +24,15 @@ export function useTeamDashboard(team: string | undefined) {
     if (!team) return;
     setIsLoading(true);
 
-    Promise.all([
-      fetchTeamOverview(team),
-      fetchTeamMembers(team),
-      fetchTeamWeeklyGrowth(team),
-      fetchTeamSkillGaps(team),
-    ])
+    getTeamMemberIds(team)
+      .then((memberIds) =>
+        Promise.all([
+          fetchTeamOverview(team, memberIds),
+          fetchTeamMembers(team, memberIds),
+          fetchTeamWeeklyGrowth(team, 8, memberIds),
+          fetchTeamSkillGaps(team, memberIds),
+        ] as const)
+      )
       .then(([ov, mem, wg, sg]) => {
         setOverview(ov);
         setMembers(mem);

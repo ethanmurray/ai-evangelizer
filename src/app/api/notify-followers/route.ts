@@ -36,15 +36,28 @@ export async function POST(req: NextRequest) {
 
     // Get instant followers
     const instantFollowers = await getFollowersForUseCase(useCaseId, 'instant');
+    const eligibleFollowerIds = instantFollowers
+      .filter((f) => !alreadyNotified.has(f.user_id))
+      .map((f) => f.user_id);
+
+    for (const id of eligibleFollowerIds) alreadyNotified.add(id);
+
     let emailsSent = 0;
 
-    for (const f of instantFollowers) {
-      if (alreadyNotified.has(f.user_id)) continue;
-      alreadyNotified.add(f.user_id);
+    // Batch-fetch all follower user records at once
+    const { data: followerUsers } = eligibleFollowerIds.length > 0
+      ? await supabase
+          .from('users')
+          .select('id, name, email, email_opt_in')
+          .in('id', eligibleFollowerIds)
+      : { data: [] as any[] };
 
+    const followerMap = new Map((followerUsers || []).map((u: any) => [u.id, u]));
+
+    for (const id of eligibleFollowerIds) {
       // In-app notification
       createNotification(
-        f.user_id,
+        id,
         'follow_comment',
         'New comment on a use case you follow',
         `${authorName} commented on "${useCaseTitle}"`,
@@ -52,12 +65,7 @@ export async function POST(req: NextRequest) {
       ).catch(() => {});
 
       // Email notification
-      const { data: follower } = await supabase
-        .from('users')
-        .select('name, email, email_opt_in')
-        .eq('id', f.user_id)
-        .single();
-
+      const follower = followerMap.get(id);
       if (follower && follower.email_opt_in !== false) {
         const { subject, html } = buildFollowNotificationEmail({
           recipientName: follower.name || 'there',

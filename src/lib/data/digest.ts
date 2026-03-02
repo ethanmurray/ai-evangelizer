@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import { fetchTrendingUseCases, type TrendingUseCase } from './trending';
+import { POINTS_CONFIG } from '../points';
 
 export interface DigestData {
   userName: string;
@@ -12,10 +13,13 @@ export interface DigestData {
   trending: TrendingUseCase[];
 }
 
-export async function fetchDigestDataForUser(userId: string): Promise<DigestData | null> {
+export async function fetchDigestDataForUser(
+  userId: string,
+  cachedTrending?: TrendingUseCase[]
+): Promise<DigestData | null> {
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-  // Fetch user info
+  // Fetch user info first (needed for team rank)
   const { data: user } = await supabase
     .from('users')
     .select('name, email, team')
@@ -24,36 +28,36 @@ export async function fetchDigestDataForUser(userId: string): Promise<DigestData
 
   if (!user) return null;
 
-  // Fetch total points
-  const { data: pointsRow } = await supabase
-    .from('user_total_points')
-    .select('total_points')
-    .eq('user_id', userId)
-    .single();
+  // Parallelize remaining independent queries
+  const [{ data: pointsRow }, { data: recentEvents }, { data: recentBadges }, trending] =
+    await Promise.all([
+      supabase
+        .from('user_total_points')
+        .select('total_points')
+        .eq('user_id', userId)
+        .single(),
+      supabase
+        .from('activity_events')
+        .select('event_type')
+        .eq('actor_id', userId)
+        .gte('created_at', oneWeekAgo),
+      supabase
+        .from('user_badges')
+        .select('badge_id')
+        .eq('user_id', userId)
+        .gte('earned_at', oneWeekAgo),
+      cachedTrending ?? fetchTrendingUseCases(7, 3),
+    ]);
 
   const totalPoints = pointsRow?.total_points || 0;
 
-  // Estimate points earned this week from recent activity
-  const { data: recentEvents } = await supabase
-    .from('activity_events')
-    .select('event_type')
-    .eq('actor_id', userId)
-    .gte('created_at', oneWeekAgo);
-
   let pointsThisWeek = 0;
   for (const e of recentEvents || []) {
-    if (e.event_type === 'learned') pointsThisWeek += 5;
-    else if (e.event_type === 'applied') pointsThisWeek += 10;
-    else if (e.event_type === 'shared') pointsThisWeek += 15;
-    else if (e.event_type === 'submitted') pointsThisWeek += 20;
+    if (e.event_type === 'learned') pointsThisWeek += POINTS_CONFIG.learned;
+    else if (e.event_type === 'applied') pointsThisWeek += POINTS_CONFIG.applied;
+    else if (e.event_type === 'shared') pointsThisWeek += POINTS_CONFIG.shared;
+    else if (e.event_type === 'submitted') pointsThisWeek += POINTS_CONFIG.submitted;
   }
-
-  // Fetch badges earned this week
-  const { data: recentBadges } = await supabase
-    .from('user_badges')
-    .select('badge_id')
-    .eq('user_id', userId)
-    .gte('earned_at', oneWeekAgo);
 
   const newBadges = (recentBadges || []).map((b: any) => b.badge_id);
 
@@ -77,9 +81,6 @@ export async function fetchDigestDataForUser(userId: string): Promise<DigestData
     const idx = (allPoints || []).findIndex((p: any) => p.user_id === userId);
     if (idx !== -1) teamRank = idx + 1;
   }
-
-  // Fetch trending
-  const trending = await fetchTrendingUseCases(7, 3);
 
   return {
     userName: user.name,

@@ -13,17 +13,7 @@ export interface FollowDigestData {
   items: FollowDigestItem[];
 }
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max) + '...' : str;
-}
+import { escapeHtml, truncate } from './utils';
 
 export function buildFollowDigestEmail(data: FollowDigestData): { subject: string; html: string } {
   const totalComments = data.items.reduce((sum, item) => sum + item.comments.length, 0);

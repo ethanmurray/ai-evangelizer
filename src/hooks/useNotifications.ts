@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  fetchUnreadNotifications,
   fetchRecentNotifications,
   markNotificationRead,
   markAllRead as markAllReadApi,
@@ -16,12 +15,9 @@ export function useNotifications(userId: string | undefined) {
 
   const load = useCallback(async () => {
     if (!userId) return;
-    const [unread, recent] = await Promise.all([
-      fetchUnreadNotifications(userId),
-      fetchRecentNotifications(userId),
-    ]);
-    setUnreadCount(unread.length);
+    const recent = await fetchRecentNotifications(userId);
     setNotifications(recent);
+    setUnreadCount(recent.filter((n) => !n.is_read).length);
   }, [userId]);
 
   useEffect(() => {

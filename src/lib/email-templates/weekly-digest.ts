@@ -1,12 +1,5 @@
 import type { DigestData } from '@/lib/data/digest';
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+import { escapeHtml } from './utils';
 
 export function buildWeeklyDigestEmail(data: DigestData): { subject: string; html: string } {
   const userName = escapeHtml(data.userName);

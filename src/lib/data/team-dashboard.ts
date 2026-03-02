@@ -42,7 +42,7 @@ export interface UseCaseAdoption {
   teamMemberCount: number;
 }
 
-async function getTeamMemberIds(team: string): Promise<string[]> {
+export async function getTeamMemberIds(team: string): Promise<string[]> {
   const { data: teamRows } = await supabase
     .from('user_teams')
     .select('user_id')
@@ -60,8 +60,8 @@ async function getTeamMemberIds(team: string): Promise<string[]> {
   return (users || []).map((u: any) => u.id);
 }
 
-export async function fetchTeamOverview(team: string): Promise<TeamOverview> {
-  const memberIds = await getTeamMemberIds(team);
+export async function fetchTeamOverview(team: string, cachedMemberIds?: string[]): Promise<TeamOverview> {
+  const memberIds = cachedMemberIds ?? await getTeamMemberIds(team);
   if (memberIds.length === 0) {
     return { totalMembers: 0, totalPoints: 0, totalLearned: 0, totalApplied: 0, totalCompleted: 0 };
   }
@@ -92,8 +92,8 @@ export async function fetchTeamOverview(team: string): Promise<TeamOverview> {
   };
 }
 
-export async function fetchTeamMembers(team: string): Promise<TeamMember[]> {
-  const memberIds = await getTeamMemberIds(team);
+export async function fetchTeamMembers(team: string, cachedMemberIds?: string[]): Promise<TeamMember[]> {
+  const memberIds = cachedMemberIds ?? await getTeamMemberIds(team);
   if (memberIds.length === 0) return [];
 
   const { data: users } = await supabase
@@ -139,8 +139,8 @@ export async function fetchTeamMembers(team: string): Promise<TeamMember[]> {
   }).sort((a, b) => b.points - a.points);
 }
 
-export async function fetchTeamWeeklyGrowth(team: string, weeks = 8): Promise<WeeklyGrowth[]> {
-  const memberIds = await getTeamMemberIds(team);
+export async function fetchTeamWeeklyGrowth(team: string, weeks = 8, cachedMemberIds?: string[]): Promise<WeeklyGrowth[]> {
+  const memberIds = cachedMemberIds ?? await getTeamMemberIds(team);
   if (memberIds.length === 0) return [];
 
   const sinceDate = new Date();
@@ -188,8 +188,8 @@ export async function fetchTeamWeeklyGrowth(team: string, weeks = 8): Promise<We
   return result;
 }
 
-export async function fetchTeamSkillGaps(team: string): Promise<SkillGap[]> {
-  const memberIds = await getTeamMemberIds(team);
+export async function fetchTeamSkillGaps(team: string, cachedMemberIds?: string[]): Promise<SkillGap[]> {
+  const memberIds = cachedMemberIds ?? await getTeamMemberIds(team);
   if (memberIds.length === 0) return [];
 
   // Get all progress with use case labels

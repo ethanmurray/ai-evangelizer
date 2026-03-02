@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useTheme } from '@/lib/theme';
 import type { ThemeKey } from '@/lib/theme';
 import { useAuth } from '@/lib/auth';
 import { saveThemePreference } from '@/lib/auth/utils/storage';
 import { THEME_UNLOCK_CONFIG, isThemeUnlocked } from '@/lib/theme/themeUnlocks';
 import { fetchUserPoints } from '@/lib/data/points';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 export function ThemeToggle() {
   const { themeKey, setThemeKey } = useTheme();
@@ -23,18 +24,8 @@ export function ThemeToggle() {
     }
   }, [user?.id]);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [open]);
+  const closeDropdown = useCallback(() => setOpen(false), []);
+  useClickOutside(ref, closeDropdown, open);
 
   const currentLabel = THEME_UNLOCK_CONFIG.find((o) => o.key === themeKey)?.label || themeKey;
 

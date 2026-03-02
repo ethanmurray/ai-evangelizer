@@ -41,17 +41,9 @@ export function UseCaseProgressCard({
   const [sharing, setSharing] = useState(false);
   const [shareSuccess, setShareSuccess] = useState('');
   const [shareError, setShareError] = useState('');
-  const [showCelebration, setShowCelebration] = useState(false);
   const [showTeacherPrompt, setShowTeacherPrompt] = useState(false);
   const [teacherEmail, setTeacherEmail] = useState('');
   const [sendingAttribution, setSendingAttribution] = useState(false);
-
-  // Show celebration when use case becomes completed
-  React.useEffect(() => {
-    if (useCase.is_completed && !showCelebration) {
-      setShowCelebration(true);
-    }
-  }, [useCase.is_completed, showCelebration]);
 
   const handleMarkSeen = useCallback(async (attribution?: { teacherEmail: string }) => {
     if (!userId) return;
@@ -131,10 +123,6 @@ export function UseCaseProgressCard({
       setRecipient1('');
       setRecipient2('');
       onRefresh();
-
-      setTimeout(() => {
-        onRefresh();
-      }, 500);
     } catch (err: any) {
       setShareError(err.message || 'Failed to share');
     } finally {
@@ -150,7 +138,7 @@ export function UseCaseProgressCard({
   return (
     <>
       {/* Celebration */}
-      {showCelebration && useCase.is_completed && (
+      {useCase.is_completed && (
         <Alert variant="success" title={t.concepts.completed}>
           {t.microcopy.completionCelebration}
         </Alert>
