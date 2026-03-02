@@ -1,21 +1,32 @@
 import type { DigestData } from '@/lib/data/digest';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export function buildWeeklyDigestEmail(data: DigestData): { subject: string; html: string } {
+  const userName = escapeHtml(data.userName);
+  const teamName = escapeHtml(data.teamName);
+
   const badgesHtml = data.newBadges.length > 0
     ? `<div style="margin:16px 0;padding:12px;background:#f0f9f0;border-radius:8px;">
-        <strong>New Badges:</strong> ${data.newBadges.join(', ')}
+        <strong>New Badges:</strong> ${data.newBadges.map(b => escapeHtml(b)).join(', ')}
        </div>`
     : '';
 
   const teamRankHtml = data.teamRank
-    ? `<p>You're ranked <strong>#${data.teamRank}</strong> on the ${data.teamName} team.</p>`
+    ? `<p>You're ranked <strong>#${data.teamRank}</strong> on the ${teamName} team.</p>`
     : '';
 
   const trendingHtml = data.trending.length > 0
     ? `<div style="margin:16px 0;">
         <strong>Trending This Week:</strong>
         <ul style="margin:8px 0;padding-left:20px;">
-          ${data.trending.map(t => `<li>${t.title} (${t.recentUpvotes} upvotes)</li>`).join('')}
+          ${data.trending.map(t => `<li>${escapeHtml(t.title)} (${t.recentUpvotes} upvotes)</li>`).join('')}
         </ul>
        </div>`
     : '';
@@ -23,7 +34,7 @@ export function buildWeeklyDigestEmail(data: DigestData): { subject: string; htm
   const html = `
     <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;">
       <h2 style="color:#333;">Weekly Digest</h2>
-      <p>Hi ${data.userName},</p>
+      <p>Hi ${userName},</p>
       <p>Here's your weekly summary:</p>
 
       <div style="margin:16px 0;padding:16px;background:#f5f5f5;border-radius:8px;">
