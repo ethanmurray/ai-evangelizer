@@ -168,3 +168,69 @@ export async function exportUserDataCSV(): Promise<string> {
 
   return [header, ...rows].join('\n');
 }
+
+export async function deleteUser(userId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    // First, handle tables that reference users without CASCADE
+    // Set submitted_by to null for use_cases
+    await supabase
+      .from('use_cases')
+      .update({ submitted_by: null })
+      .eq('submitted_by', userId);
+
+    // Delete upvotes
+    await supabase
+      .from('upvotes')
+      .delete()
+      .eq('user_id', userId);
+
+    // Delete progress records
+    await supabase
+      .from('progress')
+      .delete()
+      .eq('user_id', userId);
+
+    // Delete shares where user is sharer or recipient
+    await supabase
+      .from('shares')
+      .delete()
+      .or(`sharer_id.eq.${userId},recipient_id.eq.${userId}`);
+
+    // Delete attributions where user is learner
+    await supabase
+      .from('attributions')
+      .delete()
+      .eq('learner_id', userId);
+
+    // Delete activity events
+    await supabase
+      .from('activity_events')
+      .delete()
+      .eq('actor_id', userId);
+
+    // Delete comments
+    await supabase
+      .from('comments')
+      .delete()
+      .eq('author_id', userId);
+
+    // Finally, delete the user (CASCADE will handle the rest)
+    const { error } = await supabase
+      .from('users')
+      .delete()
+      .eq('id', userId);
+
+    if (error) {
+      console.error('Error deleting user:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error in deleteUser:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+}
