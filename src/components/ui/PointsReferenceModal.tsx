@@ -160,6 +160,49 @@ export function PointsReferenceModal({ isOpen, onClose }: PointsReferenceModalPr
                 +{POINTS_CONFIG.viralBonus} bonus
               </div>
             </div>
+
+            <div className="flex justify-between items-center p-3 rounded" style={{ background: 'var(--color-bg-surface)' }}>
+              <div>
+                <div className="font-medium">Daily Challenge</div>
+                <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                  Complete any daily challenge (one per workday)
+                </div>
+              </div>
+              <div className="font-bold" style={{ color: 'var(--color-primary)' }}>
+                +{POINTS_CONFIG.dailyChallenge} points
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Levels & Prizes */}
+        <div className="mb-6 border-t pt-4" style={{ borderColor: 'var(--color-border)' }}>
+          <h3 className="font-semibold mb-2" style={{ color: 'var(--color-text-heading)' }}>
+            Levels & Prizes
+          </h3>
+          <p className="text-sm mb-3" style={{ color: 'var(--color-text-muted)' }}>
+            Earn points to level up. Each new level unlocks a real prize!
+          </p>
+          <div className="space-y-2">
+            {t.ranks.map((rank, i) => (
+              <div
+                key={rank.min}
+                className="flex justify-between items-center p-2 rounded"
+                style={{ background: i % 2 === 0 ? 'var(--color-bg-surface)' : 'transparent' }}
+              >
+                <div>
+                  <span className="font-medium" style={{ color: 'var(--color-secondary)' }}>
+                    {rank.name}
+                  </span>
+                  <span className="text-xs ml-2" style={{ color: 'var(--color-text-muted)' }}>
+                    {rank.desc}
+                  </span>
+                </div>
+                <div className="text-sm font-medium whitespace-nowrap ml-3" style={{ color: 'var(--color-primary)' }}>
+                  {rank.min === 0 ? 'Start' : `${rank.min} pts`}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

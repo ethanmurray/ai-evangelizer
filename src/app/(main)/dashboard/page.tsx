@@ -24,6 +24,8 @@ import { EmailConsentModal } from '@/components/ui/EmailConsentModal';
 import { useThemeUnlockCheck } from '@/hooks/useThemeUnlockCheck';
 import { useDailyChallenge } from '@/hooks/useDailyChallenge';
 import { DailyChallengeCard } from '@/components/ui/DailyChallengeCard';
+import { useLevelUpCheck } from '@/hooks/useLevelUpCheck';
+import { LevelUpModal } from '@/components/ui/LevelUpModal';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -53,6 +55,14 @@ export default function DashboardPage() {
 
   // Toast notification when a theme unlock threshold is crossed
   useThemeUnlockCheck(userPoints);
+
+  // Level-up prize detection
+  const {
+    showModal: showLevelUp,
+    newRankName,
+    needsAddress,
+    dismiss: dismissLevelUp,
+  } = useLevelUpCheck(user?.id, userPoints);
 
   // Show email consent modal once after onboarding is no longer showing
   useEffect(() => {
@@ -291,6 +301,16 @@ export default function DashboardPage() {
             localStorage.setItem(`email_consent_shown_${user.id}`, '1');
             setShowEmailConsent(false);
           }}
+        />
+      )}
+
+      {showLevelUp && user && (
+        <LevelUpModal
+          isOpen={showLevelUp}
+          onClose={dismissLevelUp}
+          rankName={newRankName}
+          needsAddress={needsAddress}
+          userId={user.id}
         />
       )}
     </div>

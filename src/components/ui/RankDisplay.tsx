@@ -43,6 +43,7 @@ export function RankDisplay({ points, completedCount, compact = false }: RankDis
       {next && (
         <div className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
           {formatPoints(next.remaining)} more to reach <span style={{ color: 'var(--color-secondary)' }}>{next.rank.name}</span>
+          {' '}&mdash; earn a prize at each new level!
         </div>
       )}
       <div className="mt-2 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>

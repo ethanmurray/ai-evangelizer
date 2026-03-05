@@ -17,6 +17,11 @@ import {
   type RecentSignup,
 } from '@/lib/data/admin';
 import { fetchTeamRankings, type TeamRankingEntry } from '@/lib/data/leaderboard';
+import {
+  fetchUnfulfilledPrizes,
+  fulfillPrize,
+  type PrizeFulfillmentEntry,
+} from '@/lib/data/prizes';
 
 export default function AdminPage() {
   const { user } = useAuth();
@@ -27,6 +32,8 @@ export default function AdminPage() {
   const [inactive, setInactive] = useState<InactiveUser[]>([]);
   const [signups, setSignups] = useState<RecentSignup[]>([]);
   const [teamRankings, setTeamRankings] = useState<TeamRankingEntry[]>([]);
+  const [prizes, setPrizes] = useState<PrizeFulfillmentEntry[]>([]);
+  const [fulfillingId, setFulfillingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
@@ -46,11 +53,13 @@ export default function AdminPage() {
       fetchInactiveUsers(30),
       fetchRecentSignups(30),
       fetchTeamRankings(),
-    ]).then(([m, i, s, tr]) => {
+      fetchUnfulfilledPrizes(),
+    ]).then(([m, i, s, tr, p]) => {
       setMetrics(m);
       setInactive(i);
       setSignups(s);
       setTeamRankings(tr);
+      setPrizes(p);
       setIsLoading(false);
     });
   }, [user?.isAdmin]);
@@ -70,6 +79,15 @@ export default function AdminPage() {
     } finally {
       setExporting(false);
     }
+  }
+
+  async function handleFulfill(prizeId: string) {
+    setFulfillingId(prizeId);
+    const ok = await fulfillPrize(prizeId);
+    if (ok) {
+      setPrizes((prev) => prev.filter((p) => p.id !== prizeId));
+    }
+    setFulfillingId(null);
   }
 
   async function handleDeleteUser(userId: string, userName: string) {
@@ -229,6 +247,70 @@ export default function AdminPage() {
                       </td>
                       <td className="py-2 text-right font-medium" style={{ color: 'var(--color-primary)' }}>
                         {team.avgScore}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Prize Fulfillment */}
+      {prizes.length > 0 && (
+        <div>
+          <h2 className="text-lg font-bold mb-3">
+            Prizes to Send ({prizes.length})
+          </h2>
+          <Card>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ color: 'var(--color-text-muted)' }}>
+                    <th className="text-left py-2 pr-4">Name</th>
+                    <th className="text-left py-2 pr-4">Email</th>
+                    <th className="text-left py-2 pr-4">Level Reached</th>
+                    <th className="text-left py-2 pr-4">Address</th>
+                    <th className="text-left py-2 pr-4">Date</th>
+                    <th className="text-right py-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {prizes.map((p) => (
+                    <tr
+                      key={p.id}
+                      className="border-t"
+                      style={{ borderColor: 'var(--color-border)' }}
+                    >
+                      <td className="py-2 pr-4 font-medium" style={{ color: 'var(--color-text)' }}>
+                        {p.userName}
+                      </td>
+                      <td className="py-2 pr-4" style={{ color: 'var(--color-text-muted)' }}>
+                        {p.userEmail}
+                      </td>
+                      <td className="py-2 pr-4" style={{ color: 'var(--color-secondary)' }}>
+                        {p.rankName} ({p.rankMinPoints} pts)
+                      </td>
+                      <td className="py-2 pr-4" style={{ color: p.shippingAddress ? 'var(--color-text)' : 'var(--color-text-muted)' }}>
+                        {p.shippingAddress || 'No address yet'}
+                      </td>
+                      <td className="py-2 pr-4" style={{ color: 'var(--color-text-muted)' }}>
+                        {new Date(p.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-2 text-right">
+                        <button
+                          onClick={() => handleFulfill(p.id)}
+                          disabled={fulfillingId === p.id}
+                          className="px-3 py-1 rounded text-xs font-medium transition-colors"
+                          style={{
+                            background: 'var(--color-primary)',
+                            color: '#fff',
+                            opacity: fulfillingId === p.id ? 0.5 : 1,
+                          }}
+                        >
+                          {fulfillingId === p.id ? 'Done!' : 'Mark Sent'}
+                        </button>
                       </td>
                     </tr>
                   ))}
