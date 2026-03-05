@@ -11,6 +11,7 @@ import {
   fetchInactiveUsers,
   fetchRecentSignups,
   exportUserDataCSV,
+  deleteUser,
   type OrgMetrics,
   type InactiveUser,
   type RecentSignup,
@@ -35,6 +36,7 @@ export default function AdminPage() {
   const [fulfillingId, setFulfillingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (user && !user.isAdmin) {
@@ -86,6 +88,53 @@ export default function AdminPage() {
       setPrizes((prev) => prev.filter((p) => p.id !== prizeId));
     }
     setFulfillingId(null);
+  }
+
+  async function handleDeleteUser(userId: string, userName: string) {
+    if (!confirm(`Are you sure you want to delete user "${userName}"?\n\nThis action cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingUserId(userId);
+    try {
+      const result = await deleteUser(userId);
+      if (result.success) {
+        // Remove the user from the inactive list
+        setInactive(inactive.filter(u => u.id !== userId));
+        alert(`User "${userName}" has been deleted successfully.`);
+      } else {
+        alert(`Failed to delete user: ${result.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('An error occurred while deleting the user.');
+    } finally {
+      setDeletingUserId(null);
+    }
+  }
+
+  async function handleDeleteUserSignup(userId: string, userName: string) {
+    if (!confirm(`Are you sure you want to delete user "${userName}"?\n\nThis action cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingUserId(userId);
+    try {
+      const result = await deleteUser(userId);
+      if (result.success) {
+        // Remove the user from both lists (in case they appear in both)
+        setSignups(signups.filter(u => u.id !== userId));
+        setInactive(inactive.filter(u => u.id !== userId));
+        alert(`User "${userName}" has been deleted successfully.`);
+      } else {
+        alert(`Failed to delete user: ${result.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('An error occurred while deleting the user.');
+    } finally {
+      setDeletingUserId(null);
+    }
   }
 
   if (!user?.isAdmin) {
@@ -286,7 +335,8 @@ export default function AdminPage() {
                     <th className="text-left py-2 pr-4">Name</th>
                     <th className="text-left py-2 pr-4">Email</th>
                     <th className="text-left py-2 pr-4">Team</th>
-                    <th className="text-right py-2">Last Active</th>
+                    <th className="text-right py-2 pr-4">Last Active</th>
+                    <th className="text-center py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -305,10 +355,25 @@ export default function AdminPage() {
                       <td className="py-2 pr-4" style={{ color: 'var(--color-text)' }}>
                         {u.team}
                       </td>
-                      <td className="py-2 text-right" style={{ color: 'var(--color-text-muted)' }}>
+                      <td className="py-2 pr-4 text-right" style={{ color: 'var(--color-text-muted)' }}>
                         {u.lastActivityAt
                           ? new Date(u.lastActivityAt).toLocaleDateString()
                           : 'Never'}
+                      </td>
+                      <td className="py-2 text-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteUser(u.id, u.name)}
+                          disabled={deletingUserId === u.id}
+                          style={{
+                            color: 'var(--color-error)',
+                            borderColor: 'var(--color-error)',
+                            opacity: deletingUserId === u.id ? 0.5 : 1,
+                          }}
+                        >
+                          {deletingUserId === u.id ? 'Deleting...' : 'Delete'}
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -333,7 +398,8 @@ export default function AdminPage() {
                     <th className="text-left py-2 pr-4">Name</th>
                     <th className="text-left py-2 pr-4">Email</th>
                     <th className="text-left py-2 pr-4">Team</th>
-                    <th className="text-right py-2">Joined</th>
+                    <th className="text-right py-2 pr-4">Joined</th>
+                    <th className="text-center py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -352,8 +418,23 @@ export default function AdminPage() {
                       <td className="py-2 pr-4" style={{ color: 'var(--color-text)' }}>
                         {u.team}
                       </td>
-                      <td className="py-2 text-right" style={{ color: 'var(--color-text-muted)' }}>
+                      <td className="py-2 pr-4 text-right" style={{ color: 'var(--color-text-muted)' }}>
                         {new Date(u.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-2 text-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteUserSignup(u.id, u.name)}
+                          disabled={deletingUserId === u.id}
+                          style={{
+                            color: 'var(--color-error)',
+                            borderColor: 'var(--color-error)',
+                            opacity: deletingUserId === u.id ? 0.5 : 1,
+                          }}
+                        >
+                          {deletingUserId === u.id ? 'Deleting...' : 'Delete'}
+                        </Button>
                       </td>
                     </tr>
                   ))}
