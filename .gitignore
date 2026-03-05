@@ -45,3 +45,7 @@ yarn-error.log*
 next-env.d.ts
 tests/screenshots/
 scripts/test-screenshots/
+
+# Remotion video output
+video/out/
+video/node_modules/
