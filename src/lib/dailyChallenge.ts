@@ -117,10 +117,9 @@ export function isWorkday(dateStr: string): boolean {
  */
 export function getNextWorkday(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d));
 
   for (let i = 0; i < 10; i++) {
-    const candidate = new Date(date.getTime() + i * 86400000);
+    const candidate = new Date(y, m - 1, d + i);
     const str = getLocalDateString(candidate);
     if (isWorkday(str)) return str;
   }
@@ -133,10 +132,9 @@ export function getNextWorkday(dateStr: string): string {
  */
 export function getPreviousWorkday(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d));
 
   for (let i = 1; i <= 10; i++) {
-    const candidate = new Date(date.getTime() - i * 86400000);
+    const candidate = new Date(y, m - 1, d - i);
     const str = getLocalDateString(candidate);
     if (isWorkday(str)) return str;
   }
