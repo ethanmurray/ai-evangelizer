@@ -17,6 +17,7 @@ import { UseCaseProgressCard } from '@/components/ui/UseCaseProgressCard';
 import { UseCaseActions } from '@/components/ui/UseCaseActions';
 import { UseCaseCommentsSection } from '@/components/ui/UseCaseCommentsSection';
 import { FollowButton } from '@/components/ui/FollowButton';
+import ReactMarkdown from 'react-markdown';
 
 export default function UseCaseDetailPage() {
   const params = useParams();
@@ -91,9 +92,30 @@ export default function UseCaseDetailPage() {
           <h2 className="text-sm font-bold mb-2" style={{ color: 'var(--color-secondary)' }}>
             Resources
           </h2>
-          <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text-muted)' }}>
-            {useCase.resources}
-          </p>
+          <div className="text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
+            <ReactMarkdown
+              components={{
+                a: ({ ...props }) => (
+                  <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-secondary)', textDecoration: 'underline' }} />
+                ),
+                p: ({ ...props }) => <p {...props} className="mb-2 last:mb-0" />,
+                ul: ({ ...props }) => <ul {...props} className="list-disc pl-4 mb-2" />,
+                ol: ({ ...props }) => <ol {...props} className="list-decimal pl-4 mb-2" />,
+                li: ({ ...props }) => <li {...props} className="mb-0.5" />,
+                h1: ({ ...props }) => <h3 {...props} className="font-bold text-base mb-1" />,
+                h2: ({ ...props }) => <h3 {...props} className="font-bold text-sm mb-1" />,
+                h3: ({ ...props }) => <h3 {...props} className="font-bold text-sm mb-1" />,
+                code: ({ ...props }) => (
+                  <code {...props} className="px-1 py-0.5 rounded text-xs" style={{ backgroundColor: 'var(--color-surface)' }} />
+                ),
+                pre: ({ ...props }) => (
+                  <pre {...props} className="p-2 rounded text-xs overflow-x-auto mb-2" style={{ backgroundColor: 'var(--color-surface)' }} />
+                ),
+              }}
+            >
+              {useCase.resources}
+            </ReactMarkdown>
+          </div>
         </Card>
       )}
 
