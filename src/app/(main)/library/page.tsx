@@ -119,7 +119,7 @@ export default function LibraryPage() {
               label="Resources (optional)"
               value={submitResources}
               onChange={(e) => setSubmitResources(e.target.value)}
-              placeholder="Links, tools, tips"
+              placeholder="Links, tools, tips (supports Markdown)"
             />
             <LabelSelector
               selectedLabels={submitLabels}
